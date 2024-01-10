@@ -8,11 +8,11 @@
       },
       {
         "name": "PBIDesktopVersion",
-        "value": "2.123.742.0 (23.11)"
+        "value": "2.124.1052.0 (23.12)"
       },
       {
         "name": "PBI_QueryOrder",
-        "value": "[\"Current Status\",\"Daily Scores\",\"DetailScore\",\"Yesterday scores\",\"SCIDs secured\",\"MeasuresTable\",\"Descriptions\",\"MS products\",\"Azure Graph API Url\",\"Azure Tenant ID\",\"Azure Application ID\",\"Azure Application Client Secret\",\"SecureScores Raw\",\"LicensesHeldAPI Raw\",\"UsersAPI Raw\",\"Licenses unpacked\",\"PrimaryLicense - skuId\",\"assignedLicenses - disabledPlans\",\"User held Licenses\",\"Users\",\"Licenses SKU Raw\",\"Alerts Raw\",\"Alerts\",\"Licenses SKU\",\"Groups Raw\",\"GetGroupMembers\",\"GroupMembers\",\"Azure GroupID\",\"Groups\"]"
+        "value": "[\"Daily Scores\",\"DetailScore\",\"Yesterday scores\",\"SCIDs secured\",\"MeasuresTable\",\"Descriptions\",\"MS products\",\"Azure Graph API Url\",\"Azure Tenant ID\",\"Azure Application ID\",\"Azure Application Client Secret\",\"SecureScores Raw\",\"LicensesHeldAPI Raw\",\"UsersAPI Raw\",\"Licenses unpacked\",\"PrimaryLicense - skuId\",\"assignedLicenses - disabledPlans\",\"User held Licenses\",\"Users\",\"Licenses SKU Raw\",\"Alerts Raw\",\"Alerts\",\"Licenses SKU\",\"Groups Raw\",\"GetGroupMembers\",\"GroupMembers\",\"Azure GroupID\",\"Groups\",\"DateDimensionBI\",\"user last sigin\"]"
       },
       {
         "name": "PBI_ProTooling",
@@ -40,38 +40,6 @@
     },
     "defaultPowerBIDataSourceVersion": "powerBI_V3",
     "expressions": [
-      {
-        "name": "Current Status",
-        "annotations": [
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
-          },
-          {
-            "name": "PBI_ResultType",
-            "value": "Table"
-          }
-        ],
-        "expression": [
-          "let",
-          "    Source = #\"SecureScores Raw\",",
-          "    #\"Expanded controlScores\" = Table.ExpandListColumn(Source, \"controlScores\"),",
-          "    #\"Expanded controlScores1\" = Table.ExpandRecordColumn(#\"Expanded controlScores\", \"controlScores\", {\"controlName\", \"implementationStatus\"}, {\"controlName\", \"implementationStatus\"}),",
-          "    // https://stackoverflow.com/a/50473350",
-          "    #\"Only yesterday's data\" = Table.SelectRows(#\"Expanded controlScores1\", each DateTime.Date([createdDateTime]) = Date.From(List.Max(#\"Expanded controlScores1\"[createdDateTime]))),",
-          "    #\"Added status no markup\" = Table.AddColumn(#\"Only yesterday's data\", \"StatusTb\", each if [implementationStatus] <> null and [implementationStatus] <> \"\"",
-          "then Html.Table([implementationStatus], {{\"ExtractedText\",\":root\"}})",
-          "else null),",
-          "    #\"Expanded Status\" = Table.ExpandTableColumn(#\"Added status no markup\", \"StatusTb\", {\"ExtractedText\"}, {\"Implementation Status\"}),",
-          "    #\"Removed old status\" = Table.RemoveColumns(#\"Expanded Status\",{\"implementationStatus\"}),",
-          "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Removed old status\",{\"controlName\", \"Implementation Status\"})",
-          "in",
-          "    #\"Removed Other Columns\""
-        ],
-        "kind": "m",
-        "lineageTag": "bc7eb7af-aa6a-48b3-bd51-8f5da995dc13",
-        "queryGroup": "02 Staging\\02-00 Security Stg"
-      },
       {
         "name": "Azure Graph API Url",
         "annotations": [
@@ -141,9 +109,9 @@
           "let",
           "    Source = #\"LicensesHeldAPI Raw\",",
           "    #\"Removed Other Columns\" = Table.SelectColumns(Source,{\"id\", \"assignedLicenses\"}),",
-          "    #\"Expanded assignedLicenses\" = Table.ExpandListColumn(#\"Removed Other Columns\", \"assignedLicenses\"),",
-          "    #\"Expanded assignedLicenses1\" = Table.ExpandRecordColumn(#\"Expanded assignedLicenses\", \"assignedLicenses\", {\"disabledPlans\", \"skuId\"}, {\"assignedLicenses.disabledPlans\", \"PrimaryLicense.skuId\"}),",
-          "    #\"Filtered out no SKUID\" = Table.SelectRows(#\"Expanded assignedLicenses1\", each ([PrimaryLicense.skuId] <> null))",
+          "    #\"Expanded assignedLicenses list\" = Table.ExpandListColumn(#\"Removed Other Columns\", \"assignedLicenses\"),",
+          "    #\"Expanded assignedLicenses1 record\" = Table.ExpandRecordColumn(#\"Expanded assignedLicenses list\", \"assignedLicenses\", {\"disabledPlans\", \"skuId\"}, {\"assignedLicenses.disabledPlans\", \"PrimaryLicense.skuId\"}),",
+          "    #\"Filtered out no SKUID\" = Table.SelectRows(#\"Expanded assignedLicenses1 record\", each ([PrimaryLicense.skuId] <> null))",
           "in",
           "    #\"Filtered out no SKUID\""
         ],
@@ -267,9 +235,9 @@
           "    // The function will run recursively until it gets all the record and then",
           "    // loads the full result to UserDetail Variable  ",
           "    UserDetail = GetUserLicense(\"v1.0/users?$select=id,mail,assignedLicenses\"), #\"Converted LicenseAPI to Table\" = Table.FromList(UserDetail, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
-          "    #\"Expanded Column1\" = Table.ExpandRecordColumn(#\"Converted LicenseAPI to Table\", \"Column1\", {\"id\", \"mail\", \"assignedLicenses\"}, {\"id\", \"mail\", \"assignedLicenses\"})",
+          "    #\"Expanded licenses records\" = Table.ExpandRecordColumn(#\"Converted LicenseAPI to Table\", \"Column1\", {\"id\", \"mail\", \"assignedLicenses\"}, {\"id\", \"mail\", \"assignedLicenses\"})",
           "in",
-          "    #\"Expanded Column1\""
+          "    #\"Expanded licenses records\""
         ],
         "kind": "m",
         "lineageTag": "43a99a0d-9141-4f1f-aa51-19bc8bda81ff",
@@ -389,9 +357,9 @@
           "    nextLink = Text.AfterDelimiter(Source[#\"@odata.nextLink\"], #\"Azure Graph API Url\"), ",
           "    // recursively call GetUserDetail function using the value of the @odata.nextLink as the path",
           "    // Since @odata.nextLink is not guaranteed to always exist in the case where the result is less than 100 we need to catch this and deal with it",
-          "      // using a try otherwise basically means if you error out because no",
-          "      // @odata.nextLink exisit then just return the resulting list of values you did get",
-          "      // there is an API returned value called @odata.nextLink - so we can directly reference that",
+          "    // using a try otherwise basically means if you error out because no",
+          "    // @odata.nextLink exisit then just return the resulting list of values you did get",
+          "    // there is an API returned value called @odata.nextLink - so we can directly reference that",
           "    result = try @NextList & @GetUserDetail(nextLink) otherwise @NextList",
           "    in",
           "    // Return the result variable as the function return",
@@ -401,7 +369,7 @@
           "  // loads the full result to UserDetail Variable  ",
           "  UserDetail = GetUserDetail(\"beta/users?$\"),",
           "  #\"Converted UserAPI to Table\" = Table.FromList(UserDetail, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
-          "    #\"Expanded Column1\" = Table.ExpandRecordColumn(",
+          "    #\"Expanded user records\" = Table.ExpandRecordColumn(",
           "  #\"Converted UserAPI to Table\",",
           "  \"Column1\",",
           "  {",
@@ -463,7 +431,7 @@
           "    \"serviceProvisioningErrors\"",
           "  },",
           "  {",
-          "    \"id\",",
+          "    \"user id\",",
           "    \"deletedDateTime\",",
           "    \"accountEnabled\",",
           "    \"businessPhones\",",
@@ -522,7 +490,7 @@
           "  }",
           ")",
           "in",
-          "    #\"Expanded Column1\""
+          "    #\"Expanded user records\""
         ],
         "kind": "m",
         "lineageTag": "10d64ec1-7ff6-42d8-bd26-acc9035967f6",
@@ -641,9 +609,9 @@
           "    ), ",
           "    value = Source[value],",
           "    #\"Converted Alerts API to Table\" = Table.FromList(value, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
-          "    #\"Expanded Column1\" = Table.ExpandRecordColumn(#\"Converted Alerts API to Table\", \"Column1\", {\"id\", \"providerAlertId\", \"incidentId\", \"status\", \"severity\", \"classification\", \"determination\", \"serviceSource\", \"detectionSource\", \"productName\", \"detectorId\", \"tenantId\", \"title\", \"description\", \"recommendedActions\", \"category\", \"assignedTo\", \"alertWebUrl\", \"incidentWebUrl\", \"actorDisplayName\", \"threatDisplayName\", \"threatFamilyName\", \"mitreTechniques\", \"createdDateTime\", \"lastUpdateDateTime\", \"resolvedDateTime\", \"firstActivityDateTime\", \"lastActivityDateTime\", \"systemTags\", \"alertPolicyId\", \"additionalData\", \"comments\", \"evidence\"}, {\"id\", \"providerAlertId\", \"incidentId\", \"status\", \"severity\", \"classification\", \"determination\", \"serviceSource\", \"detectionSource\", \"productName\", \"detectorId\", \"tenantId\", \"title\", \"description\", \"recommendedActions\", \"category\", \"assignedTo\", \"alertWebUrl\", \"incidentWebUrl\", \"actorDisplayName\", \"threatDisplayName\", \"threatFamilyName\", \"mitreTechniques\", \"createdDateTime\", \"lastUpdateDateTime\", \"resolvedDateTime\", \"firstActivityDateTime\", \"lastActivityDateTime\", \"systemTags\", \"alertPolicyId\", \"additionalData\", \"comments\", \"evidence\"})",
+          "    #\"Expanded Alerts records\" = Table.ExpandRecordColumn(#\"Converted Alerts API to Table\", \"Column1\", {\"id\", \"providerAlertId\", \"incidentId\", \"status\", \"severity\", \"classification\", \"determination\", \"serviceSource\", \"detectionSource\", \"productName\", \"detectorId\", \"tenantId\", \"title\", \"description\", \"recommendedActions\", \"category\", \"assignedTo\", \"alertWebUrl\", \"incidentWebUrl\", \"actorDisplayName\", \"threatDisplayName\", \"threatFamilyName\", \"mitreTechniques\", \"createdDateTime\", \"lastUpdateDateTime\", \"resolvedDateTime\", \"firstActivityDateTime\", \"lastActivityDateTime\", \"systemTags\", \"alertPolicyId\", \"additionalData\", \"comments\", \"evidence\"}, {\"id\", \"providerAlertId\", \"incidentId\", \"status\", \"severity\", \"classification\", \"determination\", \"serviceSource\", \"detectionSource\", \"productName\", \"detectorId\", \"tenantId\", \"title\", \"description\", \"recommendedActions\", \"category\", \"assignedTo\", \"alertWebUrl\", \"incidentWebUrl\", \"actorDisplayName\", \"threatDisplayName\", \"threatFamilyName\", \"mitreTechniques\", \"createdDateTime\", \"lastUpdateDateTime\", \"resolvedDateTime\", \"firstActivityDateTime\", \"lastActivityDateTime\", \"systemTags\", \"alertPolicyId\", \"additionalData\", \"comments\", \"evidence\"})",
           "in",
-          "    #\"Expanded Column1\""
+          "    #\"Expanded Alerts records\""
         ],
         "kind": "m",
         "lineageTag": "64a9459c-9112-4434-88be-4c8bf6d015e8",
@@ -714,9 +682,9 @@
           "  // loads the full result to UserDetail Variable  ",
           "  UserDetail = GetUserDetail(\"v1.0/groups\"),",
           "  #\"Converted UserAPI to Table\" = Table.FromList(UserDetail, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
-          "    #\"Expanded Column1\" = Table.ExpandRecordColumn(#\"Converted UserAPI to Table\", \"Column1\", {\"id\", \"deletedDateTime\", \"classification\", \"createdDateTime\", \"creationOptions\", \"description\", \"displayName\", \"expirationDateTime\", \"groupTypes\", \"isAssignableToRole\", \"mail\", \"mailEnabled\", \"mailNickname\", \"membershipRule\", \"membershipRuleProcessingState\", \"preferredDataLocation\", \"preferredLanguage\", \"proxyAddresses\", \"renewedDateTime\", \"resourceBehaviorOptions\", \"resourceProvisioningOptions\", \"securityEnabled\", \"securityIdentifier\", \"theme\", \"visibility\", \"serviceProvisioningErrors\"}, {\"id\", \"deletedDateTime\", \"classification\", \"createdDateTime\", \"creationOptions\", \"description\", \"displayName\", \"expirationDateTime\", \"groupTypes\", \"isAssignableToRole\", \"mail\", \"mailEnabled\", \"mailNickname\", \"membershipRule\", \"membershipRuleProcessingState\", \"preferredDataLocation\", \"preferredLanguage\", \"proxyAddresses\", \"renewedDateTime\", \"resourceBehaviorOptions\", \"resourceProvisioningOptions\", \"securityEnabled\", \"securityIdentifier\", \"theme\", \"visibility\", \"serviceProvisioningErrors\"})",
+          "    #\"Expanded groups records\" = Table.ExpandRecordColumn(#\"Converted UserAPI to Table\", \"Column1\", {\"id\", \"deletedDateTime\", \"classification\", \"createdDateTime\", \"creationOptions\", \"description\", \"displayName\", \"expirationDateTime\", \"groupTypes\", \"isAssignableToRole\", \"mail\", \"mailEnabled\", \"mailNickname\", \"membershipRule\", \"membershipRuleProcessingState\", \"preferredDataLocation\", \"preferredLanguage\", \"proxyAddresses\", \"renewedDateTime\", \"resourceBehaviorOptions\", \"resourceProvisioningOptions\", \"securityEnabled\", \"securityIdentifier\", \"theme\", \"visibility\", \"serviceProvisioningErrors\"}, {\"id\", \"deletedDateTime\", \"classification\", \"createdDateTime\", \"creationOptions\", \"description\", \"displayName\", \"expirationDateTime\", \"groupTypes\", \"isAssignableToRole\", \"mail\", \"mailEnabled\", \"mailNickname\", \"membershipRule\", \"membershipRuleProcessingState\", \"preferredDataLocation\", \"preferredLanguage\", \"proxyAddresses\", \"renewedDateTime\", \"resourceBehaviorOptions\", \"resourceProvisioningOptions\", \"securityEnabled\", \"securityIdentifier\", \"theme\", \"visibility\", \"serviceProvisioningErrors\"})",
           "in",
-          "    #\"Expanded Column1\""
+          "    #\"Expanded groups records\""
         ],
         "kind": "m",
         "lineageTag": "dab2d59f-97d3-44d7-b583-ff236c58d5fe",
@@ -934,9 +902,9 @@
       },
       {
         "name": "714a9706-6f61-4ca0-bba9-3ed260706205",
-        "fromColumn": "createdDateTime",
+        "fromColumn": "createdDate",
         "fromTable": "DetailScore",
-        "toColumn": "createdDateTime",
+        "toColumn": "createdDate",
         "toTable": "Daily Scores"
       },
       {
@@ -958,13 +926,6 @@
         "toTable": "Yesterday scores"
       },
       {
-        "name": "509d060b-7b3e-412c-aef9-8630c46e3cff",
-        "fromColumn": "user id",
-        "fromTable": "User held Licenses",
-        "toColumn": "id",
-        "toTable": "Users"
-      },
-      {
         "name": "fd35b8bf-5508-41f4-893a-b35686b758bc",
         "fromColumn": "product GUID",
         "fromTable": "User held Licenses",
@@ -981,18 +942,81 @@
         "toTable": "Licenses SKU"
       },
       {
-        "name": "e88c9314-df4c-4fa9-b782-41d467766cd3",
-        "fromColumn": "userID",
-        "fromTable": "GroupMembers",
-        "toColumn": "id",
-        "toTable": "Users"
-      },
-      {
         "name": "44ae598a-1314-484c-9e1b-e5f785b3d31a",
         "fromColumn": "id",
         "fromTable": "GroupMembers",
         "toColumn": "id",
         "toTable": "Groups"
+      },
+      {
+        "name": "f0b21999-6690-854b-0c85-edfa2fdea949",
+        "fromColumn": "CreatedDate",
+        "fromTable": "Alerts",
+        "toColumn": "Date",
+        "toTable": "DateDimensionBI"
+      },
+      {
+        "name": "6bee4d5f-f173-291d-679f-876df125760f",
+        "fromColumn": "createdDate",
+        "fromTable": "DetailScore",
+        "isActive": false,
+        "toColumn": "Date",
+        "toTable": "DateDimensionBI"
+      },
+      {
+        "name": "3729079e-189f-a7d2-13e6-b7398284732c",
+        "fromColumn": "createdDate",
+        "fromTable": "Users",
+        "isActive": false,
+        "toColumn": "Date",
+        "toTable": "DateDimensionBI"
+      },
+      {
+        "name": "0d516c0e-5da8-d15d-4579-a877dd8eda5b",
+        "fromColumn": "createdDate",
+        "fromTable": "Groups",
+        "isActive": false,
+        "toColumn": "Date",
+        "toTable": "DateDimensionBI"
+      },
+      {
+        "name": "37f8a137-541c-dc84-c727-9c0d06dad5ad",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "Date",
+        "fromTable": "DateDimensionBI",
+        "toColumn": "createdDate",
+        "toTable": "Daily Scores"
+      },
+      {
+        "name": "7c811a0f-ec7b-4c4f-bd23-65d0a635aa91",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "user id",
+        "fromTable": "Users",
+        "toColumn": "user id",
+        "toTable": "user last sigin"
+      },
+      {
+        "name": "c24072cd-6712-432f-9b4a-4ad65eff5d6a",
+        "fromColumn": "user id",
+        "fromTable": "User held Licenses",
+        "toColumn": "user id",
+        "toTable": "Users"
+      },
+      {
+        "name": "11643298-4432-4f02-8bd9-afcc80f4ddc2",
+        "fromColumn": "userID",
+        "fromTable": "GroupMembers",
+        "toColumn": "user id",
+        "toTable": "Users"
+      },
+      {
+        "name": "b91ba6a1-b7c9-4011-a5f7-5232090c75e2",
+        "fromColumn": "Last SignIn Date",
+        "fromTable": "user last sigin",
+        "toColumn": "Date",
+        "toTable": "DateDimensionBI"
       }
     ],
     "sourceQueryCulture": "en-AU",
@@ -1057,19 +1081,6 @@
             "lineageTag": "f56ab1fc-dc68-432f-b512-f765adaa7d32",
             "sourceColumn": "controlCategory",
             "summarizeBy": "none"
-          },
-          {
-            "name": "Implementation Status",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "565c69cb-9670-4ea6-8e18-267b3363701a",
-            "sourceColumn": "Implementation Status",
-            "summarizeBy": "none"
           }
         ],
         "lineageTag": "de1e4091-41a7-4188-9abe-44a53c08fe51",
@@ -1083,7 +1094,7 @@
                 "let",
                 "    Source = #\"SecureScores Raw\",",
                 "    #\"Expanded controlScores\" = Table.ExpandListColumn(Source, \"controlScores\"),",
-                "    #\"Expanded controlScores1\" = Table.ExpandRecordColumn(#\"Expanded controlScores\", \"controlScores\", {\"controlCategory\", \"controlName\", \"description\"}, {\"controlCategory\", \"controlName\", \"description\"}),",
+                "    #\"Expanded controlScores1\" = Table.ExpandRecordColumn(#\"Expanded controlScores\", \"controlScores\", {\"controlCategory\", \"controlName\", \"description\", \"implementationStatus\"}, {\"controlCategory\", \"controlName\", \"description\", \"implementationStatus\"}),",
                 "    #\"Filtered Rows\" = Table.SelectRows(#\"Expanded controlScores1\", each [description] <> null and [description] <> \"\"),",
                 "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"controlName\", \"description\", \"controlCategory\"}),",
                 "    #\"Added Description no markup\" = Table.AddColumn(#\"Removed Other Columns\", \"DescriptionTb\", each if [description] <> null",
@@ -1092,11 +1103,9 @@
                 "    #\"Expanded Short Description1\" = Table.ExpandTableColumn(#\"Added Description no markup\", \"DescriptionTb\", {\"ExtractedText\"}, {\"Description\"}),",
                 "    #\"Removed old description\" = Table.RemoveColumns(#\"Expanded Short Description1\",{\"description\"}),",
                 "    // Everything before first \".\"",
-                "    #\"Added short description\" = Table.AddColumn(#\"Removed old description\", \"Short Description\", each Text.BeforeDelimiter([Description], \".\")),",
-                "    #\"Merged w/ current status\" = Table.NestedJoin(#\"Added short description\", {\"controlName\"}, #\"Current Status\", {\"controlName\"}, \"Current Status\", JoinKind.LeftOuter),",
-                "    #\"Expanded Current Status\" = Table.ExpandTableColumn(#\"Merged w/ current status\", \"Current Status\", {\"Implementation Status\"}, {\"Implementation Status\"})",
+                "    #\"Added short description\" = Table.AddColumn(#\"Removed old description\", \"Short Description\", each Text.BeforeDelimiter([Description], \".\"))",
                 "in",
-                "    #\"Expanded Current Status\""
+                "    #\"Added short description\""
               ],
               "type": "m"
             }
@@ -1109,11 +1118,15 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
           }
         ],
         "columns": [
           {
-            "name": "createdDateTime",
+            "name": "createdDate",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
@@ -1127,7 +1140,7 @@
             "dataType": "dateTime",
             "formatString": "Long Date",
             "lineageTag": "1601aaf5-668f-40e0-9013-d522c4ce915e",
-            "sourceColumn": "createdDateTime",
+            "sourceColumn": "createdDate",
             "summarizeBy": "none"
           },
           {
@@ -1165,16 +1178,47 @@
             "summarizeBy": "none"
           },
           {
-            "name": "Secure Score %",
+            "name": "AllTenants",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
-                "value": "User"
+                "value": "Automatic"
               }
             ],
             "dataType": "double",
             "formatString": "0.00%;-0.00%;0.00%",
-            "lineageTag": "d60dbcab-06df-48d0-80e7-a046be97bb1a",
+            "lineageTag": "ba49cf3f-39bc-46c4-ab6f-62564049a45c",
+            "sourceColumn": "AllTenants",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "TotalSeats",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "7436e46e-0f59-43d6-bbe5-afa4c18dc4ba",
+            "sourceColumn": "TotalSeats",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Secure Score %",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "9e0fe617-a39e-40e5-8fec-5fe15ae898da",
             "sourceColumn": "Secure Score %",
             "summarizeBy": "none"
           }
@@ -1189,11 +1233,23 @@
               "expression": [
                 "let",
                 "    Source = #\"SecureScores Raw\",",
-                "    #\"Removed Other Columns\" = Table.SelectColumns(Source,{\"createdDateTime\", \"currentScore\", \"maxScore\"}),",
+                "    // keep only scores",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(Source,{\"createdDateTime\", \"currentScore\", \"maxScore\", \"averageComparativeScores\"}),",
+                "    // calculate percentage",
                 "    #\"Added Secure score %\" = Table.AddColumn(#\"Removed Other Columns\", \"Secure Score %\", each [currentScore] / [maxScore]),",
-                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Added Secure score %\",{{\"Secure Score %\", Percentage.Type}, {\"createdDateTime\", type date}})",
+                "    #\"Expanded averageComparativeScores\" = Table.ExpandListColumn(#\"Added Secure score %\", \"averageComparativeScores\"),",
+                "    #\"Expanded averageComparativeScores1\" = Table.ExpandRecordColumn(#\"Expanded averageComparativeScores\", \"averageComparativeScores\", {\"basis\", \"averageScore\", \"appsScore\", \"appsScoreMax\", \"dataScore\", \"dataScoreMax\", \"deviceScore\", \"deviceScoreMax\", \"identityScore\", \"identityScoreMax\", \"infrastructureScore\", \"infrastructureScoreMax\", \"SeatSizeRangeLowerValue\", \"SeatSizeRangeUpperValue\"}, {\"averageComparativeScores.basis\", \"averageComparativeScores.averageScore\", \"averageComparativeScores.appsScore\", \"averageComparativeScores.appsScoreMax\", \"averageComparativeScores.dataScore\", \"averageComparativeScores.dataScoreMax\", \"averageComparativeScores.deviceScore\", \"averageComparativeScores.deviceScoreMax\", \"averageComparativeScores.identityScore\", \"averageComparativeScores.identityScoreMax\", \"averageComparativeScores.infrastructureScore\", \"averageComparativeScores.infrastructureScoreMax\", \"averageComparativeScores.SeatSizeRangeLowerValue\", \"averageComparativeScores.SeatSizeRangeUpperValue\"}),",
+                "    #\"Removed Other Columns2\" = Table.SelectColumns(#\"Expanded averageComparativeScores1\",{\"createdDateTime\", \"currentScore\", \"maxScore\", \"averageComparativeScores.basis\", \"averageComparativeScores.averageScore\", \"Secure Score %\"}),",
+                "    // Comparison scores are given as a %, but need to x/100 & type convert",
+                "    #\"Added comparison score %\" = Table.AddColumn(#\"Removed Other Columns2\", \"comparison Score %\", each [averageComparativeScores.averageScore] / 100),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Added comparison score %\",{{\"Secure Score %\", Percentage.Type}, {\"createdDateTime\", type date}, {\"comparison Score %\", Percentage.Type}}),",
+                "    #\"Removed non % comparison score\" = Table.RemoveColumns(#\"Changed Type\",{\"averageComparativeScores.averageScore\"}),",
+                "    // need to do this so we can pivot",
+                "    #\"Filtered out comparison is null\" = Table.SelectRows(#\"Removed non % comparison score\", each ([averageComparativeScores.basis] <> null)),",
+                "    #\"Pivoted on comparison type\" = Table.Pivot(#\"Filtered out comparison is null\", List.Distinct(#\"Filtered out comparison is null\"[averageComparativeScores.basis]), \"averageComparativeScores.basis\", \"comparison Score %\", List.Sum),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Pivoted on comparison type\",{{\"createdDateTime\", \"createdDate\"}})",
                 "in",
-                "    #\"Changed Type\""
+                "    #\"Renamed Columns\""
               ],
               "type": "m"
             }
@@ -1322,15 +1378,13 @@
                 "    Source = #\"Yesterday scores\",",
                 "    // These seem to only be as-at",
                 "    // need most recent instance: https://stackoverflow.com/a/50473350",
-                "    #\"Filtered device scores\" = Table.SelectRows(Source, each Text.StartsWith([controlName], \"scid_\") and DateTime.Date([createdDateTime]) = Date.From(List.Max(Source[createdDateTime]))),",
-                "    #\"Merged Queries\" = Table.NestedJoin(#\"Filtered device scores\", {\"controlName\"}, #\"Current Status\", {\"controlName\"}, \"Current Status\", JoinKind.LeftOuter),",
-                "    #\"Expanded Current Status\" = Table.ExpandTableColumn(#\"Merged Queries\", \"Current Status\", {\"Implementation Status\"}, {\"implementationStatus\"}),",
-                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Expanded Current Status\",{\"DailyScoreKey\", \"controlName\", \"implementationStatus\"}),",
-                "    #\"Split Column by Delimiter\" = Table.SplitColumn(#\"Removed Other Columns\", \"implementationStatus\", Splitter.SplitTextByDelimiter(\"/\", QuoteStyle.Csv), {\"implementationStatus.1\", \"implementationStatus.2\"}),",
-                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Split Column by Delimiter\",{{\"implementationStatus.1\", \"Exposed devices\"}}),",
-                "    #\"Extracted Text Before Delimiter\" = Table.TransformColumns(#\"Renamed Columns\", {{\"implementationStatus.2\", each Text.BeforeDelimiter(_, \" exposed devices\"), type text}}),",
-                "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Extracted Text Before Delimiter\",{{\"implementationStatus.2\", \"total devices\"}}),",
-                "    #\"Changed device numbers to num\" = Table.TransformColumnTypes(#\"Renamed Columns1\",{{\"Exposed devices\", Int64.Type}, {\"total devices\", Int64.Type}}),",
+                "    #\"Filtered device scores\" = Table.SelectRows(Source, each Text.StartsWith([controlName], \"scid_\")),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered device scores\",{\"DailyScoreKey\", \"controlName\", \"Implementation Status\"}),",
+                "    #\"Split implementation by /\" = Table.SplitColumn(#\"Removed Other Columns\", \"Implementation Status\", Splitter.SplitTextByDelimiter(\"/\", QuoteStyle.Csv), {\"implementationStatus.1\", \"implementationStatus.2\"}),",
+                "    #\"Renamed implementation 1 to Exposed\" = Table.RenameColumns(#\"Split implementation by /\",{{\"implementationStatus.1\", \"Exposed devices\"}}),",
+                "    #\"Extracted Text Before Delimiter\" = Table.TransformColumns(#\"Renamed implementation 1 to Exposed\", {{\"implementationStatus.2\", each Text.BeforeDelimiter(_, \" exposed devices\"), type text}}),",
+                "    #\"Renamed implementation 2 to total devices\" = Table.RenameColumns(#\"Extracted Text Before Delimiter\",{{\"implementationStatus.2\", \"total devices\"}}),",
+                "    #\"Changed device numbers to num\" = Table.TransformColumnTypes(#\"Renamed implementation 2 to total devices\",{{\"Exposed devices\", Int64.Type}, {\"total devices\", Int64.Type}}),",
                 "    #\"Added % secured\" = Table.AddColumn(#\"Changed device numbers to num\", \"% secured\", each [Exposed devices] / [total devices]),",
                 "    #\"Changed % to perc format\" = Table.TransformColumnTypes(#\"Added % secured\",{{\"% secured\", Percentage.Type}}),",
                 "    #\"Added SCID number for index\" = Table.AddColumn(#\"Changed % to perc format\", \"SCID-index\", each Number.FromText(Text.AfterDelimiter([controlName], \"scid_\"))),",
@@ -1360,16 +1414,18 @@
                 "property": "IsHidden"
               }
             ],
+            "displayFolder": "Security Scores",
             "expression": "1",
             "formatString": "0%;-0%;0%",
             "lineageTag": "061bf1be-6ba0-4514-b1ba-6ac473541608"
           },
           {
             "name": "Security Score",
+            "displayFolder": "Security Scores",
             "expression": [
               "CALCULATE(",
               "    sum('Daily Scores'[Secure Score %])",
-              "    , FILTER('Daily Scores', 'Daily Scores'[createdDateTime] = SELECTEDVALUE('Daily Scores'[createdDateTime], max('Daily Scores'[createdDateTime]))",
+              "    , FILTER('DateDimensionBI', 'DateDimensionBI'[Date] = SELECTEDVALUE('DateDimensionBI'[Date], MAX('Daily Scores'[createdDate]))",
               "))"
             ],
             "formatString": "0.00%;-0.00%;0.00%",
@@ -1377,6 +1433,7 @@
           },
           {
             "name": "Assigned users",
+            "displayFolder": "Users",
             "expression": [
               "CALCULATE(",
               "    DISTINCTCOUNT('User held Licenses'[user id])",
@@ -1387,9 +1444,10 @@
           },
           {
             "name": "Guest Users",
+            "displayFolder": "Users",
             "expression": [
               "CALCULATE(",
-              "    DISTINCTCOUNT(Users[id])",
+              "    DISTINCTCOUNT(Users[user id])",
               "    , FILTER(Users, Users[userType] = \"Guest\")",
               ")"
             ],
@@ -1402,21 +1460,92 @@
             "lineageTag": "7544c434-465a-4aed-85c5-c87e39429963"
           },
           {
-            "name": "Most recent date",
-            "expression": "\"Microsoft Secure Score for \" & FORMAT(max('Daily Scores'[createdDateTime]), \"yyyy/mm/dd\")",
+            "name": "Most recent date header",
+            "displayFolder": "Security Scores",
+            "expression": "\"Microsoft Secure Score for \" & FORMAT([Most recent date], \"yyyy/mm/dd\")",
             "lineageTag": "50e72549-d3f9-4d77-a3e5-c112db8e4bc9"
           },
           {
             "name": "Groups assigned to",
+            "displayFolder": "Users",
             "expression": "CALCULATE(DISTINCTCOUNT(GroupMembers[id]))",
             "formatString": "0",
             "lineageTag": "88158280-5517-49e8-97d9-10fd8c9a8b61"
           },
           {
             "name": "Groups members",
+            "displayFolder": "Users",
             "expression": "CALCULATE(DISTINCTCOUNT(GroupMembers[userID]))",
             "formatString": "0",
             "lineageTag": "6a61610b-48ab-4a83-93c4-f69d8a9747c7"
+          },
+          {
+            "name": "Security Score - similar organisations",
+            "displayFolder": "Security Scores",
+            "expression": [
+              "CALCULATE(",
+              "    SUM('Daily Scores'[TotalSeats])",
+              "    , FILTER('DateDimensionBI', 'DateDimensionBI'[Date] = SELECTEDVALUE('DateDimensionBI'[Date], MAX('Daily Scores'[createdDate]))",
+              "))"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "92cbda89-4644-4cd9-95f4-aeb59ab92743"
+          },
+          {
+            "name": "Alerts",
+            "expression": [
+              "CALCULATE(",
+              "    COUNT(Alerts[id])",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "7e74cac1-1dcb-473a-b83e-c782b1a8d11b"
+          },
+          {
+            "name": "Most recent date",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "expression": "MAX('Daily Scores'[createdDate])",
+            "formatString": "yyyy/mm/dd",
+            "lineageTag": "e6a04031-8990-461d-8ba0-ca86379e1aea"
+          },
+          {
+            "name": "Users created",
+            "displayFolder": "Users",
+            "expression": [
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Users[user id])",
+              "    , USERELATIONSHIP(Users[createdDate], DateDimensionBI[Date])",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "f0f49071-b99d-4a3e-85c1-fac0f3c642cf"
+          },
+          {
+            "name": "Users signed in",
+            "displayFolder": "Users",
+            "expression": [
+              "CALCULATE(",
+              "    DISTINCTCOUNT('user last sigin'[user id])",
+              "    , USERELATIONSHIP('user last sigin'[Last SignIn Date], DateDimensionBI[Date])",
+              ")"
+            ],
+            "lineageTag": "696d647a-5ea5-40bf-ac16-aa908a22d77d"
+          },
+          {
+            "name": "Accounts",
+            "displayFolder": "Users",
+            "expression": [
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Users[user id])",
+              ") // some ppl have multiple accounts against their name"
+            ],
+            "formatString": "0",
+            "lineageTag": "aa67bdb9-f4b5-49ab-ab31-0f88809548bc"
           }
         ],
         "partitions": [
@@ -1448,7 +1577,7 @@
         ],
         "columns": [
           {
-            "name": "createdDateTime",
+            "name": "createdDate",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
@@ -1462,7 +1591,7 @@
             "dataType": "dateTime",
             "formatString": "Long Date",
             "lineageTag": "4edaca44-db67-4d3e-86d1-4bc0e0761f2e",
-            "sourceColumn": "createdDateTime",
+            "sourceColumn": "createdDate",
             "summarizeBy": "none"
           },
           {
@@ -1549,6 +1678,32 @@
             "lineageTag": "a148de65-4884-4ac9-b884-9497392096ba",
             "sourceColumn": "DailyScoreKey",
             "summarizeBy": "none"
+          },
+          {
+            "name": "controlCategory",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3e4a2097-db79-465d-a6bd-572cdf591064",
+            "sourceColumn": "controlCategory",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Implementation Status",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "55ce6186-5992-49fe-bd5b-4492848a79c0",
+            "sourceColumn": "Implementation Status",
+            "summarizeBy": "none"
           }
         ],
         "lineageTag": "9e3f2df6-de0b-4b62-b7f6-71de4dbe6710",
@@ -1562,7 +1717,7 @@
                 "let",
                 "    Source = DetailScore,",
                 "    // https://stackoverflow.com/a/50473350",
-                "    #\"Filtered - only yesterday's scores\" = Table.SelectRows(Source, each DateTime.Date([createdDateTime]) = Date.From(List.Max(Source[createdDateTime])))",
+                "    #\"Filtered - only yesterday's scores\" = Table.SelectRows(Source, each DateTime.Date([createdDate]) = Date.From(List.Max(Source[createdDate])))",
                 "in",
                 "    #\"Filtered - only yesterday's scores\""
               ],
@@ -1577,15 +1732,11 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
-          },
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
           }
         ],
         "columns": [
           {
-            "name": "createdDateTime",
+            "name": "createdDate",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
@@ -1599,7 +1750,7 @@
             "dataType": "dateTime",
             "formatString": "Long Date",
             "lineageTag": "a8946365-8587-46d2-9195-968da96958b9",
-            "sourceColumn": "createdDateTime",
+            "sourceColumn": "createdDate",
             "summarizeBy": "none"
           },
           {
@@ -1686,6 +1837,32 @@
             "lineageTag": "09cc30fb-c2f2-4d7b-b6c4-b89a592c3c48",
             "sourceColumn": "DailyScoreKey",
             "summarizeBy": "none"
+          },
+          {
+            "name": "controlCategory",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ffe922c6-d777-4b98-89a5-068cd3924f82",
+            "sourceColumn": "controlCategory",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Implementation Status",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c41a12bf-8469-440a-bc98-dd78d29968cc",
+            "sourceColumn": "Implementation Status",
+            "summarizeBy": "none"
           }
         ],
         "lineageTag": "3b6665f1-de6d-4a70-83e0-7cf2efd821fa",
@@ -1700,7 +1877,7 @@
                 "    Source = #\"SecureScores Raw\",",
                 "    #\"Removed Other Columns\" = Table.SelectColumns(Source,{\"controlScores\", \"createdDateTime\"}),",
                 "    #\"Expanded controlScores\" = Table.ExpandListColumn(#\"Removed Other Columns\", \"controlScores\"),",
-                "    #\"Expanded controlScores1\" = Table.ExpandRecordColumn(#\"Expanded controlScores\", \"controlScores\", {\"controlCategory\", \"controlName\", \"score\", \"on\", \"scoreInPercentage\", \"lastSynced\"}, {\"controlCategory\", \"controlName\", \"score\", \"on\", \"scoreInPercentage\", \"lastSynced\"}),",
+                "    #\"Expanded controlScores1\" = Table.ExpandRecordColumn(#\"Expanded controlScores\", \"controlScores\", {\"controlCategory\", \"controlName\", \"score\", \"implementationStatus\", \"on\", \"scoreInPercentage\", \"lastSynced\"}, {\"controlCategory\", \"controlName\", \"score\", \"implementationStatus\", \"on\", \"scoreInPercentage\", \"lastSynced\"}),",
                 "    // scores to numbers",
                 "    // lastsycned to datetimezone",
                 "    #\"Changed types\" = Table.TransformColumnTypes(#\"Expanded controlScores1\",{{\"score\", type number}, {\"lastSynced\", type datetimezone}, {\"createdDateTime\", type date}}),",
@@ -1708,10 +1885,15 @@
                 "    #\"Changed percentage col to percent type\" = Table.TransformColumnTypes(#\"Added actual percentage col\",{{\"Score Percentage\", Percentage.Type}}),",
                 "    #\"Capitalized On column\" = Table.TransformColumns(#\"Changed percentage col to percent type\",{{\"on\", Text.Proper, type text}}),",
                 "    #\"Changed On column to T|F\" = Table.TransformColumnTypes(#\"Capitalized On column\",{{\"on\", type logical}}),",
-                "    #\"Removed Other Columns1\" = Table.SelectColumns(#\"Changed On column to T|F\",{\"createdDateTime\", \"lastSynced\", \"controlName\", \"score\", \"Score Percentage\", \"on\"}),",
-                "    #\"Added key for ID at each day\" = Table.AddColumn(#\"Removed Other Columns1\", \"DailyScoreKey\", each Date.ToText([createdDateTime]) & \"-\" & [controlName])",
+                "    #\"Added key for ID at each day\" = Table.AddColumn(#\"Changed On column to T|F\", \"DailyScoreKey\", each Date.ToText([createdDateTime]) & \"-\" & [controlName]), ",
+                "    #\"Added status no markup\" = Table.AddColumn(#\"Added key for ID at each day\", \"StatusTb\", each if [implementationStatus] <> null and [implementationStatus] <> \"\"",
+                "then Html.Table([implementationStatus], {{\"ExtractedText\",\":root\"}})",
+                "else null),",
+                "    #\"Expanded Status no markup\" = Table.ExpandTableColumn(#\"Added status no markup\", \"StatusTb\", {\"ExtractedText\"}, {\"Implementation Status\"}),",
+                "    #\"Removed old status\" = Table.RemoveColumns(#\"Expanded Status no markup\",{\"implementationStatus\", \"scoreInPercentage\"}),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Removed old status\",{{\"createdDateTime\", \"createdDate\"}})",
                 "in",
-                "    #\"Added key for ID at each day\""
+                "    #\"Renamed Columns\""
               ],
               "type": "m"
             }
@@ -1797,26 +1979,9 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
-          },
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
           }
         ],
         "columns": [
-          {
-            "name": "id",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "64d3dca7-3343-4dab-b1b2-407c9fc7fd8e",
-            "sourceColumn": "id",
-            "summarizeBy": "none"
-          },
           {
             "name": "accountEnabled",
             "annotations": [
@@ -2040,16 +2205,21 @@
             "summarizeBy": "none"
           },
           {
-            "name": "createdDateTime",
+            "name": "createdDate",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
                 "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
               }
             ],
-            "dataType": "string",
+            "dataType": "dateTime",
+            "formatString": "Long Date",
             "lineageTag": "4d0a7c4e-6538-42cc-8623-e1e4e9fab55a",
-            "sourceColumn": "createdDateTime",
+            "sourceColumn": "createdDate",
             "summarizeBy": "none"
           },
           {
@@ -2561,6 +2731,19 @@
             "lineageTag": "4b68ff77-4548-4369-a399-7d47f99ac62e",
             "sourceColumn": "Marked as blocked",
             "summarizeBy": "none"
+          },
+          {
+            "name": "user id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ed092f2c-6528-4f61-90db-14b35feedaea",
+            "sourceColumn": "user id",
+            "summarizeBy": "none"
           }
         ],
         "lineageTag": "eaa4a2f8-dd92-489a-b4b2-5c2be7d8d78f",
@@ -2573,14 +2756,16 @@
               "expression": [
                 "let",
                 "GetUserDetail = #\"UsersAPI Raw\",",
-                "    #\"Extracted Values\" = Table.TransformColumns(GetUserDetail, {\"businessPhones\", each Text.Combine(List.Transform(_, Text.From), \";\"), type text}),",
-                "    #\"Extracted Values1\" = Table.TransformColumns(#\"Extracted Values\", {\"imAddresses\", each Text.Combine(List.Transform(_, Text.From), \";\"), type text}),",
+                "    #\"Extracted phone numbers\" = Table.TransformColumns(GetUserDetail, {\"businessPhones\", each Text.Combine(List.Transform(_, Text.From), \";\"), type text}),",
+                "    #\"Extracted imAddress\" = Table.TransformColumns(#\"Extracted phone numbers\", {\"imAddresses\", each Text.Combine(List.Transform(_, Text.From), \";\"), type text}),",
                 "    // scans text for \"blocked\"",
-                "    #\"Added is blocked\" = Table.AddColumn(#\"Extracted Values1\", \"Marked as blocked\", each if [department] <> null then (if Text.Contains(Text.Lower([department]), \"blocked\") then true else false) else null),",
-                "    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Added is blocked\",{{\"signInSessionsValidFromDateTime\", type datetimezone}, {\"externalUserStateChangeDateTime\", type datetimezone}}),",
-                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Changed Type1\",{{\"isLicenseReconciliationNeeded\", type logical}, {\"accountEnabled\", type logical}})",
+                "    #\"Added is blocked\" = Table.AddColumn(#\"Extracted imAddress\", \"Marked as blocked\", each if [department] <> null then (if Text.Contains(Text.Lower([department]), \"blocked\") then true else false) else null),",
+                "    // need to first set datetimezones to such, to enable follow-up step of casting to date",
+                "    #\"Changed Types\" = Table.TransformColumnTypes(#\"Added is blocked\",{{\"signInSessionsValidFromDateTime\", type datetimezone}, {\"externalUserStateChangeDateTime\", type datetimezone}, {\"createdDateTime\", type datetimezone}, {\"isLicenseReconciliationNeeded\", type logical}, {\"accountEnabled\", type logical}}),",
+                "    #\"Changed created to date\" = Table.TransformColumnTypes(#\"Changed Types\",{{\"createdDateTime\", type date}}),",
+                "    #\"Renamed created at\" = Table.RenameColumns(#\"Changed created to date\",{{\"createdDateTime\", \"createdDate\"}})",
                 "in",
-                "    #\"Changed Type\""
+                "    #\"Renamed created at\""
               ],
               "type": "m"
             }
@@ -2590,10 +2775,6 @@
       {
         "name": "Alerts",
         "annotations": [
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
-          },
           {
             "name": "PBI_ResultType",
             "value": "Table"
@@ -3033,6 +3214,24 @@
             "lineageTag": "ca0536a6-66b0-43ee-9635-644fdf290438",
             "sourceColumn": "evidence",
             "summarizeBy": "none"
+          },
+          {
+            "name": "CreatedDate",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "08f08c4d-058f-42e5-9dfe-88f367845cca",
+            "sourceColumn": "CreatedDate",
+            "summarizeBy": "none"
           }
         ],
         "lineageTag": "2040a737-f181-4aae-b694-1018e0213469",
@@ -3045,9 +3244,11 @@
               "expression": [
                 "let",
                 "    Source = #\"Alerts Raw\",",
-                "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"createdDateTime\", type datetimezone}, {\"lastUpdateDateTime\", type datetimezone}, {\"resolvedDateTime\", type datetimezone}, {\"firstActivityDateTime\", type datetimezone}, {\"lastActivityDateTime\", type datetimezone}})",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"createdDateTime\", type datetimezone}, {\"lastUpdateDateTime\", type datetimezone}, {\"resolvedDateTime\", type datetimezone}, {\"firstActivityDateTime\", type datetimezone}, {\"lastActivityDateTime\", type datetimezone}}),",
+                "    #\"Added CreatedDate\" = Table.AddColumn(#\"Changed Type\", \"CreatedDate\", each DateTime.Date([createdDateTime])),",
+                "    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Added CreatedDate\",{{\"CreatedDate\", type date}})",
                 "in",
-                "    #\"Changed Type\""
+                "    #\"Changed Type1\""
               ],
               "type": "m"
             }
@@ -3057,10 +3258,6 @@
       {
         "name": "Licenses SKU",
         "annotations": [
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
-          },
           {
             "name": "PBI_ResultType",
             "value": "Table"
@@ -3255,10 +3452,6 @@
         "name": "MS products",
         "annotations": [
           {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
-          },
-          {
             "name": "PBI_ResultType",
             "value": "Table"
           }
@@ -3329,12 +3522,12 @@
         "name": "GroupMembers",
         "annotations": [
           {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
-          },
-          {
             "name": "PBI_ResultType",
             "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
           }
         ],
         "columns": [
@@ -3349,19 +3542,6 @@
             "dataType": "string",
             "lineageTag": "db5960d0-6532-4911-92aa-e683a7da2d61",
             "sourceColumn": "id",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "@odata.type",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "498d8964-9d86-483c-946b-99b48d45ff2a",
-            "sourceColumn": "@odata.type",
             "summarizeBy": "none"
           },
           {
@@ -3438,7 +3618,7 @@
                 "  // loads the full result to Members Variable  ",
                 "  Groups = GetGroups(\"v1.0/groups\"),",
                 "  #\"Converted UserAPI to Table\" = Table.FromList(Groups, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
-                "  #\"Expanded Column1\" = Table.ExpandRecordColumn(#\"Converted UserAPI to Table\", \"Column1\", {\"id\"}, {\"id\"}),",
+                "  #\"Expanded group members record\" = Table.ExpandRecordColumn(#\"Converted UserAPI to Table\", \"Column1\", {\"id\"}, {\"id\"}),",
                 " // Define a Function Called GetMembers that takes a single parameter Path; the MS Graph API Endpoint",
                 "      GetMembers = (queryPath)=>",
                 "        let",
@@ -3466,11 +3646,12 @@
                 "      // The function will run recursively until it gets all the record and then",
                 "      // loads the full result to Members Variable  ",
                 "",
-                "    #\"Invoked GetGroupMembers\" = Table.AddColumn(#\"Expanded Column1\", \"Members\", each GetMembers(\"v1.0/groups/\" & [id] & \"/members\")),",
-                "    #\"Expanded Members\" = Table.ExpandListColumn(#\"Invoked GetGroupMembers\", \"Members\"),",
-                "    #\"Expanded Members1\" = Table.ExpandRecordColumn(#\"Expanded Members\", \"Members\", {\"@odata.type\", \"id\"}, {\"@odata.type\", \"userID\"})",
+                "    #\"Invoked GetGroupMembers\" = Table.AddColumn(#\"Expanded group members record\", \"Members\", each GetMembers(\"v1.0/groups/\" & [id] & \"/members\")),",
+                "    #\"Expanded Members list\" = Table.ExpandListColumn(#\"Invoked GetGroupMembers\", \"Members\"),",
+                "    #\"Expanded Members record\" = Table.ExpandRecordColumn(#\"Expanded Members list\", \"Members\", {\"@odata.type\", \"id\"}, {\"@odata.type\", \"userID\"}),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Expanded Members record\",{\"id\", \"userID\"})",
                 "in",
-                "    #\"Expanded Members1\""
+                "    #\"Removed Other Columns\""
               ],
               "type": "m"
             }
@@ -3481,12 +3662,12 @@
         "name": "Groups",
         "annotations": [
           {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
-          },
-          {
             "name": "PBI_ResultType",
             "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
           }
         ],
         "columns": [
@@ -3543,17 +3724,21 @@
             "summarizeBy": "none"
           },
           {
-            "name": "createdDateTime",
+            "name": "createdDate",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
                 "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
               }
             ],
             "dataType": "dateTime",
-            "formatString": "General Date",
+            "formatString": "Long Date",
             "lineageTag": "a80471b1-3fbc-4509-af2a-8a1d862ba8ac",
-            "sourceColumn": "createdDateTime",
+            "sourceColumn": "createdDate",
             "summarizeBy": "none"
           },
           {
@@ -3749,7 +3934,650 @@
                 "    \"securityEnabled\", ",
                 "    \"securityIdentifier\"",
                 "}),",
-                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Removed Other Columns\",{{\"renewedDateTime\", type datetimezone}, {\"createdDateTime\", type datetimezone}, {\"expirationDateTime\", type datetimezone}, {\"deletedDateTime\", type datetimezone}, {\"isAssignableToRole\", type logical}, {\"mailEnabled\", type logical}, {\"securityEnabled\", type logical}})",
+                "    // need to first set datetimezones to such, to enable follow-up step of casting to date",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Removed Other Columns\",{{\"renewedDateTime\", type datetimezone}, {\"createdDateTime\", type datetimezone}, {\"expirationDateTime\", type datetimezone}, {\"deletedDateTime\", type datetimezone}, {\"isAssignableToRole\", type logical}, {\"mailEnabled\", type logical}, {\"securityEnabled\", type logical}}),",
+                "    #\"Changed created at to date\" = Table.TransformColumnTypes(#\"Changed Type\",{{\"createdDateTime\", type date}}),",
+                "    #\"Renamed created at\" = Table.RenameColumns(#\"Changed created at to date\",{{\"createdDateTime\", \"createdDate\"}})",
+                "in",
+                "    #\"Renamed created at\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "DateDimensionBI",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "ee55efbf-43f3-47aa-a61b-f425f32e3cd7",
+            "sourceColumn": "Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "29cf3f02-5825-4d6c-b4c1-244cc73bc8c1",
+            "sourceColumn": "Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Start of Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "8b4e7047-c772-4178-9cc9-9e005195fb9b",
+            "sourceColumn": "Start of Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "End of Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "1393a432-9e9e-445d-90d7-0a05851a213b",
+            "sourceColumn": "End of Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Month Number",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "0791a058-da8b-48c2-b8e3-fcf5d4e34e1b",
+            "sourceColumn": "Month Number",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Month Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "1ccf21f9-6dfb-48bb-b2dc-89080d21468a",
+            "sortByColumn": "Month Number",
+            "sourceColumn": "Month Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Month Start Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "5eef945f-38d6-4c97-a8cd-42857f297377",
+            "sourceColumn": "Month Start Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Month End Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "4f150bc8-b609-475e-8044-f6659a43064b",
+            "sourceColumn": "Month End Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Days in Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "ee9b7132-444a-4215-89d6-fbc2cb674ec9",
+            "sourceColumn": "Days in Month",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Quarter Number",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "04f75878-f675-4eb2-892a-83390c542e44",
+            "sourceColumn": "Quarter Number",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Quarter Start Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "dc54e5f0-d47d-4cac-aa33-8273c7c0f945",
+            "sourceColumn": "Quarter Start Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Quarter End Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "bdb7477f-82de-4f28-b46a-12707b01df9b",
+            "sourceColumn": "Quarter End Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Week Number of Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "e03c8fb7-fcbc-4c03-b67b-5b62587fc231",
+            "sourceColumn": "Week Number of Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Week Number of Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "0b6279d4-988b-4c17-b574-95027b006651",
+            "sourceColumn": "Week Number of Month",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Week Start Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "5db2d073-26ff-4442-8c09-9f72c81c6172",
+            "sourceColumn": "Week Start Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Week End Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "0482c9af-9f35-4ab9-a4d3-6d361f8c64b5",
+            "sourceColumn": "Week End Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Day of Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "17b595cb-2e5c-4bc8-a38e-a2ca77e08b2f",
+            "sourceColumn": "Day of Month",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Day of Week",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "76b40f29-01dd-4360-a3f6-88aca8931e08",
+            "sourceColumn": "Day of Week",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Day of Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "8ef01b45-1a92-4bde-bb45-0042240f550d",
+            "sourceColumn": "Day of Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Day Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c241d616-e7f1-4679-80b7-57431b282052",
+            "sortByColumn": "Day of Week",
+            "sourceColumn": "Day Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "t-90",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "1090a32a-48cb-4866-8182-b23f5b84756b",
+            "sourceColumn": "t-90",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "isFuture",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "68ed3946-c899-4551-bc0c-1bc8c8f9ac3b",
+            "sourceColumn": "isFuture",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "ebdfe54c-6249-4558-ae7b-316c53cc74c8",
+        "partitions": [
+          {
+            "name": "DateDimensionBI",
+            "mode": "import",
+            "queryGroup": "00 Utilities",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = PowerPlatform.Dataflows(null),",
+                "    Workspaces = Source{[Id=\"Workspaces\"]}[Data],",
+                "    #\"6f7c04d6-f8ec-4722-a220-364c2598401d\" = Workspaces{[workspaceId=\"6f7c04d6-f8ec-4722-a220-364c2598401d\"]}[Data],",
+                "    #\"b9ac9667-3d19-4d70-8128-20287e809db0\" = #\"6f7c04d6-f8ec-4722-a220-364c2598401d\"{[dataflowId=\"b9ac9667-3d19-4d70-8128-20287e809db0\"]}[Data],",
+                "    Query_ = #\"b9ac9667-3d19-4d70-8128-20287e809db0\"{[entity=\"DateDimensionBI\",version=\"\"]}[Data]",
+                "in",
+                "    Query_"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "user last sigin",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "displayName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "791c94a3-da9f-49b8-8a9d-30c2236aa9d8",
+            "sourceColumn": "displayName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "user id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "d9b0b199-8bd7-42f6-9ba1-b52124eeda85",
+            "sourceColumn": "user id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastSignInDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "e6f2f04e-7619-4021-8b5d-4e1871c3daa1",
+            "sourceColumn": "lastSignInDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastSignInRequestId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "fa4cd2d9-2792-4093-a48d-43461ad0488f",
+            "sourceColumn": "lastSignInRequestId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastNonInteractiveSignInDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "9b1bc78d-97c4-4dc1-bd33-3ed57dcb7ea6",
+            "sourceColumn": "lastNonInteractiveSignInDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastNonInteractiveSignInRequestId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "fe4539a2-f9ef-4a69-b6fe-418cad05463c",
+            "sourceColumn": "lastNonInteractiveSignInRequestId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastSuccessfulSignInDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "53693b05-dd7d-4390-9478-60eeedf7b994",
+            "sourceColumn": "lastSuccessfulSignInDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastSuccessfulSignInRequestId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3ec5e632-b891-4036-8a0c-52503349361f",
+            "sourceColumn": "lastSuccessfulSignInRequestId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Last SignIn Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy/mm/dd",
+            "lineageTag": "7ef82d0f-40b1-48e5-9ea3-0a9ecbd09071",
+            "sourceColumn": "Last SignIn Date",
+            "summarizeBy": "none"
+          }
+        ],
+        "description": [
+          "User properties can be found on this page: https://learn.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-1.0",
+          "",
+          " not all are returned by default"
+        ],
+        "excludeFromModelRefresh": true,
+        "lineageTag": "83207739-1192-49c3-9e4b-65fa4bc19e62",
+        "partitions": [
+          {
+            "name": "user last sigin",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-03 Users",
+            "source": {
+              "expression": [
+                "let",
+                "    // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+                "    makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+                "        loginURL = \"https://login.microsoftonline.com/\",",
+                "        TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+                "        ResourceId = #\"Azure Graph API Url\", // where is this token for",
+                "        TokenResponse = Json.Document(",
+                "            Web.Contents(loginURL",
+                "\t\t\t    , [RelativePath = TokenUri",
+                "\t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+                "\t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+                "\t\t\t    ]",
+                "            ) // end web contents",
+                "        ), // end json",
+                "        generatedToken = TokenResponse[access_token] // assign token value",
+                "    in",
+                "    generatedToken,",
+                "myToken = makeToken(",
+                "                        #\"Azure Graph API Url\"",
+                "                        , #\"Azure Tenant ID\"",
+                "                        , #\"Azure Application ID\"",
+                "                        , #\"Azure Application Client Secret\"",
+                "                    )",
+                ", ",
+                "// Define a Function Called GetUserDetail that takes a single parameter Path; the MS Graph API Endpoint",
+                "  GetUserDetail = (queryPath)=>",
+                "    let",
+                "    // call out to the web endpoint and convert the result to a JSON",
+                "    // Document object which is saved in the Source variable",
+                "    Source = Json.Document(",
+                "                Web.Contents(",
+                "                    #\"Azure Graph API Url\"",
+                "                    , [RelativePath = queryPath, Headers = [Authorization = \"Bearer \" & myToken]]",
+                "                )",
+                "            ),",
+                "    // Assign the resultant List object (API return) to NextList variable",
+                "    NextList= @Source[value],",
+                "    nextLink = Text.AfterDelimiter(Source[#\"@odata.nextLink\"], #\"Azure Graph API Url\"), ",
+                "    // recursively call GetUserDetail function using the value of the @odata.nextLink as the path",
+                "    // Since @odata.nextLink is not guaranteed to always exist in the case where the result is less than 100 we need to catch this and deal with it",
+                "      // using a try otherwise basically means if you error out because no",
+                "      // @odata.nextLink exisit then just return the resulting list of values you did get",
+                "      // there is an API returned value called @odata.nextLink - so we can directly reference that",
+                "    result = try @NextList & @GetUserDetail(nextLink) otherwise @NextList",
+                "    in",
+                "    // Return the result variable as the function return",
+                "    result,",
+                "  // Use the function GetUserDetail with the initial path to the object.",
+                "  // The function will run recursively until it gets all the record and then",
+                "  // loads the full result to UserDetail Variable  ",
+                "  UserDetail = GetUserDetail(\"beta/users?$select=displayName,signInActivity\"),",
+                "  #\"Converted UserAPI to Table\" = Table.FromList(UserDetail, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+                "    #\"Expanded Users table\" = Table.ExpandRecordColumn(#\"Converted UserAPI to Table\", \"Column1\", {\"displayName\", \"id\", \"signInActivity\"}, {\"displayName\", \"user id\", \"signInActivity\"}),",
+                "    #\"Expanded signInActivity\" = Table.ExpandRecordColumn(#\"Expanded Users table\", \"signInActivity\", {\"lastSignInDateTime\", \"lastSignInRequestId\", \"lastNonInteractiveSignInDateTime\", \"lastNonInteractiveSignInRequestId\", \"lastSuccessfulSignInDateTime\", \"lastSuccessfulSignInRequestId\"}, {\"lastSignInDateTime\", \"lastSignInRequestId\", \"lastNonInteractiveSignInDateTime\", \"lastNonInteractiveSignInRequestId\", \"lastSuccessfulSignInDateTime\", \"lastSuccessfulSignInRequestId\"}),",
+                "    #\"Changed datetimes to timezones\" = Table.TransformColumnTypes(#\"Expanded signInActivity\",{{\"lastSignInDateTime\", type datetimezone}, {\"lastNonInteractiveSignInDateTime\", type datetimezone}, {\"lastSuccessfulSignInDateTime\", type datetimezone}}),",
+                "    #\"Added LastSignInDate\" = Table.AddColumn(#\"Changed datetimes to timezones\", \"Last SignIn Date\", each DateTime.Date([lastSignInDateTime])),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Added LastSignInDate\",{{\"Last SignIn Date\", type date}})",
                 "in",
                 "    #\"Changed Type\""
               ],

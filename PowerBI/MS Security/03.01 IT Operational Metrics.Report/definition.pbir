@@ -2,7 +2,7 @@
   "version": "1.0",
   "datasetReference": {
     "byPath": {
-      "path": "../MS Security Dashboard.Dataset"
+      "path": "../03.01 IT Operational Metrics.Dataset"
     },
     "byConnection": null
   }
