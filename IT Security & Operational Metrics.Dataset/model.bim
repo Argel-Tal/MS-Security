@@ -1,0 +1,4591 @@
+{
+  "compatibilityLevel": 1567,
+  "model": {
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.124.1052.0 (23.12)"
+      },
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"Daily Scores\",\"DetailScore\",\"Yesterday scores\",\"SCIDs secured\",\"MeasuresTable\",\"Descriptions\",\"MS products\",\"Azure Graph API Url\",\"Azure Tenant ID\",\"Azure Application ID\",\"Azure Application Client Secret\",\"SecureScores Raw\",\"LicensesHeldAPI Raw\",\"UsersAPI Raw\",\"Licenses unpacked\",\"PrimaryLicense - skuId\",\"assignedLicenses - disabledPlans\",\"User held Licenses\",\"Users\",\"Licenses SKU Raw\",\"Alerts Raw\",\"Alerts\",\"Licenses SKU\",\"Groups Raw\",\"GetGroupMembers\",\"GroupMembers\",\"Azure GroupID\",\"Groups\",\"DateDimensionBI\",\"user last sigin\"]"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"DevMode\"]"
+      }
+    ],
+    "culture": "en-US",
+    "cultures": [
+      {
+        "name": "en-US",
+        "linguisticMetadata": {
+          "content": {
+            "DynamicImprovement": "HighConfidence",
+            "Language": "en-US",
+            "Version": "1.0.0"
+          },
+          "contentType": "json"
+        }
+      }
+    ],
+    "dataAccessOptions": {
+      "fastCombine": true,
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "expressions": [
+      {
+        "name": "Azure Graph API Url",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Text"
+          }
+        ],
+        "description": "base url for query",
+        "expression": "\"https://graph.microsoft.com/\" meta [IsParameterQuery=true, List={\"https://graph.microsoft.com/\"}, DefaultValue=\"https://graph.microsoft.com/\", Type=\"Any\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "d52b805a-c892-467b-a650-cd27606be49e",
+        "queryGroup": "00 Utilities\\00-0 Parameters"
+      },
+      {
+        "name": "Azure Tenant ID",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Text"
+          }
+        ],
+        "expression": "\"YOUR-AZURE-TENANT-ID\" meta [IsParameterQuery=true, List={\"YOUR-AZURE-TENANT-ID\"}, DefaultValue=\"YOUR-AZURE-TENANT-ID\", Type=\"Any\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "0786551f-b92e-47c2-9d08-07a69558a4ea",
+        "queryGroup": "00 Utilities\\00-0 Parameters"
+      },
+      {
+        "name": "Azure Application ID",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Text"
+          }
+        ],
+        "expression": "\"YOUR-AZURE-APP-ID\" meta [IsParameterQuery=true, List={\"YOUR-AZURE-APP-ID\"}, DefaultValue=\"YOUR-AZURE-APP-ID\", Type=\"Any\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "65d7af9b-e65f-45ce-8b1f-b0363109fdaa",
+        "queryGroup": "00 Utilities\\00-0 Parameters"
+      },
+      {
+        "name": "Azure Application Client Secret",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Text"
+          }
+        ],
+        "expression": "\"YOUR-AZURE-APP-SECRET\" meta [IsParameterQuery=true, List={\"YOUR-AZURE-APP-SECRET\"}, DefaultValue=\"YOUR-AZURE-APP-SECRET\", Type=\"Any\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "305e0036-4ac9-431d-8b2f-5f4b77a36c2b",
+        "queryGroup": "00 Utilities\\00-0 Parameters"
+      },
+      {
+        "name": "Licenses unpacked",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"LicensesHeldAPI Raw\",",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(Source,{\"id\", \"assignedLicenses\"}),",
+          "    #\"Expanded assignedLicenses list\" = Table.ExpandListColumn(#\"Removed Other Columns\", \"assignedLicenses\"),",
+          "    #\"Expanded assignedLicenses1 record\" = Table.ExpandRecordColumn(#\"Expanded assignedLicenses list\", \"assignedLicenses\", {\"disabledPlans\", \"skuId\"}, {\"assignedLicenses.disabledPlans\", \"PrimaryLicense.skuId\"}),",
+          "    #\"Filtered out no SKUID\" = Table.SelectRows(#\"Expanded assignedLicenses1 record\", each ([PrimaryLicense.skuId] <> null))",
+          "in",
+          "    #\"Filtered out no SKUID\""
+        ],
+        "kind": "m",
+        "lineageTag": "c600569a-a193-4596-99dc-c60eadc00265",
+        "queryGroup": "02 Staging\\02-01 Licenses Stg"
+      },
+      {
+        "name": "PrimaryLicense - skuId",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Licenses unpacked\",",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(Source,{\"id\", \"PrimaryLicense.skuId\"}),",
+          "    #\"Renamed Columns\" = Table.RenameColumns(#\"Removed Other Columns\",{{\"PrimaryLicense.skuId\", \"GUID\"}}),",
+          "    #\"Added License type\" = Table.AddColumn(#\"Renamed Columns\", \"Type\", each \"PrimaryLicense.skuId\")",
+          "in",
+          "    #\"Added License type\""
+        ],
+        "kind": "m",
+        "lineageTag": "1d2d0b14-0d2f-4566-9d88-572179e7f0a5",
+        "queryGroup": "02 Staging\\02-01 Licenses Stg"
+      },
+      {
+        "name": "assignedLicenses - disabledPlans",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #\"Licenses unpacked\",",
+          "    #\"Removed Other Columns\" = Table.SelectColumns(Source,{\"id\", \"assignedLicenses.disabledPlans\"}),",
+          "    #\"Renamed Columns\" = Table.RenameColumns(#\"Removed Other Columns\",{{\"assignedLicenses.disabledPlans\", \"GUID\"}}),",
+          "    #\"Expanded GUID\" = Table.ExpandListColumn(#\"Renamed Columns\", \"GUID\"),",
+          "    #\"Filtered Rows\" = Table.SelectRows(#\"Expanded GUID\", each ([GUID] <> null)),",
+          "    #\"Added License type\" = Table.AddColumn(#\"Filtered Rows\", \"Type\", each \"assignedLicenses.disabledPlans\")",
+          "in",
+          "    #\"Added License type\""
+        ],
+        "kind": "m",
+        "lineageTag": "2d3d342b-6aa5-47c2-bdc3-ed204c00e812",
+        "queryGroup": "02 Staging\\02-01 Licenses Stg"
+      },
+      {
+        "name": "LicensesHeldAPI Raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+          "    makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+          "        loginURL = \"https://login.microsoftonline.com/\",",
+          "        TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+          "        ResourceId = #\"Azure Graph API Url\", // where is this token for",
+          "        TokenResponse = Json.Document(",
+          "            Web.Contents(loginURL",
+          "\t\t\t    , [RelativePath = TokenUri",
+          "\t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+          "\t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+          "\t\t\t    ]",
+          "            ) // end web contents",
+          "        ), // end json",
+          "        generatedToken = TokenResponse[access_token] // assign token value",
+          "    in",
+          "    generatedToken,",
+          "myToken = makeToken(",
+          "                        #\"Azure Graph API Url\"",
+          "                        , #\"Azure Tenant ID\"",
+          "                        , #\"Azure Application ID\"",
+          "                        , #\"Azure Application Client Secret\"",
+          "                    )",
+          "    , ",
+          "// Define a Function Called GetUserLicense that takes a single parameter Path; the MS Graph API Endpoint",
+          "  GetUserLicense = (queryPath)=>",
+          "    let",
+          "    // call out to the web endpoint and convert the result to a JSON",
+          "    // Document object which is saved in the Source variable",
+          "    Source = Json.Document(",
+          "                Web.Contents(",
+          "                    #\"Azure Graph API Url\"",
+          "                    , [RelativePath = queryPath, Headers = [Authorization = \"Bearer \" & myToken]]",
+          "                )",
+          "            ),",
+          "    // Assign the resultant List object (API return) to NextList variable",
+          "    NextList= @Source[value],",
+          "    nextLink = Text.AfterDelimiter(Source[#\"@odata.nextLink\"], #\"Azure Graph API Url\"), ",
+          "    // recursively call GetUserLicense function using the value of the @odata.nextLink as the path",
+          "    // Since @odata.nextLink is not guaranteed to always exist in the case where the result is less than 100 we need to catch this and deal with it",
+          "      // using a try otherwise basically means if you error out because no",
+          "      // @odata.nextLink exisit then just return the resulting list of values you did get",
+          "      // there is an API returned value called @odata.nextLink - so we can directly reference that",
+          "    result = try @NextList & @GetUserLicense(nextLink) otherwise @NextList",
+          "in",
+          "    // Return the result variable as the function return",
+          "    result,",
+          "    // Use the function GetUserLicense with the initial path to the object.",
+          "    // The function will run recursively until it gets all the record and then",
+          "    // loads the full result to UserDetail Variable  ",
+          "    UserDetail = GetUserLicense(\"v1.0/users?$select=id,mail,assignedLicenses\"), #\"Converted LicenseAPI to Table\" = Table.FromList(UserDetail, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+          "    #\"Expanded licenses records\" = Table.ExpandRecordColumn(#\"Converted LicenseAPI to Table\", \"Column1\", {\"id\", \"mail\", \"assignedLicenses\"}, {\"id\", \"mail\", \"assignedLicenses\"})",
+          "in",
+          "    #\"Expanded licenses records\""
+        ],
+        "kind": "m",
+        "lineageTag": "43a99a0d-9141-4f1f-aa51-19bc8bda81ff",
+        "queryGroup": "01 API query\\01-01 API return"
+      },
+      {
+        "name": "SecureScores Raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+          "    makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+          "        loginURL = \"https://login.microsoftonline.com/\",",
+          "        TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+          "        ResourceId = #\"Azure Graph API Url\", // where is this token for",
+          "        TokenResponse = Json.Document(",
+          "            Web.Contents(loginURL",
+          "\t\t\t    , [RelativePath = TokenUri",
+          "\t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+          "\t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+          "\t\t\t    ]",
+          "            ) // end web contents",
+          "        ), // end json",
+          "        generatedToken = TokenResponse[access_token] // assign token value",
+          "    in",
+          "    generatedToken,",
+          "    myToken = makeToken(",
+          "                        #\"Azure Graph API Url\"",
+          "                        , #\"Azure Tenant ID\"",
+          "                        , #\"Azure Application ID\"",
+          "                        , #\"Azure Application Client Secret\"",
+          "                    ) // end makeToken",
+          "    , ",
+          "    // Ping API for json",
+          "    Source = Json.Document(",
+          "        Web.Contents(",
+          "            #\"Azure Graph API Url\"",
+          "            , [",
+          "                RelativePath = \"beta/security/secureScores\"",
+          "                , Headers = [",
+          "                    Authorization = \"Bearer \" ",
+          "                    &  myToken",
+          "                ]",
+          "            ]",
+          "        )",
+          "    ), ",
+          "    value = Source[value],",
+          "    #\"Converted SecureScore API to Table\" = Table.FromList(value, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+          "    #\"Expanded Columns\" = Table.ExpandRecordColumn(#\"Converted SecureScore API to Table\", \"Column1\", {\"id\", \"azureTenantId\", \"activeUserCount\", \"createdDateTime\", \"currentScore\", \"enabledServices\", \"licensedUserCount\", \"maxScore\", \"vendorInformation\", \"averageComparativeScores\", \"controlScores\"}, {\"id\", \"azureTenantId\", \"activeUserCount\", \"createdDateTime\", \"currentScore\", \"enabledServices\", \"licensedUserCount\", \"maxScore\", \"vendorInformation\", \"averageComparativeScores\", \"controlScores\"}),",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Expanded Columns\",{{\"createdDateTime\", type datetimezone}, {\"currentScore\", type number}, {\"maxScore\", type number}, {\"activeUserCount\", Int64.Type}, {\"licensedUserCount\", Int64.Type}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "bc828dfd-4605-4c6b-b638-df7e3a96ac68",
+        "queryGroup": "01 API query\\01-01 API return"
+      },
+      {
+        "name": "UsersAPI Raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+          "    makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+          "        loginURL = \"https://login.microsoftonline.com/\",",
+          "        TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+          "        ResourceId = #\"Azure Graph API Url\", // where is this token for",
+          "        TokenResponse = Json.Document(",
+          "            Web.Contents(loginURL",
+          "\t\t\t    , [RelativePath = TokenUri",
+          "\t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+          "\t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+          "\t\t\t    ]",
+          "            ) // end web contents",
+          "        ), // end json",
+          "        generatedToken = TokenResponse[access_token] // assign token value",
+          "    in",
+          "    generatedToken,",
+          "myToken = makeToken(",
+          "                        #\"Azure Graph API Url\"",
+          "                        , #\"Azure Tenant ID\"",
+          "                        , #\"Azure Application ID\"",
+          "                        , #\"Azure Application Client Secret\"",
+          "                    )",
+          ", ",
+          "// Define a Function Called GetUserDetail that takes a single parameter Path; the MS Graph API Endpoint",
+          "  GetUserDetail = (queryPath)=>",
+          "    let",
+          "    // call out to the web endpoint and convert the result to a JSON",
+          "    // Document object which is saved in the Source variable",
+          "    Source = Json.Document(",
+          "                Web.Contents(",
+          "                    #\"Azure Graph API Url\"",
+          "                    , [RelativePath = queryPath, Headers = [Authorization = \"Bearer \" & myToken]]",
+          "                )",
+          "            ),",
+          "    // Assign the resultant List object (API return) to NextList variable",
+          "    NextList= @Source[value],",
+          "    nextLink = Text.AfterDelimiter(Source[#\"@odata.nextLink\"], #\"Azure Graph API Url\"), ",
+          "    // recursively call GetUserDetail function using the value of the @odata.nextLink as the path",
+          "    // Since @odata.nextLink is not guaranteed to always exist in the case where the result is less than 100 we need to catch this and deal with it",
+          "    // using a try otherwise basically means if you error out because no",
+          "    // @odata.nextLink exisit then just return the resulting list of values you did get",
+          "    // there is an API returned value called @odata.nextLink - so we can directly reference that",
+          "    result = try @NextList & @GetUserDetail(nextLink) otherwise @NextList",
+          "    in",
+          "    // Return the result variable as the function return",
+          "    result,",
+          "  // Use the function GetUserDetail with the initial path to the object.",
+          "  // The function will run recursively until it gets all the record and then",
+          "  // loads the full result to UserDetail Variable  ",
+          "  UserDetail = GetUserDetail(\"beta/users?$\"),",
+          "  #\"Converted UserAPI to Table\" = Table.FromList(UserDetail, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+          "    #\"Expanded user records\" = Table.ExpandRecordColumn(",
+          "  #\"Converted UserAPI to Table\",",
+          "  \"Column1\",",
+          "  {",
+          "    \"id\",",
+          "    \"deletedDateTime\",",
+          "    \"accountEnabled\",",
+          "    \"businessPhones\",",
+          "    \"city\",",
+          "    \"createdDateTime\",",
+          "    \"creationType\",",
+          "    \"companyName\",",
+          "    \"country\",",
+          "    \"department\",",
+          "    \"displayName\",",
+          "    \"employeeId\",",
+          "    \"employeeHireDate\",",
+          "    \"employeeLeaveDateTime\",",
+          "    \"employeeType\",",
+          "    \"faxNumber\",",
+          "    \"givenName\",",
+          "    \"imAddresses\",",
+          "    \"infoCatalogs\",",
+          "    \"isLicenseReconciliationNeeded\",",
+          "    \"jobTitle\",",
+          "    \"mail\",",
+          "    \"mailNickname\",",
+          "    \"mobilePhone\",",
+          "    \"officeLocation\",",
+          "    \"otherMails\",",
+          "    \"passwordPolicies\",",
+          "    \"postalCode\",",
+          "    \"preferredLanguage\",",
+          "    \"proxyAddresses\",",
+          "    \"refreshTokensValidFromDateTime\",",
+          "    \"securityIdentifier\",",
+          "    \"showInAddressList\",",
+          "    \"signInSessionsValidFromDateTime\",",
+          "    \"state\",",
+          "    \"streetAddress\",",
+          "    \"surname\",",
+          "    \"usageLocation\",",
+          "    \"userPrincipalName\",",
+          "    \"externalUserConvertedOn\",",
+          "    \"externalUserState\",",
+          "    \"externalUserStateChangeDateTime\",",
+          "    \"userType\",",
+          "    \"employeeOrgData\",",
+          "    \"passwordProfile\",",
+          "    \"assignedLicenses\",",
+          "    \"assignedPlans\",",
+          "    \"authorizationInfo\",",
+          "    \"cloudRealtimeCommunicationInfo\",",
+          "    \"deviceKeys\",",
+          "    \"identities\",",
+          "    \"onPremisesExtensionAttributes\",",
+          "    \"onPremisesProvisioningErrors\",",
+          "    \"onPremisesSipInfo\",",
+          "    \"provisionedPlans\",",
+          "    \"serviceProvisioningErrors\"",
+          "  },",
+          "  {",
+          "    \"user id\",",
+          "    \"deletedDateTime\",",
+          "    \"accountEnabled\",",
+          "    \"businessPhones\",",
+          "    \"city\",",
+          "    \"createdDateTime\",",
+          "    \"creationType\",",
+          "    \"companyName\",",
+          "    \"country\",",
+          "    \"department\",",
+          "    \"displayName\",",
+          "    \"employeeId\",",
+          "    \"employeeHireDate\",",
+          "    \"employeeLeaveDateTime\",",
+          "    \"employeeType\",",
+          "    \"faxNumber\",",
+          "    \"givenName\",",
+          "    \"imAddresses\",",
+          "    \"infoCatalogs\",",
+          "    \"isLicenseReconciliationNeeded\",",
+          "    \"jobTitle\",",
+          "    \"mail\",",
+          "    \"mailNickname\",",
+          "    \"mobilePhone\",",
+          "    \"officeLocation\",",
+          "    \"otherMails\",",
+          "    \"passwordPolicies\",",
+          "    \"postalCode\",",
+          "    \"preferredLanguage\",",
+          "    \"proxyAddresses\",",
+          "    \"refreshTokensValidFromDateTime\",",
+          "    \"securityIdentifier\",",
+          "    \"showInAddressList\",",
+          "    \"signInSessionsValidFromDateTime\",",
+          "    \"state\",",
+          "    \"streetAddress\",",
+          "    \"surname\",",
+          "    \"usageLocation\",",
+          "    \"userPrincipalName\",",
+          "    \"externalUserConvertedOn\",",
+          "    \"externalUserState\",",
+          "    \"externalUserStateChangeDateTime\",",
+          "    \"userType\",",
+          "    \"employeeOrgData\",",
+          "    \"passwordProfile\",",
+          "    \"assignedLicenses\",",
+          "    \"assignedPlans\",",
+          "    \"authorizationInfo\",",
+          "    \"cloudRealtimeCommunicationInfo\",",
+          "    \"deviceKeys\",",
+          "    \"identities\",",
+          "    \"onPremisesExtensionAttributes\",",
+          "    \"onPremisesProvisioningErrors\",",
+          "    \"onPremisesSipInfo\",",
+          "    \"provisionedPlans\",",
+          "    \"serviceProvisioningErrors\"",
+          "  }",
+          ")",
+          "in",
+          "    #\"Expanded user records\""
+        ],
+        "kind": "m",
+        "lineageTag": "10d64ec1-7ff6-42d8-bd26-acc9035967f6",
+        "queryGroup": "01 API query\\01-01 API return"
+      },
+      {
+        "name": "Licenses SKU Raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+          "    makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+          "        loginURL = \"https://login.microsoftonline.com/\",",
+          "        TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+          "        ResourceId = #\"Azure Graph API Url\", // where is this token for",
+          "        TokenResponse = Json.Document(",
+          "            Web.Contents(loginURL",
+          "\t\t\t    , [RelativePath = TokenUri",
+          "\t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+          "\t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+          "\t\t\t    ]",
+          "            ) // end web contents",
+          "        ), // end json",
+          "        generatedToken = TokenResponse[access_token] // assign token value",
+          "    in",
+          "    generatedToken,",
+          "    myToken = makeToken(",
+          "                        #\"Azure Graph API Url\"",
+          "                        , #\"Azure Tenant ID\"",
+          "                        , #\"Azure Application ID\"",
+          "                        , #\"Azure Application Client Secret\"",
+          "                    ) // end makeToken",
+          "    , ",
+          "    // Ping API for json",
+          "    Source = Json.Document(",
+          "        Web.Contents(",
+          "            #\"Azure Graph API Url\"",
+          "            , [",
+          "                RelativePath = \"v1.0/subscribedSkus\"",
+          "                , Headers = [",
+          "                    Authorization = \"Bearer \" ",
+          "                    &  myToken",
+          "                ]",
+          "            ]",
+          "        )",
+          "    ), ",
+          "    value = Source[value],",
+          "    #\"Converted Licenses API to table\" = Table.FromList(value, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+          "    #\"Expanded Column1\" = Table.ExpandRecordColumn(#\"Converted Licenses API to table\", \"Column1\", {\"accountName\", \"accountId\", \"appliesTo\", \"capabilityStatus\", \"consumedUnits\", \"id\", \"skuId\", \"skuPartNumber\", \"subscriptionIds\", \"prepaidUnits\", \"servicePlans\"}, {\"accountName\", \"accountId\", \"appliesTo\", \"capabilityStatus\", \"consumedUnits\", \"id\", \"skuId\", \"skuPartNumber\", \"subscriptionIds\", \"prepaidUnits\", \"servicePlans\"}),",
+          "    #\"Removed Columns\" = Table.RemoveColumns(#\"Expanded Column1\",{\"accountName\", \"accountId\", \"id\"})",
+          "in",
+          "    #\"Removed Columns\""
+        ],
+        "kind": "m",
+        "lineageTag": "e013728e-cdc6-426a-bc02-7c63da6721a6",
+        "queryGroup": "01 API query\\01-01 API return"
+      },
+      {
+        "name": "Alerts Raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+          "    makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+          "        loginURL = \"https://login.microsoftonline.com/\",",
+          "        TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+          "        ResourceId = #\"Azure Graph API Url\", // where is this token for",
+          "        TokenResponse = Json.Document(",
+          "            Web.Contents(loginURL",
+          "\t\t\t    , [RelativePath = TokenUri",
+          "\t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+          "\t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+          "\t\t\t    ]",
+          "            ) // end web contents",
+          "        ), // end json",
+          "        generatedToken = TokenResponse[access_token] // assign token value",
+          "    in",
+          "    generatedToken,",
+          "    myToken = makeToken(",
+          "                        #\"Azure Graph API Url\"",
+          "                        , #\"Azure Tenant ID\"",
+          "                        , #\"Azure Application ID\"",
+          "                        , #\"Azure Application Client Secret\"",
+          "                    ) // end makeToken",
+          "    , ",
+          "    // Ping API for json",
+          "    Source = Json.Document(",
+          "        Web.Contents(",
+          "            #\"Azure Graph API Url\"",
+          "            , [",
+          "                RelativePath = \"beta/security/alerts_v2/\"",
+          "                , Headers = [",
+          "                    Authorization = \"Bearer \" ",
+          "                    &  myToken",
+          "                ]",
+          "            ]",
+          "        )",
+          "    ), ",
+          "    value = Source[value],",
+          "    #\"Converted Alerts API to Table\" = Table.FromList(value, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+          "    #\"Expanded Alerts records\" = Table.ExpandRecordColumn(#\"Converted Alerts API to Table\", \"Column1\", {\"id\", \"providerAlertId\", \"incidentId\", \"status\", \"severity\", \"classification\", \"determination\", \"serviceSource\", \"detectionSource\", \"productName\", \"detectorId\", \"tenantId\", \"title\", \"description\", \"recommendedActions\", \"category\", \"assignedTo\", \"alertWebUrl\", \"incidentWebUrl\", \"actorDisplayName\", \"threatDisplayName\", \"threatFamilyName\", \"mitreTechniques\", \"createdDateTime\", \"lastUpdateDateTime\", \"resolvedDateTime\", \"firstActivityDateTime\", \"lastActivityDateTime\", \"systemTags\", \"alertPolicyId\", \"additionalData\", \"comments\", \"evidence\"}, {\"id\", \"providerAlertId\", \"incidentId\", \"status\", \"severity\", \"classification\", \"determination\", \"serviceSource\", \"detectionSource\", \"productName\", \"detectorId\", \"tenantId\", \"title\", \"description\", \"recommendedActions\", \"category\", \"assignedTo\", \"alertWebUrl\", \"incidentWebUrl\", \"actorDisplayName\", \"threatDisplayName\", \"threatFamilyName\", \"mitreTechniques\", \"createdDateTime\", \"lastUpdateDateTime\", \"resolvedDateTime\", \"firstActivityDateTime\", \"lastActivityDateTime\", \"systemTags\", \"alertPolicyId\", \"additionalData\", \"comments\", \"evidence\"})",
+          "in",
+          "    #\"Expanded Alerts records\""
+        ],
+        "kind": "m",
+        "lineageTag": "64a9459c-9112-4434-88be-4c8bf6d015e8",
+        "queryGroup": "01 API query\\01-01 API return"
+      },
+      {
+        "name": "Groups Raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+          "    makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+          "        loginURL = \"https://login.microsoftonline.com/\",",
+          "        TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+          "        ResourceId = #\"Azure Graph API Url\", // where is this token for",
+          "        TokenResponse = Json.Document(",
+          "            Web.Contents(loginURL",
+          "\t\t\t    , [RelativePath = TokenUri",
+          "\t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+          "\t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+          "\t\t\t    ]",
+          "            ) // end web contents",
+          "        ), // end json",
+          "        generatedToken = TokenResponse[access_token] // assign token value",
+          "    in",
+          "    generatedToken,",
+          "myToken = makeToken(",
+          "                        #\"Azure Graph API Url\"",
+          "                        , #\"Azure Tenant ID\"",
+          "                        , #\"Azure Application ID\"",
+          "                        , #\"Azure Application Client Secret\"",
+          "                    )",
+          ", ",
+          "// Define a Function Called GetUserDetail that takes a single parameter Path; the MS Graph API Endpoint",
+          "  GetUserDetail = (queryPath)=>",
+          "    let",
+          "    // call out to the web endpoint and convert the result to a JSON",
+          "    // Document object which is saved in the Source variable",
+          "    Source = Json.Document(",
+          "                Web.Contents(",
+          "                    #\"Azure Graph API Url\"",
+          "                    , [RelativePath = queryPath, Headers = [Authorization = \"Bearer \" & myToken]]",
+          "                )",
+          "            ),",
+          "    // Assign the resultant List object (API return) to NextList variable",
+          "    NextList= @Source[value],",
+          "    nextLink = Text.AfterDelimiter(Source[#\"@odata.nextLink\"], #\"Azure Graph API Url\"), ",
+          "    // recursively call GetUserDetail function using the value of the @odata.nextLink as the path",
+          "    // Since @odata.nextLink is not guaranteed to always exist in the case where the result is less than 100 we need to catch this and deal with it",
+          "      // using a try otherwise basically means if you error out because no",
+          "      // @odata.nextLink exisit then just return the resulting list of values you did get",
+          "      // there is an API returned value called @odata.nextLink - so we can directly reference that",
+          "    result = try @NextList & @GetUserDetail(nextLink) otherwise @NextList",
+          "    in",
+          "    // Return the result variable as the function return",
+          "    result,",
+          "  // Use the function GetUserDetail with the initial path to the object.",
+          "  // The function will run recursively until it gets all the record and then",
+          "  // loads the full result to UserDetail Variable  ",
+          "  UserDetail = GetUserDetail(\"v1.0/groups\"),",
+          "  #\"Converted UserAPI to Table\" = Table.FromList(UserDetail, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+          "    #\"Expanded groups records\" = Table.ExpandRecordColumn(#\"Converted UserAPI to Table\", \"Column1\", {\"id\", \"deletedDateTime\", \"classification\", \"createdDateTime\", \"creationOptions\", \"description\", \"displayName\", \"expirationDateTime\", \"groupTypes\", \"isAssignableToRole\", \"mail\", \"mailEnabled\", \"mailNickname\", \"membershipRule\", \"membershipRuleProcessingState\", \"preferredDataLocation\", \"preferredLanguage\", \"proxyAddresses\", \"renewedDateTime\", \"resourceBehaviorOptions\", \"resourceProvisioningOptions\", \"securityEnabled\", \"securityIdentifier\", \"theme\", \"visibility\", \"serviceProvisioningErrors\"}, {\"id\", \"deletedDateTime\", \"classification\", \"createdDateTime\", \"creationOptions\", \"description\", \"displayName\", \"expirationDateTime\", \"groupTypes\", \"isAssignableToRole\", \"mail\", \"mailEnabled\", \"mailNickname\", \"membershipRule\", \"membershipRuleProcessingState\", \"preferredDataLocation\", \"preferredLanguage\", \"proxyAddresses\", \"renewedDateTime\", \"resourceBehaviorOptions\", \"resourceProvisioningOptions\", \"securityEnabled\", \"securityIdentifier\", \"theme\", \"visibility\", \"serviceProvisioningErrors\"})",
+          "in",
+          "    #\"Expanded groups records\""
+        ],
+        "kind": "m",
+        "lineageTag": "dab2d59f-97d3-44d7-b583-ff236c58d5fe",
+        "queryGroup": "01 API query\\01-01 API return"
+      },
+      {
+        "name": "GetGroupMembers",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Function"
+          }
+        ],
+        "expression": [
+          "let",
+          "    GetGroupMembers = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any, GroupID as any) => let",
+          "        // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+          "        makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+          "            loginURL = \"https://login.microsoftonline.com/\",",
+          "            TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+          "            ResourceId = #\"Azure Graph API Url\", // where is this token for",
+          "            TokenResponse = Json.Document(",
+          "                Web.Contents(loginURL",
+          "    \t\t\t    , [RelativePath = TokenUri",
+          "    \t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+          "    \t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+          "    \t\t\t    ]",
+          "                ) // end web contents",
+          "            ), // end json",
+          "            generatedToken = TokenResponse[access_token] // assign token value",
+          "        in",
+          "        generatedToken,",
+          "    myToken = makeToken(",
+          "                            #\"Azure Graph API Url\"",
+          "                            , #\"Azure Tenant ID\"",
+          "                            , #\"Azure Application ID\"",
+          "                            , #\"Azure Application Client Secret\"",
+          "                        )",
+          "    , ",
+          "    // Define a Function Called GetUserDetail that takes a single parameter Path; the MS Graph API Endpoint",
+          "      GetUserDetail = (queryPath)=>",
+          "        let",
+          "        // call out to the web endpoint and convert the result to a JSON",
+          "        // Document object which is saved in the Source variable",
+          "        Source = Json.Document(",
+          "                    Web.Contents(",
+          "                        #\"Azure Graph API Url\"",
+          "                        , [RelativePath = queryPath, Headers = [Authorization = \"Bearer \" & myToken]]",
+          "                    )",
+          "                ),",
+          "        // Assign the resultant List object (API return) to NextList variable",
+          "        NextList= @Source[value],",
+          "        nextLink = Text.AfterDelimiter(Source[#\"@odata.nextLink\"], #\"Azure Graph API Url\"), ",
+          "        // recursively call GetUserDetail function using the value of the @odata.nextLink as the path",
+          "        // Since @odata.nextLink is not guaranteed to always exist in the case where the result is less than 100 we need to catch this and deal with it",
+          "          // using a try otherwise basically means if you error out because no",
+          "          // @odata.nextLink exisit then just return the resulting list of values you did get",
+          "          // there is an API returned value called @odata.nextLink - so we can directly reference that",
+          "        result = try @NextList & @GetUserDetail(nextLink) otherwise @NextList",
+          "        in",
+          "        // Return the result variable as the function return",
+          "        result,",
+          "      // Use the function GetUserDetail with the initial path to the object.",
+          "      // The function will run recursively until it gets all the record and then",
+          "      // loads the full result to UserDetail Variable  ",
+          "      UserDetail = GetUserDetail(\"v1.0/groups/\" & GroupID & \"/members\")",
+          "    in",
+          "        UserDetail",
+          "in",
+          "    GetGroupMembers"
+        ],
+        "kind": "m",
+        "lineageTag": "e12388b1-1d47-46a6-964b-9c869c347069",
+        "queryGroup": "01 API query\\01-01 API return"
+      },
+      {
+        "name": "Azure GroupID",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Text"
+          }
+        ],
+        "expression": "\"0eff0ddf-d017-4edf-89c4-026b9b3df4f1\" meta [IsParameterQuery=true, Type=\"Any\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "87a936cd-8edb-471c-bfa8-8d61508e6aaf",
+        "queryGroup": "00 Utilities\\00-0 Parameters"
+      }
+    ],
+    "queryGroups": [
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "00 Utilities"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "1"
+          }
+        ],
+        "folder": "01 API query"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "2"
+          }
+        ],
+        "folder": "02 Staging"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "4"
+          }
+        ],
+        "folder": "03 Model Tables"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "00 Utilities\\00-0 Parameters"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "1"
+          }
+        ],
+        "folder": "01 API query\\01-01 API return"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "03 Model Tables\\03-01 Security master tables"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "1"
+          }
+        ],
+        "folder": "03 Model Tables\\03-02 Security Current Stats"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "0"
+          }
+        ],
+        "folder": "02 Staging\\02-00 Security Stg"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "5"
+          }
+        ],
+        "folder": "99 testing"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "2"
+          }
+        ],
+        "folder": "03 Model Tables\\03-03 Users"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "1"
+          }
+        ],
+        "folder": "02 Staging\\02-01 Licenses Stg"
+      }
+    ],
+    "relationships": [
+      {
+        "name": "1cf2113c-821e-4a01-9b82-67953991afba",
+        "fromColumn": "controlName",
+        "fromTable": "DetailScore",
+        "toColumn": "controlName",
+        "toTable": "Descriptions"
+      },
+      {
+        "name": "714a9706-6f61-4ca0-bba9-3ed260706205",
+        "fromColumn": "createdDate",
+        "fromTable": "DetailScore",
+        "toColumn": "createdDate",
+        "toTable": "Daily Scores"
+      },
+      {
+        "name": "52d4554f-db20-296e-b49a-559577e8b52c",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "controlName",
+        "fromTable": "Descriptions",
+        "toColumn": "controlName",
+        "toTable": "SCIDs secured"
+      },
+      {
+        "name": "1beba249-93b1-159d-079b-b99273b7384c",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "controlName",
+        "fromTable": "Descriptions",
+        "toColumn": "controlName",
+        "toTable": "Yesterday scores"
+      },
+      {
+        "name": "fd35b8bf-5508-41f4-893a-b35686b758bc",
+        "fromColumn": "product GUID",
+        "fromTable": "User held Licenses",
+        "toColumn": "GUID",
+        "toTable": "MS products"
+      },
+      {
+        "name": "c8c5b747-9f9e-415c-bacc-777126041035",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "GUID",
+        "fromTable": "MS products",
+        "toColumn": "skuId",
+        "toTable": "Licenses SKU"
+      },
+      {
+        "name": "44ae598a-1314-484c-9e1b-e5f785b3d31a",
+        "fromColumn": "id",
+        "fromTable": "GroupMembers",
+        "toColumn": "id",
+        "toTable": "Groups"
+      },
+      {
+        "name": "f0b21999-6690-854b-0c85-edfa2fdea949",
+        "fromColumn": "CreatedDate",
+        "fromTable": "Alerts",
+        "toColumn": "Date",
+        "toTable": "DateDimensionBI"
+      },
+      {
+        "name": "6bee4d5f-f173-291d-679f-876df125760f",
+        "fromColumn": "createdDate",
+        "fromTable": "DetailScore",
+        "isActive": false,
+        "toColumn": "Date",
+        "toTable": "DateDimensionBI"
+      },
+      {
+        "name": "3729079e-189f-a7d2-13e6-b7398284732c",
+        "fromColumn": "createdDate",
+        "fromTable": "Users",
+        "isActive": false,
+        "toColumn": "Date",
+        "toTable": "DateDimensionBI"
+      },
+      {
+        "name": "0d516c0e-5da8-d15d-4579-a877dd8eda5b",
+        "fromColumn": "createdDate",
+        "fromTable": "Groups",
+        "isActive": false,
+        "toColumn": "Date",
+        "toTable": "DateDimensionBI"
+      },
+      {
+        "name": "37f8a137-541c-dc84-c727-9c0d06dad5ad",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "Date",
+        "fromTable": "DateDimensionBI",
+        "toColumn": "createdDate",
+        "toTable": "Daily Scores"
+      },
+      {
+        "name": "7c811a0f-ec7b-4c4f-bd23-65d0a635aa91",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "user id",
+        "fromTable": "Users",
+        "toColumn": "user id",
+        "toTable": "user last sigin"
+      },
+      {
+        "name": "c24072cd-6712-432f-9b4a-4ad65eff5d6a",
+        "fromColumn": "user id",
+        "fromTable": "User held Licenses",
+        "toColumn": "user id",
+        "toTable": "Users"
+      },
+      {
+        "name": "11643298-4432-4f02-8bd9-afcc80f4ddc2",
+        "fromColumn": "userID",
+        "fromTable": "GroupMembers",
+        "toColumn": "user id",
+        "toTable": "Users"
+      },
+      {
+        "name": "b91ba6a1-b7c9-4011-a5f7-5232090c75e2",
+        "fromColumn": "Last SignIn Date",
+        "fromTable": "user last sigin",
+        "toColumn": "Date",
+        "toTable": "DateDimensionBI"
+      }
+    ],
+    "sourceQueryCulture": "en-AU",
+    "tables": [
+      {
+        "name": "Descriptions",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "controlName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "2fdad0e3-74cb-4794-8396-11032f8a4e7b",
+            "sourceColumn": "controlName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Description",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "777813fa-b562-4612-b3cf-fe79f7ede1b9",
+            "sourceColumn": "Description",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Short Description",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "2e34875d-28a8-4b28-abed-297bcd3f80dc",
+            "sourceColumn": "Short Description",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "controlCategory",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f56ab1fc-dc68-432f-b512-f765adaa7d32",
+            "sourceColumn": "controlCategory",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "de1e4091-41a7-4188-9abe-44a53c08fe51",
+        "partitions": [
+          {
+            "name": "Descriptions",
+            "mode": "import",
+            "queryGroup": "02 Staging\\02-00 Security Stg",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = #\"SecureScores Raw\",",
+                "    #\"Expanded controlScores\" = Table.ExpandListColumn(Source, \"controlScores\"),",
+                "    #\"Expanded controlScores1\" = Table.ExpandRecordColumn(#\"Expanded controlScores\", \"controlScores\", {\"controlCategory\", \"controlName\", \"description\", \"implementationStatus\"}, {\"controlCategory\", \"controlName\", \"description\", \"implementationStatus\"}),",
+                "    #\"Filtered Rows\" = Table.SelectRows(#\"Expanded controlScores1\", each [description] <> null and [description] <> \"\"),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered Rows\",{\"controlName\", \"description\", \"controlCategory\"}),",
+                "    #\"Added Description no markup\" = Table.AddColumn(#\"Removed Other Columns\", \"DescriptionTb\", each if [description] <> null",
+                "then Html.Table([description], {{\"ExtractedText\",\":root\"}})",
+                "else null),",
+                "    #\"Expanded Short Description1\" = Table.ExpandTableColumn(#\"Added Description no markup\", \"DescriptionTb\", {\"ExtractedText\"}, {\"Description\"}),",
+                "    #\"Removed old description\" = Table.RemoveColumns(#\"Expanded Short Description1\",{\"description\"}),",
+                "    // Everything before first \".\"",
+                "    #\"Added short description\" = Table.AddColumn(#\"Removed old description\", \"Short Description\", each Text.BeforeDelimiter([Description], \".\"))",
+                "in",
+                "    #\"Added short description\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Daily Scores",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "createdDate",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "1601aaf5-668f-40e0-9013-d522c4ce915e",
+            "sourceColumn": "createdDate",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "currentScore",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "0596e145-5694-4b9c-888d-ec6c8613e4db",
+            "sourceColumn": "currentScore",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "maxScore",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "b256c353-3d5d-4691-b0eb-cc01397e593b",
+            "sourceColumn": "maxScore",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "AllTenants",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "ba49cf3f-39bc-46c4-ab6f-62564049a45c",
+            "sourceColumn": "AllTenants",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "TotalSeats",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "7436e46e-0f59-43d6-bbe5-afa4c18dc4ba",
+            "sourceColumn": "TotalSeats",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Secure Score %",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "9e0fe617-a39e-40e5-8fec-5fe15ae898da",
+            "sourceColumn": "Secure Score %",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "35b62065-104f-4be2-8861-2632268cb73c",
+        "partitions": [
+          {
+            "name": "Daily Scores",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-01 Security master tables",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = #\"SecureScores Raw\",",
+                "    // keep only scores",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(Source,{\"createdDateTime\", \"currentScore\", \"maxScore\", \"averageComparativeScores\"}),",
+                "    // calculate percentage",
+                "    #\"Added Secure score %\" = Table.AddColumn(#\"Removed Other Columns\", \"Secure Score %\", each [currentScore] / [maxScore]),",
+                "    #\"Expanded averageComparativeScores\" = Table.ExpandListColumn(#\"Added Secure score %\", \"averageComparativeScores\"),",
+                "    #\"Expanded averageComparativeScores1\" = Table.ExpandRecordColumn(#\"Expanded averageComparativeScores\", \"averageComparativeScores\", {\"basis\", \"averageScore\", \"appsScore\", \"appsScoreMax\", \"dataScore\", \"dataScoreMax\", \"deviceScore\", \"deviceScoreMax\", \"identityScore\", \"identityScoreMax\", \"infrastructureScore\", \"infrastructureScoreMax\", \"SeatSizeRangeLowerValue\", \"SeatSizeRangeUpperValue\"}, {\"averageComparativeScores.basis\", \"averageComparativeScores.averageScore\", \"averageComparativeScores.appsScore\", \"averageComparativeScores.appsScoreMax\", \"averageComparativeScores.dataScore\", \"averageComparativeScores.dataScoreMax\", \"averageComparativeScores.deviceScore\", \"averageComparativeScores.deviceScoreMax\", \"averageComparativeScores.identityScore\", \"averageComparativeScores.identityScoreMax\", \"averageComparativeScores.infrastructureScore\", \"averageComparativeScores.infrastructureScoreMax\", \"averageComparativeScores.SeatSizeRangeLowerValue\", \"averageComparativeScores.SeatSizeRangeUpperValue\"}),",
+                "    #\"Removed Other Columns2\" = Table.SelectColumns(#\"Expanded averageComparativeScores1\",{\"createdDateTime\", \"currentScore\", \"maxScore\", \"averageComparativeScores.basis\", \"averageComparativeScores.averageScore\", \"Secure Score %\"}),",
+                "    // Comparison scores are given as a %, but need to x/100 & type convert",
+                "    #\"Added comparison score %\" = Table.AddColumn(#\"Removed Other Columns2\", \"comparison Score %\", each [averageComparativeScores.averageScore] / 100),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Added comparison score %\",{{\"Secure Score %\", Percentage.Type}, {\"createdDateTime\", type date}, {\"comparison Score %\", Percentage.Type}}),",
+                "    #\"Removed non % comparison score\" = Table.RemoveColumns(#\"Changed Type\",{\"averageComparativeScores.averageScore\"}),",
+                "    // need to do this so we can pivot",
+                "    #\"Filtered out comparison is null\" = Table.SelectRows(#\"Removed non % comparison score\", each ([averageComparativeScores.basis] <> null)),",
+                "    #\"Pivoted on comparison type\" = Table.Pivot(#\"Filtered out comparison is null\", List.Distinct(#\"Filtered out comparison is null\"[averageComparativeScores.basis]), \"averageComparativeScores.basis\", \"comparison Score %\", List.Sum),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Pivoted on comparison type\",{{\"createdDateTime\", \"createdDate\"}})",
+                "in",
+                "    #\"Renamed Columns\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "SCIDs secured",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Exposed devices",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "7fd4e715-ca6b-4121-9e04-0af74b800cb0",
+            "sourceColumn": "Exposed devices",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "total devices",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "cb39e889-77b4-43f3-8a0f-665709879b1f",
+            "sourceColumn": "total devices",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "% secured",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.0%;-0.0%;0.0%",
+            "lineageTag": "88d83ca4-88bf-41af-af07-c6eb307d8e2d",
+            "sourceColumn": "% secured",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "controlName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "022f085b-6ba8-4041-a486-c7a83424364e",
+            "sortByColumn": "SCID-index",
+            "sourceColumn": "controlName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "DailyScoreKey",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "78c4936b-caa1-42e9-93bb-e7113aa8b2c2",
+            "sortByColumn": "SCID-index",
+            "sourceColumn": "DailyScoreKey",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "SCID-index",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "d57288e7-a7b7-497e-bbb7-67c9845ede19",
+            "sourceColumn": "SCID-index",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "bd89d351-899e-4665-9f63-10cee2075bde",
+        "partitions": [
+          {
+            "name": "SCIDs secured",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-02 Security Current Stats",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = #\"Yesterday scores\",",
+                "    // These seem to only be as-at",
+                "    // need most recent instance: https://stackoverflow.com/a/50473350",
+                "    #\"Filtered device scores\" = Table.SelectRows(Source, each Text.StartsWith([controlName], \"scid_\")),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Filtered device scores\",{\"DailyScoreKey\", \"controlName\", \"Implementation Status\"}),",
+                "    #\"Split implementation by /\" = Table.SplitColumn(#\"Removed Other Columns\", \"Implementation Status\", Splitter.SplitTextByDelimiter(\"/\", QuoteStyle.Csv), {\"implementationStatus.1\", \"implementationStatus.2\"}),",
+                "    #\"Renamed implementation 1 to Exposed\" = Table.RenameColumns(#\"Split implementation by /\",{{\"implementationStatus.1\", \"Exposed devices\"}}),",
+                "    #\"Extracted Text Before Delimiter\" = Table.TransformColumns(#\"Renamed implementation 1 to Exposed\", {{\"implementationStatus.2\", each Text.BeforeDelimiter(_, \" exposed devices\"), type text}}),",
+                "    #\"Renamed implementation 2 to total devices\" = Table.RenameColumns(#\"Extracted Text Before Delimiter\",{{\"implementationStatus.2\", \"total devices\"}}),",
+                "    #\"Changed device numbers to num\" = Table.TransformColumnTypes(#\"Renamed implementation 2 to total devices\",{{\"Exposed devices\", Int64.Type}, {\"total devices\", Int64.Type}}),",
+                "    #\"Added % secured\" = Table.AddColumn(#\"Changed device numbers to num\", \"% secured\", each [Exposed devices] / [total devices]),",
+                "    #\"Changed % to perc format\" = Table.TransformColumnTypes(#\"Added % secured\",{{\"% secured\", Percentage.Type}}),",
+                "    #\"Added SCID number for index\" = Table.AddColumn(#\"Changed % to perc format\", \"SCID-index\", each Number.FromText(Text.AfterDelimiter([controlName], \"scid_\"))),",
+                "    #\"Changed SCID number to num\" = Table.TransformColumnTypes(#\"Added SCID number for index\",{{\"SCID-index\", Int64.Type}})",
+                "in",
+                "    #\"Changed SCID number to num\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "MeasuresTable",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "lineageTag": "e0d85df8-9339-4561-9004-c205cb2724f9",
+        "measures": [
+          {
+            "name": "Max Secure Score %",
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "displayFolder": "Security Scores",
+            "expression": "1",
+            "formatString": "0%;-0%;0%",
+            "lineageTag": "061bf1be-6ba0-4514-b1ba-6ac473541608"
+          },
+          {
+            "name": "Security Score",
+            "displayFolder": "Security Scores",
+            "expression": [
+              "CALCULATE(",
+              "    sum('Daily Scores'[Secure Score %])",
+              "    , FILTER('DateDimensionBI', 'DateDimensionBI'[Date] = SELECTEDVALUE('DateDimensionBI'[Date], MAX('Daily Scores'[createdDate]))",
+              "))"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "d4c30ecf-a281-4d91-a786-97d5f24a416e"
+          },
+          {
+            "name": "Assigned users",
+            "displayFolder": "Users",
+            "expression": [
+              "CALCULATE(",
+              "    DISTINCTCOUNT('User held Licenses'[user id])",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "51a065b1-f958-4877-a7db-7008e464cc54"
+          },
+          {
+            "name": "Guest Users",
+            "displayFolder": "Users",
+            "expression": [
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Users[user id])",
+              "    , FILTER(Users, Users[userType] = \"Guest\")",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "81a9d443-7ab9-4d4a-8cfd-1d9b53b8b1a3"
+          },
+          {
+            "name": "Last Refreshed",
+            "expression": "FORMAT(NOW(), \"yyyy/mm/dd HH:mm\")",
+            "lineageTag": "7544c434-465a-4aed-85c5-c87e39429963"
+          },
+          {
+            "name": "Most recent date header",
+            "displayFolder": "Security Scores",
+            "expression": "\"Microsoft Secure Score for \" & FORMAT([Most recent date], \"yyyy/mm/dd\")",
+            "lineageTag": "50e72549-d3f9-4d77-a3e5-c112db8e4bc9"
+          },
+          {
+            "name": "Groups assigned to",
+            "displayFolder": "Users",
+            "expression": "CALCULATE(DISTINCTCOUNT(GroupMembers[id]))",
+            "formatString": "0",
+            "lineageTag": "88158280-5517-49e8-97d9-10fd8c9a8b61"
+          },
+          {
+            "name": "Groups members",
+            "displayFolder": "Users",
+            "expression": "CALCULATE(DISTINCTCOUNT(GroupMembers[userID]))",
+            "formatString": "0",
+            "lineageTag": "6a61610b-48ab-4a83-93c4-f69d8a9747c7"
+          },
+          {
+            "name": "Security Score - similar organisations",
+            "displayFolder": "Security Scores",
+            "expression": [
+              "CALCULATE(",
+              "    SUM('Daily Scores'[TotalSeats])",
+              "    , FILTER('DateDimensionBI', 'DateDimensionBI'[Date] = SELECTEDVALUE('DateDimensionBI'[Date], MAX('Daily Scores'[createdDate]))",
+              "))"
+            ],
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "92cbda89-4644-4cd9-95f4-aeb59ab92743"
+          },
+          {
+            "name": "Alerts",
+            "expression": [
+              "CALCULATE(",
+              "    COUNT(Alerts[id])",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "7e74cac1-1dcb-473a-b83e-c782b1a8d11b"
+          },
+          {
+            "name": "Most recent date",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "expression": "MAX('Daily Scores'[createdDate])",
+            "formatString": "yyyy/mm/dd",
+            "lineageTag": "e6a04031-8990-461d-8ba0-ca86379e1aea"
+          },
+          {
+            "name": "Users created",
+            "displayFolder": "Users",
+            "expression": [
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Users[user id])",
+              "    , USERELATIONSHIP(Users[createdDate], DateDimensionBI[Date])",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "f0f49071-b99d-4a3e-85c1-fac0f3c642cf"
+          },
+          {
+            "name": "Users signed in",
+            "displayFolder": "Users",
+            "expression": [
+              "CALCULATE(",
+              "    DISTINCTCOUNT('user last sigin'[user id])",
+              "    , USERELATIONSHIP('user last sigin'[Last SignIn Date], DateDimensionBI[Date])",
+              ")"
+            ],
+            "lineageTag": "696d647a-5ea5-40bf-ac16-aa908a22d77d"
+          },
+          {
+            "name": "Accounts",
+            "displayFolder": "Users",
+            "expression": [
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Users[user id])",
+              ") // some ppl have multiple accounts against their name"
+            ],
+            "formatString": "0",
+            "lineageTag": "aa67bdb9-f4b5-49ab-ab31-0f88809548bc"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "MeasuresTable",
+            "mode": "import",
+            "queryGroup": "00 Utilities",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i44FAA==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Column1\", type text}}),",
+                "    #\"Removed Columns\" = Table.RemoveColumns(#\"Changed Type\",{\"Column1\"})",
+                "in",
+                "    #\"Removed Columns\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Yesterday scores",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "createdDate",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "4edaca44-db67-4d3e-86d1-4bc0e0761f2e",
+            "sourceColumn": "createdDate",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastSynced",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "a33829c7-660b-46cd-a294-019ea539d978",
+            "sourceColumn": "lastSynced",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "controlName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f517544f-fefd-40d8-8426-9478bda0478d",
+            "sourceColumn": "controlName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "score",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "d762af10-f7a9-4f07-af6f-5971945a8e5a",
+            "sourceColumn": "score",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Score Percentage",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "3131613c-894c-46f4-8846-29d1ebcc33dc",
+            "sourceColumn": "Score Percentage",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "on",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "2ba7ee66-7284-4b61-9bfe-58bd34c31a56",
+            "sourceColumn": "on",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "DailyScoreKey",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "a148de65-4884-4ac9-b884-9497392096ba",
+            "sourceColumn": "DailyScoreKey",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "controlCategory",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3e4a2097-db79-465d-a6bd-572cdf591064",
+            "sourceColumn": "controlCategory",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Implementation Status",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "55ce6186-5992-49fe-bd5b-4492848a79c0",
+            "sourceColumn": "Implementation Status",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "9e3f2df6-de0b-4b62-b7f6-71de4dbe6710",
+        "partitions": [
+          {
+            "name": "Yesterday scores",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-02 Security Current Stats",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = DetailScore,",
+                "    // https://stackoverflow.com/a/50473350",
+                "    #\"Filtered - only yesterday's scores\" = Table.SelectRows(Source, each DateTime.Date([createdDate]) = Date.From(List.Max(Source[createdDate])))",
+                "in",
+                "    #\"Filtered - only yesterday's scores\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "DetailScore",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "createdDate",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "a8946365-8587-46d2-9195-968da96958b9",
+            "sourceColumn": "createdDate",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastSynced",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "9bbce438-266c-4336-add5-0a0009464a28",
+            "sourceColumn": "lastSynced",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "controlName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "e90edd1d-be15-4b2e-a8b6-97f4931f997a",
+            "sourceColumn": "controlName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "score",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "38835ad0-7a01-400b-aaa3-e82b496aea25",
+            "sourceColumn": "score",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Score Percentage",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "ea7bed14-4f7f-4705-a78d-330e13c27c5b",
+            "sourceColumn": "Score Percentage",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "on",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "16b038f9-1a74-493d-b941-39bc841970a5",
+            "sourceColumn": "on",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "DailyScoreKey",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "09cc30fb-c2f2-4d7b-b6c4-b89a592c3c48",
+            "sourceColumn": "DailyScoreKey",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "controlCategory",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ffe922c6-d777-4b98-89a5-068cd3924f82",
+            "sourceColumn": "controlCategory",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Implementation Status",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c41a12bf-8469-440a-bc98-dd78d29968cc",
+            "sourceColumn": "Implementation Status",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "3b6665f1-de6d-4a70-83e0-7cf2efd821fa",
+        "partitions": [
+          {
+            "name": "DetailScore",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-01 Security master tables",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = #\"SecureScores Raw\",",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(Source,{\"controlScores\", \"createdDateTime\"}),",
+                "    #\"Expanded controlScores\" = Table.ExpandListColumn(#\"Removed Other Columns\", \"controlScores\"),",
+                "    #\"Expanded controlScores1\" = Table.ExpandRecordColumn(#\"Expanded controlScores\", \"controlScores\", {\"controlCategory\", \"controlName\", \"score\", \"implementationStatus\", \"on\", \"scoreInPercentage\", \"lastSynced\"}, {\"controlCategory\", \"controlName\", \"score\", \"implementationStatus\", \"on\", \"scoreInPercentage\", \"lastSynced\"}),",
+                "    // scores to numbers",
+                "    // lastsycned to datetimezone",
+                "    #\"Changed types\" = Table.TransformColumnTypes(#\"Expanded controlScores1\",{{\"score\", type number}, {\"lastSynced\", type datetimezone}, {\"createdDateTime\", type date}}),",
+                "    #\"Added actual percentage col\" = Table.AddColumn(#\"Changed types\", \"Score Percentage\", each [scoreInPercentage] / 100),",
+                "    #\"Changed percentage col to percent type\" = Table.TransformColumnTypes(#\"Added actual percentage col\",{{\"Score Percentage\", Percentage.Type}}),",
+                "    #\"Capitalized On column\" = Table.TransformColumns(#\"Changed percentage col to percent type\",{{\"on\", Text.Proper, type text}}),",
+                "    #\"Changed On column to T|F\" = Table.TransformColumnTypes(#\"Capitalized On column\",{{\"on\", type logical}}),",
+                "    #\"Added key for ID at each day\" = Table.AddColumn(#\"Changed On column to T|F\", \"DailyScoreKey\", each Date.ToText([createdDateTime]) & \"-\" & [controlName]), ",
+                "    #\"Added status no markup\" = Table.AddColumn(#\"Added key for ID at each day\", \"StatusTb\", each if [implementationStatus] <> null and [implementationStatus] <> \"\"",
+                "then Html.Table([implementationStatus], {{\"ExtractedText\",\":root\"}})",
+                "else null),",
+                "    #\"Expanded Status no markup\" = Table.ExpandTableColumn(#\"Added status no markup\", \"StatusTb\", {\"ExtractedText\"}, {\"Implementation Status\"}),",
+                "    #\"Removed old status\" = Table.RemoveColumns(#\"Expanded Status no markup\",{\"implementationStatus\", \"scoreInPercentage\"}),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Removed old status\",{{\"createdDateTime\", \"createdDate\"}})",
+                "in",
+                "    #\"Renamed Columns\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "User held Licenses",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "user id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "9bca53cd-796d-4153-99be-f1fdd7606635",
+            "sourceColumn": "user id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "product GUID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "9e113b55-8005-449a-ae65-4312b3d6f19f",
+            "sourceColumn": "product GUID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Type",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3dd54c8f-d9c7-4f60-9e0a-08e9bc963981",
+            "sourceColumn": "Type",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "4f5f9d29-c52a-4aaf-a0aa-92fd83659bc7",
+        "partitions": [
+          {
+            "name": "User held Licenses",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-03 Users",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.Combine({#\"assignedLicenses - disabledPlans\", #\"PrimaryLicense - skuId\"}),",
+                "    #\"Removed Duplicates\" = Table.Distinct(Table.Buffer(Source)),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Removed Duplicates\",{{\"id\", \"user id\"}, {\"GUID\", \"product GUID\"}})",
+                "in",
+                "    #\"Renamed Columns\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Users",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "accountEnabled",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "1d0329e5-aea4-4efa-9fb7-75ff2e61389b",
+            "sourceColumn": "accountEnabled",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "businessPhones",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "5a8cac7d-76b3-4cfb-babf-fe7524ddb27b",
+            "sourceColumn": "businessPhones",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "city",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f2b39775-0280-4e31-bf6c-2050ae3c8b7c",
+            "sourceColumn": "city",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "companyName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "4e124ca9-9992-45db-befd-df5d6f271566",
+            "sourceColumn": "companyName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "country",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "6972619b-4757-4062-92de-fc492662ff81",
+            "sourceColumn": "country",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "department",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c2458132-b5ba-4448-9074-9ae6c5e42e80",
+            "sourceColumn": "department",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "displayName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "713e4965-0e91-48a8-b3bc-cca1947db050",
+            "sourceColumn": "displayName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "givenName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f017889d-6d6a-4e79-93a8-36c79deaf694",
+            "sourceColumn": "givenName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "jobTitle",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "36f717f9-f713-4883-a128-a8a3e875132a",
+            "sourceColumn": "jobTitle",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "mail",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "68df6094-53b9-4ee2-b88d-b768c5b5b629",
+            "sourceColumn": "mail",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "mailNickname",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "41fb2abf-a418-4564-b786-8529bc169ff3",
+            "sourceColumn": "mailNickname",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "mobilePhone",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "d1618d33-5506-407d-afbb-82375e92bd9a",
+            "sourceColumn": "mobilePhone",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "officeLocation",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "4f67cbfb-ae82-47f6-b291-8de772ac56ec",
+            "sourceColumn": "officeLocation",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "surname",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "34bb52fb-8362-4d91-a14d-f1b73d66fa9a",
+            "sourceColumn": "surname",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "userPrincipalName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "30f3d546-c396-48a3-b0d8-a47639059fe7",
+            "sourceColumn": "userPrincipalName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "userType",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c640fa4a-7263-4a21-983e-6bd561b75f98",
+            "sourceColumn": "userType",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "deletedDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "6f642b16-f388-414e-bb3e-7bac14becf75",
+            "sourceColumn": "deletedDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "createdDate",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "4d0a7c4e-6538-42cc-8623-e1e4e9fab55a",
+            "sourceColumn": "createdDate",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "creationType",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f791513e-7f4f-4d30-bb22-4da8f6afee37",
+            "sourceColumn": "creationType",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "employeeId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "9008c85f-ae7f-4ea6-8d03-7167b92fa015",
+            "sourceColumn": "employeeId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "employeeHireDate",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0aa64bc1-903d-4ded-9cdc-73a57f5eef2d",
+            "sourceColumn": "employeeHireDate",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "employeeLeaveDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "9aa86c7a-01fb-4e6e-82e4-40fbb0693eee",
+            "sourceColumn": "employeeLeaveDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "employeeType",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "70e33d69-018b-4925-9ad2-e3e6785df8dd",
+            "sourceColumn": "employeeType",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "faxNumber",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "4cbeabdc-7115-4758-95ee-8474079737de",
+            "sourceColumn": "faxNumber",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "imAddresses",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0307a14f-31fb-48b1-9ec0-8b056b291a9a",
+            "sourceColumn": "imAddresses",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "infoCatalogs",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "62efb5ad-2ac7-4bf6-b01f-ca71092ea2ab",
+            "sourceColumn": "infoCatalogs",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "isLicenseReconciliationNeeded",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "3a155548-3e20-490c-a4b1-310c721b4906",
+            "sourceColumn": "isLicenseReconciliationNeeded",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "otherMails",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "898efd36-e65d-4cf5-b857-47346a1d7f11",
+            "sourceColumn": "otherMails",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "passwordPolicies",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ef445a41-f3dd-4491-adeb-73de53f61bd8",
+            "sourceColumn": "passwordPolicies",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "postalCode",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c978b719-4075-40f3-98cd-caa6681bf7d3",
+            "sourceColumn": "postalCode",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "preferredLanguage",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "78624866-9379-4976-842d-c53628ea51ac",
+            "sourceColumn": "preferredLanguage",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "proxyAddresses",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "6ce3486f-cbae-4e52-909e-83acb210a346",
+            "sourceColumn": "proxyAddresses",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "refreshTokensValidFromDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3e31e436-56c3-4808-9506-57bdf457b56e",
+            "sourceColumn": "refreshTokensValidFromDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "securityIdentifier",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "feba138d-a993-47b5-814a-5bc06fc8e7ce",
+            "sourceColumn": "securityIdentifier",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "showInAddressList",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3c8720e7-9596-4c2a-b775-32103f80417f",
+            "sourceColumn": "showInAddressList",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "signInSessionsValidFromDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "DataType"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy/mm/dd",
+            "lineageTag": "70f55419-91f8-4397-8bfc-89ece01fba86",
+            "sourceColumn": "signInSessionsValidFromDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "state",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "d46628fd-51ad-4876-956a-8e715142fa07",
+            "sourceColumn": "state",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "streetAddress",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "b12717d8-ce99-4bc2-a975-6226e182ba32",
+            "sourceColumn": "streetAddress",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "usageLocation",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f74ec02c-a691-40ee-a73b-853232e8b54c",
+            "sourceColumn": "usageLocation",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "externalUserConvertedOn",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "82fc729d-fb25-40ee-9e26-94e666efe65a",
+            "sourceColumn": "externalUserConvertedOn",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "externalUserState",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "aab9e2fb-cd4c-4cb5-a281-ec677c357527",
+            "sourceColumn": "externalUserState",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "externalUserStateChangeDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "683fe565-5d59-4004-9eaf-b8b05a0e0bf9",
+            "sourceColumn": "externalUserStateChangeDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "employeeOrgData",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "80efcad3-0b0a-493e-b50c-dabbe56b2770",
+            "sourceColumn": "employeeOrgData",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "passwordProfile",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "e0e2c768-aa28-4320-b318-eeafe1f6b264",
+            "sourceColumn": "passwordProfile",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "assignedLicenses",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "174450bb-83dc-4f35-9df5-0ffda7f87d9d",
+            "sourceColumn": "assignedLicenses",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "assignedPlans",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "933cace4-775e-4430-a469-c70cc8527e93",
+            "sourceColumn": "assignedPlans",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "authorizationInfo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "5b8719a1-bf68-4ca9-ad64-eefdc953ef41",
+            "sourceColumn": "authorizationInfo",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "cloudRealtimeCommunicationInfo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "fa6240ef-4e9e-4502-b2a9-2f77ee84a007",
+            "sourceColumn": "cloudRealtimeCommunicationInfo",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "deviceKeys",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "de99f25f-4398-4204-a4fe-155bc7fef58d",
+            "sourceColumn": "deviceKeys",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "identities",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "18b9b74a-241a-4e5c-89d4-ca53bf05053d",
+            "sourceColumn": "identities",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "onPremisesExtensionAttributes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "aa74323f-77c7-4692-820e-ef66be582ca4",
+            "sourceColumn": "onPremisesExtensionAttributes",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "onPremisesProvisioningErrors",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "b4e6e3dc-782a-4fe4-971f-847d5291691b",
+            "sourceColumn": "onPremisesProvisioningErrors",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "onPremisesSipInfo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3c62af23-0fb8-47b1-98bd-ab106c54a453",
+            "sourceColumn": "onPremisesSipInfo",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "provisionedPlans",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "2971d5ab-8701-441a-b75e-003bad0059d9",
+            "sourceColumn": "provisionedPlans",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "serviceProvisioningErrors",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "e616d50f-ebff-40cc-b34e-c1d4610ab154",
+            "sourceColumn": "serviceProvisioningErrors",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Marked as blocked",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "4b68ff77-4548-4369-a399-7d47f99ac62e",
+            "sourceColumn": "Marked as blocked",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "user id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ed092f2c-6528-4f61-90db-14b35feedaea",
+            "sourceColumn": "user id",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "eaa4a2f8-dd92-489a-b4b2-5c2be7d8d78f",
+        "partitions": [
+          {
+            "name": "Users",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-03 Users",
+            "source": {
+              "expression": [
+                "let",
+                "GetUserDetail = #\"UsersAPI Raw\",",
+                "    #\"Extracted phone numbers\" = Table.TransformColumns(GetUserDetail, {\"businessPhones\", each Text.Combine(List.Transform(_, Text.From), \";\"), type text}),",
+                "    #\"Extracted imAddress\" = Table.TransformColumns(#\"Extracted phone numbers\", {\"imAddresses\", each Text.Combine(List.Transform(_, Text.From), \";\"), type text}),",
+                "    // scans text for \"blocked\"",
+                "    #\"Added is blocked\" = Table.AddColumn(#\"Extracted imAddress\", \"Marked as blocked\", each if [department] <> null then (if Text.Contains(Text.Lower([department]), \"blocked\") then true else false) else null),",
+                "    // need to first set datetimezones to such, to enable follow-up step of casting to date",
+                "    #\"Changed Types\" = Table.TransformColumnTypes(#\"Added is blocked\",{{\"signInSessionsValidFromDateTime\", type datetimezone}, {\"externalUserStateChangeDateTime\", type datetimezone}, {\"createdDateTime\", type datetimezone}, {\"isLicenseReconciliationNeeded\", type logical}, {\"accountEnabled\", type logical}}),",
+                "    #\"Changed created to date\" = Table.TransformColumnTypes(#\"Changed Types\",{{\"createdDateTime\", type date}}),",
+                "    #\"Renamed created at\" = Table.RenameColumns(#\"Changed created to date\",{{\"createdDateTime\", \"createdDate\"}})",
+                "in",
+                "    #\"Renamed created at\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Alerts",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "aeae7dde-d72b-4274-91e1-b11ca697a177",
+            "sourceColumn": "id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "providerAlertId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "2be0b4e2-b5d8-4f95-8551-9b6810e2c305",
+            "sourceColumn": "providerAlertId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "incidentId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "fcbd7f34-e3a2-47cf-ada4-e2d5faec98b0",
+            "sourceColumn": "incidentId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "status",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "9d671469-d290-4279-81bf-c4a395f56358",
+            "sourceColumn": "status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "severity",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "dd6d4a1d-a612-4d85-ae26-4a7f232dbf13",
+            "sourceColumn": "severity",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "classification",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "4c9c39c2-d63d-48ea-8f9d-33770f218988",
+            "sourceColumn": "classification",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "determination",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0cbe151a-fff1-46b5-a015-6149e332d8f0",
+            "sourceColumn": "determination",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "serviceSource",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3ae0ddca-5b6b-4e71-94d6-6e2c699852e6",
+            "sourceColumn": "serviceSource",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "detectionSource",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "04d16c12-902e-4dfa-9675-f7a8eaac4d31",
+            "sourceColumn": "detectionSource",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "productName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "b10ac402-7ba0-497b-8192-525ab5ce96ea",
+            "sourceColumn": "productName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "detectorId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "cb9bdb1d-23ca-4ec1-9c11-8154e9ec9c81",
+            "sourceColumn": "detectorId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "tenantId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "55f04756-be71-43ae-bd97-987092a07d69",
+            "sourceColumn": "tenantId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "title",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "1f5859f6-c8d7-47b9-b151-607a5d54cf3c",
+            "sourceColumn": "title",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "description",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "cd22e9b6-adb8-43d1-b7e2-8ed1c122d973",
+            "sourceColumn": "description",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "recommendedActions",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "63e4d43f-8f6d-4556-8d4a-110788546077",
+            "sourceColumn": "recommendedActions",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "category",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c3e14019-90d1-415f-9392-8054d9a56c69",
+            "sourceColumn": "category",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "assignedTo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "647aeed6-a071-4c75-92af-9074ce22e23f",
+            "sourceColumn": "assignedTo",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "alertWebUrl",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0a7b8609-b2a4-440a-b360-58e5e9ba081f",
+            "sourceColumn": "alertWebUrl",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "incidentWebUrl",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "44b4897b-da5f-4dad-a312-66bddfc67b54",
+            "sourceColumn": "incidentWebUrl",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "actorDisplayName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c1917671-6d5c-48c7-b67f-7469f4db963b",
+            "sourceColumn": "actorDisplayName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "threatDisplayName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ec6219bb-99f2-42df-859c-159b79f4fc39",
+            "sourceColumn": "threatDisplayName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "threatFamilyName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "d07c3909-873c-48cc-9e5d-a5f5df5a5aae",
+            "sourceColumn": "threatFamilyName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "mitreTechniques",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "cbff2d89-433e-4d09-89c6-73b1007e6092",
+            "sourceColumn": "mitreTechniques",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "createdDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "7f908a7a-cfc6-4517-aaf9-2ce1e5a78fcf",
+            "sourceColumn": "createdDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastUpdateDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "4131eee5-d229-481f-80c3-f01748304ab9",
+            "sourceColumn": "lastUpdateDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "resolvedDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "f8fbbf39-ceb7-42f3-be35-ad5b786b05b6",
+            "sourceColumn": "resolvedDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "firstActivityDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "9de28d81-368b-4bcb-a54d-7f613c9d400f",
+            "sourceColumn": "firstActivityDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastActivityDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "82cc78c3-d3bd-4760-9912-335fa6b0f0c5",
+            "sourceColumn": "lastActivityDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "systemTags",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "cf5374f3-281f-4497-859a-867bdb58570d",
+            "sourceColumn": "systemTags",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "alertPolicyId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0af74a9d-8267-4da7-be78-02ab56c77162",
+            "sourceColumn": "alertPolicyId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "additionalData",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "1ec2975b-aa7a-472c-9c56-697647c036aa",
+            "sourceColumn": "additionalData",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "comments",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c76ec68f-077a-4763-b42a-82230e56558f",
+            "sourceColumn": "comments",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "evidence",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ca0536a6-66b0-43ee-9635-644fdf290438",
+            "sourceColumn": "evidence",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "CreatedDate",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "08f08c4d-058f-42e5-9dfe-88f367845cca",
+            "sourceColumn": "CreatedDate",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "2040a737-f181-4aae-b694-1018e0213469",
+        "partitions": [
+          {
+            "name": "Alerts",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-01 Security master tables",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = #\"Alerts Raw\",",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"createdDateTime\", type datetimezone}, {\"lastUpdateDateTime\", type datetimezone}, {\"resolvedDateTime\", type datetimezone}, {\"firstActivityDateTime\", type datetimezone}, {\"lastActivityDateTime\", type datetimezone}}),",
+                "    #\"Added CreatedDate\" = Table.AddColumn(#\"Changed Type\", \"CreatedDate\", each DateTime.Date([createdDateTime])),",
+                "    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Added CreatedDate\",{{\"CreatedDate\", type date}})",
+                "in",
+                "    #\"Changed Type1\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Licenses SKU",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "appliesTo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "1ad586a6-6f9a-430e-afe6-8dfa0cfcb718",
+            "sourceColumn": "appliesTo",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "capabilityStatus",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "b05c64a4-6e60-41b2-8d41-112cf3b3561d",
+            "sourceColumn": "capabilityStatus",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "consumedUnits",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "#,0",
+            "lineageTag": "1bb24bfc-7133-4d19-810e-ee6aefba9db1",
+            "sourceColumn": "consumedUnits",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "skuId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "acab1da8-e454-44e1-a618-94446c10f260",
+            "sourceColumn": "skuId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "skuPartNumber",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0557872c-a661-4a8c-a3a1-293ffd886fef",
+            "sourceColumn": "skuPartNumber",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "subscriptionIds",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "d0d38de3-4eb4-413f-b55a-44b773cdb50c",
+            "sourceColumn": "subscriptionIds",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "prepaidUnits.enabled",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "#,0",
+            "lineageTag": "a3983ca3-a955-49fd-aba2-4a30ae1078bc",
+            "sourceColumn": "prepaidUnits.enabled",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "prepaidUnits.suspended",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "#,0",
+            "lineageTag": "de836eac-ccbb-4355-a8a5-54cb7b286d94",
+            "sourceColumn": "prepaidUnits.suspended",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "prepaidUnits.warning",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "#,0",
+            "lineageTag": "12a7d023-6de5-4d14-8f96-0352bab91173",
+            "sourceColumn": "prepaidUnits.warning",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "prepaidUnits.lockedOut",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "#,0",
+            "lineageTag": "9238fb61-6ce5-473c-bc39-ee4a5fc4fe7a",
+            "sourceColumn": "prepaidUnits.lockedOut",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "servicePlans",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "7cf15063-0890-488f-8df8-2e7fb3914a05",
+            "sourceColumn": "servicePlans",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Available units",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "#,0",
+            "lineageTag": "e37b01fa-4356-4106-8488-fefbe3cdd331",
+            "sourceColumn": "Available units",
+            "summarizeBy": "sum"
+          }
+        ],
+        "lineageTag": "f10b45bc-368d-43a1-a98e-fb0310b60d70",
+        "partitions": [
+          {
+            "name": "Licenses SKU",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-03 Users",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = #\"Licenses SKU Raw\",",
+                "    #\"Expanded prepaidUnits\" = Table.ExpandRecordColumn(Source, \"prepaidUnits\", {\"enabled\", \"suspended\", \"warning\", \"lockedOut\"}, {\"prepaidUnits.enabled\", \"prepaidUnits.suspended\", \"prepaidUnits.warning\", \"prepaidUnits.lockedOut\"}),",
+                "    #\"Added available unuits\" = Table.AddColumn(#\"Expanded prepaidUnits\", \"Available units\", each [prepaidUnits.enabled] - [consumedUnits]),",
+                "    #\"Changed to whole number\" = Table.TransformColumnTypes(#\"Added available unuits\",{{\"Available units\", Int64.Type}, {\"prepaidUnits.lockedOut\", Int64.Type}, {\"prepaidUnits.warning\", Int64.Type}, {\"prepaidUnits.suspended\", Int64.Type}, {\"prepaidUnits.enabled\", Int64.Type}, {\"consumedUnits\", Int64.Type}})",
+                "in",
+                "    #\"Changed to whole number\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "MS products",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Product_Display_Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "d71973a6-37e9-4a9d-b3ba-3641bc4042cf",
+            "sourceColumn": "Product_Display_Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "String_Id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "effde46d-17b3-429a-b198-ff01a8ceee41",
+            "sourceColumn": "String_Id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "GUID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "4ec501a7-1be7-4009-a01d-6cfb4ab0b3ca",
+            "sourceColumn": "GUID",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "f59f35e8-9329-4629-a9f6-94ca7a5c6306",
+        "partitions": [
+          {
+            "name": "MS products",
+            "mode": "import",
+            "queryGroup": "00 Utilities",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Csv.Document(Web.Contents(\"https://download.microsoft.com\", [RelativePath = \"/download/e/3/e/e3e9faf2-f28b-490a-9ada-c6089a1fc5b0/Product%20names%20and%20service%20plan%20identifiers%20for%20licensing.csv\"]),[Delimiter=\",\", Columns=6, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Promoted Headers\",{\"Product_Display_Name\", \"String_Id\", \"GUID\"}),",
+                "    #\"Removed Duplicates\" = Table.Distinct(#\"Removed Other Columns\")",
+                "in",
+                "    #\"Removed Duplicates\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "GroupMembers",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "db5960d0-6532-4911-92aa-e683a7da2d61",
+            "sourceColumn": "id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "userID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "b7cf75ee-b3f2-4f1f-ba2b-f3e7ec73014c",
+            "sourceColumn": "userID",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "a37328cc-414e-4cd3-9bdf-c8c622f594f8",
+        "partitions": [
+          {
+            "name": "GroupMembers",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-03 Users",
+            "source": {
+              "expression": [
+                "let",
+                "    // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+                "    makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+                "        loginURL = \"https://login.microsoftonline.com/\",",
+                "        TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+                "        ResourceId = #\"Azure Graph API Url\", // where is this token for",
+                "        TokenResponse = Json.Document(",
+                "            Web.Contents(loginURL",
+                "\t\t\t    , [RelativePath = TokenUri",
+                "\t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+                "\t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+                "\t\t\t    ]",
+                "            ) // end web contents",
+                "        ), // end json",
+                "        generatedToken = TokenResponse[access_token] // assign token value",
+                "    in",
+                "    generatedToken,",
+                "myToken = makeToken(",
+                "                        #\"Azure Graph API Url\"",
+                "                        , #\"Azure Tenant ID\"",
+                "                        , #\"Azure Application ID\"",
+                "                        , #\"Azure Application Client Secret\"",
+                "                    )",
+                ", ",
+                "// Define a Function Called GetGroups that takes a single parameter Path; the MS Graph API Endpoint",
+                "  GetGroups = (queryPath)=>",
+                "    let",
+                "    // call out to the web endpoint and convert the result to a JSON",
+                "    // Document object which is saved in the Source variable",
+                "    Source = Json.Document(",
+                "                Web.Contents(",
+                "                    #\"Azure Graph API Url\"",
+                "                    , [RelativePath = queryPath, Headers = [Authorization = \"Bearer \" & myToken]]",
+                "                )",
+                "            ),",
+                "    // Assign the resultant List object (API return) to NextList variable",
+                "    NextList= @Source[value],",
+                "    nextLink = Text.AfterDelimiter(Source[#\"@odata.nextLink\"], #\"Azure Graph API Url\"), ",
+                "    // recursively call GetGroups function using the value of the @odata.nextLink as the path",
+                "    // Since @odata.nextLink is not guaranteed to always exist in the case where the result is less than 100 we need to catch this and deal with it",
+                "      // using a try otherwise basically means if you error out because no",
+                "      // @odata.nextLink exisit then just return the resulting list of values you did get",
+                "      // there is an API returned value called @odata.nextLink - so we can directly reference that",
+                "    result = try @NextList & @GetGroups(nextLink) otherwise @NextList",
+                "    in",
+                "    // Return the result variable as the function return",
+                "    result,",
+                "  // Use the function GetGroups with the initial path to the object.",
+                "  // The function will run recursively until it gets all the record and then",
+                "  // loads the full result to Members Variable  ",
+                "  Groups = GetGroups(\"v1.0/groups\"),",
+                "  #\"Converted UserAPI to Table\" = Table.FromList(Groups, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+                "  #\"Expanded group members record\" = Table.ExpandRecordColumn(#\"Converted UserAPI to Table\", \"Column1\", {\"id\"}, {\"id\"}),",
+                " // Define a Function Called GetMembers that takes a single parameter Path; the MS Graph API Endpoint",
+                "      GetMembers = (queryPath)=>",
+                "        let",
+                "        // call out to the web endpoint and convert the result to a JSON",
+                "        // Document object which is saved in the Source variable",
+                "        Source = Json.Document(",
+                "                    Web.Contents(",
+                "                        #\"Azure Graph API Url\"",
+                "                        , [RelativePath = queryPath, Headers = [Authorization = \"Bearer \" & myToken]]",
+                "                    )",
+                "                ),",
+                "        // Assign the resultant List object (API return) to NextList variable",
+                "        NextList= @Source[value],",
+                "        nextLink = Text.AfterDelimiter(Source[#\"@odata.nextLink\"], #\"Azure Graph API Url\"), ",
+                "        // recursively call GetMembers function using the value of the @odata.nextLink as the path",
+                "        // Since @odata.nextLink is not guaranteed to always exist in the case where the result is less than 100 we need to catch this and deal with it",
+                "          // using a try otherwise basically means if you error out because no",
+                "          // @odata.nextLink exisit then just return the resulting list of values you did get",
+                "          // there is an API returned value called @odata.nextLink - so we can directly reference that",
+                "        result = try @NextList & @GetMembers(nextLink) otherwise @NextList",
+                "        in",
+                "        // Return the result variable as the function return",
+                "        result,",
+                "      // Use the function GetMembers with the initial path to the object.",
+                "      // The function will run recursively until it gets all the record and then",
+                "      // loads the full result to Members Variable  ",
+                "",
+                "    #\"Invoked GetGroupMembers\" = Table.AddColumn(#\"Expanded group members record\", \"Members\", each GetMembers(\"v1.0/groups/\" & [id] & \"/members\")),",
+                "    #\"Expanded Members list\" = Table.ExpandListColumn(#\"Invoked GetGroupMembers\", \"Members\"),",
+                "    #\"Expanded Members record\" = Table.ExpandRecordColumn(#\"Expanded Members list\", \"Members\", {\"@odata.type\", \"id\"}, {\"@odata.type\", \"userID\"}),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Expanded Members record\",{\"id\", \"userID\"})",
+                "in",
+                "    #\"Removed Other Columns\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Groups",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3df674c4-082f-4787-9a43-df50a30a74d5",
+            "sourceColumn": "id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "displayName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "b4589cc8-7ddc-4696-9a69-74dad406f48e",
+            "sourceColumn": "displayName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "description",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "7f1cc256-47e1-4c6c-8679-43180a91b624",
+            "sourceColumn": "description",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "groupTypes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "8703ad80-86b4-416c-8109-7b512118a5b0",
+            "sourceColumn": "groupTypes",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "createdDate",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "a80471b1-3fbc-4509-af2a-8a1d862ba8ac",
+            "sourceColumn": "createdDate",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "expirationDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "75f319bb-3696-4274-8d7a-cdc12276b3ad",
+            "sourceColumn": "expirationDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "deletedDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "d6cfcd73-2e7a-4021-bc14-b39094e10716",
+            "sourceColumn": "deletedDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "renewedDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "1802ad38-5399-464b-99a0-3e659c9936cd",
+            "sourceColumn": "renewedDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "isAssignableToRole",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "d19a8cc2-8f91-4c5b-9751-fcc041e42c69",
+            "sourceColumn": "isAssignableToRole",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "visibility",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "889d0d76-2224-4089-a812-9837333846d3",
+            "sourceColumn": "visibility",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "mail",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "622b5541-2fe2-4409-967d-8e34f59989eb",
+            "sourceColumn": "mail",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "mailEnabled",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "bc718a7e-25ab-4999-9791-c53399cb25f7",
+            "sourceColumn": "mailEnabled",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "mailNickname",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "20d390d6-48a1-44c6-bcc1-e417ed744823",
+            "sourceColumn": "mailNickname",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "membershipRule",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c3f4195c-ec34-40f7-bdca-162d5540ba5d",
+            "sourceColumn": "membershipRule",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "membershipRuleProcessingState",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "01e45a2d-41c2-4816-9758-75d9e3fdb7bc",
+            "sourceColumn": "membershipRuleProcessingState",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "securityEnabled",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "afffe522-9f1c-47a2-b6db-0cf6fb54149b",
+            "sourceColumn": "securityEnabled",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "securityIdentifier",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "e52869e6-199f-4dd7-a573-34504f12e82c",
+            "sourceColumn": "securityIdentifier",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "7529f5a8-2835-4f0e-a641-ccda143b7300",
+        "partitions": [
+          {
+            "name": "Groups",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-03 Users",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = #\"Groups Raw\",",
+                "    #\"Extracted Values\" = Table.TransformColumns(Source, {\"groupTypes\", each Text.Combine(List.Transform(_, Text.From), \";\"), type text}),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Extracted Values\",{",
+                "    \"id\", ",
+                "    \"displayName\", ",
+                "    \"description\", ",
+                "    \"groupTypes\", ",
+                "    \"createdDateTime\", ",
+                "    \"expirationDateTime\", ",
+                "    \"deletedDateTime\", ",
+                "    \"renewedDateTime\", ",
+                "    \"isAssignableToRole\", ",
+                "    \"visibility\", ",
+                "    \"mail\", ",
+                "    \"mailEnabled\", ",
+                "    \"mailNickname\", ",
+                "    \"membershipRule\", ",
+                "    \"membershipRuleProcessingState\", ",
+                "    \"securityEnabled\", ",
+                "    \"securityIdentifier\"",
+                "}),",
+                "    // need to first set datetimezones to such, to enable follow-up step of casting to date",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Removed Other Columns\",{{\"renewedDateTime\", type datetimezone}, {\"createdDateTime\", type datetimezone}, {\"expirationDateTime\", type datetimezone}, {\"deletedDateTime\", type datetimezone}, {\"isAssignableToRole\", type logical}, {\"mailEnabled\", type logical}, {\"securityEnabled\", type logical}}),",
+                "    #\"Changed created at to date\" = Table.TransformColumnTypes(#\"Changed Type\",{{\"createdDateTime\", type date}}),",
+                "    #\"Renamed created at\" = Table.RenameColumns(#\"Changed created at to date\",{{\"createdDateTime\", \"createdDate\"}})",
+                "in",
+                "    #\"Renamed created at\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "DateDimensionBI",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "ee55efbf-43f3-47aa-a61b-f425f32e3cd7",
+            "sourceColumn": "Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "29cf3f02-5825-4d6c-b4c1-244cc73bc8c1",
+            "sourceColumn": "Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Start of Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "8b4e7047-c772-4178-9cc9-9e005195fb9b",
+            "sourceColumn": "Start of Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "End of Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "1393a432-9e9e-445d-90d7-0a05851a213b",
+            "sourceColumn": "End of Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Month Number",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "0791a058-da8b-48c2-b8e3-fcf5d4e34e1b",
+            "sourceColumn": "Month Number",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Month Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "1ccf21f9-6dfb-48bb-b2dc-89080d21468a",
+            "sortByColumn": "Month Number",
+            "sourceColumn": "Month Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Month Start Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "5eef945f-38d6-4c97-a8cd-42857f297377",
+            "sourceColumn": "Month Start Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Month End Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "4f150bc8-b609-475e-8044-f6659a43064b",
+            "sourceColumn": "Month End Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Days in Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "ee9b7132-444a-4215-89d6-fbc2cb674ec9",
+            "sourceColumn": "Days in Month",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Quarter Number",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "04f75878-f675-4eb2-892a-83390c542e44",
+            "sourceColumn": "Quarter Number",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Quarter Start Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "dc54e5f0-d47d-4cac-aa33-8273c7c0f945",
+            "sourceColumn": "Quarter Start Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Quarter End Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "bdb7477f-82de-4f28-b46a-12707b01df9b",
+            "sourceColumn": "Quarter End Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Week Number of Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "e03c8fb7-fcbc-4c03-b67b-5b62587fc231",
+            "sourceColumn": "Week Number of Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Week Number of Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "0b6279d4-988b-4c17-b574-95027b006651",
+            "sourceColumn": "Week Number of Month",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Week Start Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "5db2d073-26ff-4442-8c09-9f72c81c6172",
+            "sourceColumn": "Week Start Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Week End Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy-mm-dd",
+            "lineageTag": "0482c9af-9f35-4ab9-a4d3-6d361f8c64b5",
+            "sourceColumn": "Week End Date",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Day of Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "17b595cb-2e5c-4bc8-a38e-a2ca77e08b2f",
+            "sourceColumn": "Day of Month",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Day of Week",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "76b40f29-01dd-4360-a3f6-88aca8931e08",
+            "sourceColumn": "Day of Week",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Day of Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "8ef01b45-1a92-4bde-bb45-0042240f550d",
+            "sourceColumn": "Day of Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Day Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c241d616-e7f1-4679-80b7-57431b282052",
+            "sortByColumn": "Day of Week",
+            "sourceColumn": "Day Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "t-90",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "1090a32a-48cb-4866-8182-b23f5b84756b",
+            "sourceColumn": "t-90",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "isFuture",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "68ed3946-c899-4551-bc0c-1bc8c8f9ac3b",
+            "sourceColumn": "isFuture",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "ebdfe54c-6249-4558-ae7b-316c53cc74c8",
+        "partitions": [
+          {
+            "name": "DateDimensionBI",
+            "mode": "import",
+            "queryGroup": "00 Utilities",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = PowerPlatform.Dataflows(null),",
+                "    Workspaces = Source{[Id=\"Workspaces\"]}[Data],",
+                "    #\"6f7c04d6-f8ec-4722-a220-364c2598401d\" = Workspaces{[workspaceId=\"6f7c04d6-f8ec-4722-a220-364c2598401d\"]}[Data],",
+                "    #\"b9ac9667-3d19-4d70-8128-20287e809db0\" = #\"6f7c04d6-f8ec-4722-a220-364c2598401d\"{[dataflowId=\"b9ac9667-3d19-4d70-8128-20287e809db0\"]}[Data],",
+                "    Query_ = #\"b9ac9667-3d19-4d70-8128-20287e809db0\"{[entity=\"DateDimensionBI\",version=\"\"]}[Data]",
+                "in",
+                "    Query_"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "user last sigin",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "displayName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "791c94a3-da9f-49b8-8a9d-30c2236aa9d8",
+            "sourceColumn": "displayName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "user id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "d9b0b199-8bd7-42f6-9ba1-b52124eeda85",
+            "sourceColumn": "user id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastSignInDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "e6f2f04e-7619-4021-8b5d-4e1871c3daa1",
+            "sourceColumn": "lastSignInDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastSignInRequestId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "fa4cd2d9-2792-4093-a48d-43461ad0488f",
+            "sourceColumn": "lastSignInRequestId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastNonInteractiveSignInDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "9b1bc78d-97c4-4dc1-bd33-3ed57dcb7ea6",
+            "sourceColumn": "lastNonInteractiveSignInDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastNonInteractiveSignInRequestId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "fe4539a2-f9ef-4a69-b6fe-418cad05463c",
+            "sourceColumn": "lastNonInteractiveSignInRequestId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastSuccessfulSignInDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "53693b05-dd7d-4390-9478-60eeedf7b994",
+            "sourceColumn": "lastSuccessfulSignInDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastSuccessfulSignInRequestId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3ec5e632-b891-4036-8a0c-52503349361f",
+            "sourceColumn": "lastSuccessfulSignInRequestId",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Last SignIn Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "yyyy/mm/dd",
+            "lineageTag": "7ef82d0f-40b1-48e5-9ea3-0a9ecbd09071",
+            "sourceColumn": "Last SignIn Date",
+            "summarizeBy": "none"
+          }
+        ],
+        "description": [
+          "User properties can be found on this page: https://learn.microsoft.com/en-us/graph/api/resources/user?view=graph-rest-1.0",
+          "",
+          " not all are returned by default"
+        ],
+        "excludeFromModelRefresh": true,
+        "lineageTag": "83207739-1192-49c3-9e4b-65fa4bc19e62",
+        "partitions": [
+          {
+            "name": "user last sigin",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-03 Users",
+            "source": {
+              "expression": [
+                "let",
+                "    // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+                "    makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+                "        loginURL = \"https://login.microsoftonline.com/\",",
+                "        TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+                "        ResourceId = #\"Azure Graph API Url\", // where is this token for",
+                "        TokenResponse = Json.Document(",
+                "            Web.Contents(loginURL",
+                "\t\t\t    , [RelativePath = TokenUri",
+                "\t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+                "\t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+                "\t\t\t    ]",
+                "            ) // end web contents",
+                "        ), // end json",
+                "        generatedToken = TokenResponse[access_token] // assign token value",
+                "    in",
+                "    generatedToken,",
+                "myToken = makeToken(",
+                "                        #\"Azure Graph API Url\"",
+                "                        , #\"Azure Tenant ID\"",
+                "                        , #\"Azure Application ID\"",
+                "                        , #\"Azure Application Client Secret\"",
+                "                    )",
+                ", ",
+                "// Define a Function Called GetUserDetail that takes a single parameter Path; the MS Graph API Endpoint",
+                "  GetUserDetail = (queryPath)=>",
+                "    let",
+                "    // call out to the web endpoint and convert the result to a JSON",
+                "    // Document object which is saved in the Source variable",
+                "    Source = Json.Document(",
+                "                Web.Contents(",
+                "                    #\"Azure Graph API Url\"",
+                "                    , [RelativePath = queryPath, Headers = [Authorization = \"Bearer \" & myToken]]",
+                "                )",
+                "            ),",
+                "    // Assign the resultant List object (API return) to NextList variable",
+                "    NextList= @Source[value],",
+                "    nextLink = Text.AfterDelimiter(Source[#\"@odata.nextLink\"], #\"Azure Graph API Url\"), ",
+                "    // recursively call GetUserDetail function using the value of the @odata.nextLink as the path",
+                "    // Since @odata.nextLink is not guaranteed to always exist in the case where the result is less than 100 we need to catch this and deal with it",
+                "      // using a try otherwise basically means if you error out because no",
+                "      // @odata.nextLink exisit then just return the resulting list of values you did get",
+                "      // there is an API returned value called @odata.nextLink - so we can directly reference that",
+                "    result = try @NextList & @GetUserDetail(nextLink) otherwise @NextList",
+                "    in",
+                "    // Return the result variable as the function return",
+                "    result,",
+                "  // Use the function GetUserDetail with the initial path to the object.",
+                "  // The function will run recursively until it gets all the record and then",
+                "  // loads the full result to UserDetail Variable  ",
+                "  UserDetail = GetUserDetail(\"beta/users?$select=displayName,signInActivity\"),",
+                "  #\"Converted UserAPI to Table\" = Table.FromList(UserDetail, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+                "    #\"Expanded Users table\" = Table.ExpandRecordColumn(#\"Converted UserAPI to Table\", \"Column1\", {\"displayName\", \"id\", \"signInActivity\"}, {\"displayName\", \"user id\", \"signInActivity\"}),",
+                "    #\"Expanded signInActivity\" = Table.ExpandRecordColumn(#\"Expanded Users table\", \"signInActivity\", {\"lastSignInDateTime\", \"lastSignInRequestId\", \"lastNonInteractiveSignInDateTime\", \"lastNonInteractiveSignInRequestId\", \"lastSuccessfulSignInDateTime\", \"lastSuccessfulSignInRequestId\"}, {\"lastSignInDateTime\", \"lastSignInRequestId\", \"lastNonInteractiveSignInDateTime\", \"lastNonInteractiveSignInRequestId\", \"lastSuccessfulSignInDateTime\", \"lastSuccessfulSignInRequestId\"}),",
+                "    #\"Changed datetimes to timezones\" = Table.TransformColumnTypes(#\"Expanded signInActivity\",{{\"lastSignInDateTime\", type datetimezone}, {\"lastNonInteractiveSignInDateTime\", type datetimezone}, {\"lastSuccessfulSignInDateTime\", type datetimezone}}),",
+                "    #\"Added LastSignInDate\" = Table.AddColumn(#\"Changed datetimes to timezones\", \"Last SignIn Date\", each DateTime.Date([lastSignInDateTime])),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Added LastSignInDate\",{{\"Last SignIn Date\", type date}})",
+                "in",
+                "    #\"Changed Type\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

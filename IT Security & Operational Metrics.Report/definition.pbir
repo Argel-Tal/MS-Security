@@ -1,0 +1,9 @@
+{
+  "version": "1.0",
+  "datasetReference": {
+    "byPath": {
+      "path": "../IT Security & Operational Metrics.Dataset"
+    },
+    "byConnection": null
+  }
+}
