@@ -1,4 +1,4 @@
-# 03.01 IT Operational Metrics - ReadMe
+# IT Security & Operational Metrics - ReadMe
 
 ## Purpose: Provide IT security & CIO with a single source of all their IT security metrics
 This stops IT from having to go into multiple different security provider sites/applications and collate all their metrics. 

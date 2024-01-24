@@ -2,7 +2,7 @@
   "version": "1.0",
   "datasetReference": {
     "byPath": {
-      "path": "../03.01 IT Operational Metrics.Dataset"
+      "path": "../IT Security & Operational Metrics.Dataset"
     },
     "byConnection": null
   }
