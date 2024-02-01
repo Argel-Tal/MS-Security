@@ -11,19 +11,6 @@
         {
           "location": {
             "x": 0,
-            "y": 140
-          },
-          "nodeIndex": "Daily Scores",
-          "nodeLineageTag": "35b62065-104f-4be2-8861-2632268cb73c",
-          "size": {
-            "height": 152,
-            "width": 234
-          },
-          "zIndex": 7
-        },
-        {
-          "location": {
-            "x": 0,
             "y": 0
           },
           "nodeIndex": "MeasuresTable",
@@ -33,58 +20,6 @@
             "width": 234
           },
           "zIndex": 8
-        },
-        {
-          "location": {
-            "x": 1021.6626813681271,
-            "y": 0
-          },
-          "nodeIndex": "Yesterday scores",
-          "nodeLineageTag": "9e3f2df6-de0b-4b62-b7f6-71de4dbe6710",
-          "size": {
-            "height": 255,
-            "width": 234
-          },
-          "zIndex": 12
-        },
-        {
-          "location": {
-            "x": 679.81857352017539,
-            "y": 0
-          },
-          "nodeIndex": "Descriptions",
-          "nodeLineageTag": "de1e4091-41a7-4188-9abe-44a53c08fe51",
-          "size": {
-            "height": 152,
-            "width": 234
-          },
-          "zIndex": 9
-        },
-        {
-          "location": {
-            "x": 358.74030344565631,
-            "y": 210.15345275743027
-          },
-          "nodeIndex": "DetailScore",
-          "nodeLineageTag": "3b6665f1-de6d-4a70-83e0-7cf2efd821fa",
-          "size": {
-            "height": 296,
-            "width": 234
-          },
-          "zIndex": 10
-        },
-        {
-          "location": {
-            "x": 1030.3000139570827,
-            "y": 283.45599888343332
-          },
-          "nodeIndex": "SCIDs secured",
-          "nodeLineageTag": "bd89d351-899e-4665-9f63-10cee2075bde",
-          "size": {
-            "height": 152,
-            "width": 234
-          },
-          "zIndex": 11
         },
         {
           "location": {
@@ -110,12 +45,12 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 3
+          "zIndex": 4
         },
         {
           "location": {
-            "x": 1642.5428461165416,
-            "y": 1340.4913655849857
+            "x": 983.38372442169975,
+            "y": 1331.5838098864067
           },
           "nodeIndex": "Licenses SKU",
           "nodeLineageTag": "f10b45bc-368d-43a1-a98e-fb0310b60d70",
@@ -123,20 +58,7 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 4
-        },
-        {
-          "location": {
-            "x": 1259.6830400153251,
-            "y": 1027.368939048851
-          },
-          "nodeIndex": "User held Licenses",
-          "nodeLineageTag": "4f5f9d29-c52a-4aaf-a0aa-92fd83659bc7",
-          "size": {
-            "height": 176,
-            "width": 234
-          },
-          "zIndex": 15
+          "zIndex": 5
         },
         {
           "location": {
@@ -149,12 +71,12 @@
             "height": 152,
             "width": 234
           },
-          "zIndex": 5
+          "zIndex": 6
         },
         {
           "location": {
-            "x": 459.80943422866324,
-            "y": 1069.3424731948637
+            "x": 542.20432444051846,
+            "y": 978.04002728442958
           },
           "nodeIndex": "GroupMembers",
           "nodeLineageTag": "a37328cc-414e-4cd3-9bdf-c8c622f594f8",
@@ -166,8 +88,8 @@
         },
         {
           "location": {
-            "x": 182.11117811501521,
-            "y": 851.553268676622
+            "x": 264.50606832687043,
+            "y": 760.25082276618787
           },
           "nodeIndex": "Groups",
           "nodeLineageTag": "7529f5a8-2835-4f0e-a641-ccda143b7300",
@@ -175,7 +97,7 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 6
+          "zIndex": 17
         },
         {
           "location": {
@@ -188,24 +110,146 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 2
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 1917.7443692575682,
+            "y": 0
+          },
+          "nodeIndex": "Index Alert Status",
+          "nodeLineageTag": "65050a38-4859-499e-a5d9-c19aa136fcd7",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 1726.6821850932974,
+            "y": 385.86734786019116
+          },
+          "nodeIndex": "Incidents",
+          "nodeLineageTag": "02eb3069-aebe-492c-aed5-f70893980a24",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2071.0670619969474,
+            "y": 415.19531494320296
+          },
+          "nodeIndex": "Index Incident Status",
+          "nodeLineageTag": "482e508e-0931-4ed8-a809-181fe03110a8",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1914.6194539969474,
+            "y": 196.6432710000002
+          },
+          "nodeIndex": "Index Severity",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 679.81857352017539,
+            "y": 0
+          },
+          "nodeIndex": "SecureComponent Descriptions",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
         },
         {
           "location": {
             "x": 1261.7384693154841,
             "y": 708.73725059505045
           },
-          "nodeIndex": "user last sigin",
-          "nodeLineageTag": "83207739-1192-49c3-9e4b-65fa4bc19e62",
+          "nodeIndex": "User last sigin",
           "size": {
             "height": 272,
             "width": 234
           },
-          "zIndex": 1
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 358.74030344565631,
+            "y": 210.15345275743027
+          },
+          "nodeIndex": "Score Detail",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1021.6626813681271,
+            "y": 0
+          },
+          "nodeIndex": "Score Yesterday",
+          "size": {
+            "height": 255,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 140
+          },
+          "nodeIndex": "Score Daily",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1030.3000139570827,
+            "y": 283.45599888343332
+          },
+          "nodeIndex": "SecureComponent statuses",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1259.6830400153251,
+            "y": 1027.368939048851
+          },
+          "nodeIndex": "Licenses Held",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "All tables",
-      "zoomValue": 63.287087723233995,
+      "zoomValue": 56.447393005377677,
       "pinKeyFieldsToTop": false,
       "showExtraHeaderInfo": false,
       "hideKeyFieldsWhenCollapsed": false,
@@ -233,7 +277,7 @@
         },
         {
           "location": {
-            "x": 501.88382845555475,
+            "x": 189.73092490853065,
             "y": 361.43321421995745
           },
           "nodeIndex": "GroupMembers",
@@ -246,7 +290,7 @@
         },
         {
           "location": {
-            "x": 323.92352884616741,
+            "x": 11.770625299143319,
             "y": 620.03801468621145
           },
           "nodeIndex": "Groups",
@@ -255,11 +299,11 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 3
+          "zIndex": 6
         },
         {
           "location": {
-            "x": 1215.5635406287083,
+            "x": 903.41063708168417,
             "y": 794.70782157560791
           },
           "nodeIndex": "Licenses SKU",
@@ -268,11 +312,11 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 6
+          "zIndex": 4
         },
         {
           "location": {
-            "x": 1047.2483040313396,
+            "x": 735.09540048431541,
             "y": 587.446470966162
           },
           "nodeIndex": "MS products",
@@ -281,24 +325,11 @@
             "height": 152,
             "width": 234
           },
-          "zIndex": 4
+          "zIndex": 3
         },
         {
           "location": {
-            "x": 926.31801616910423,
-            "y": 359.97835958278836
-          },
-          "nodeIndex": "User held Licenses",
-          "nodeLineageTag": "4f5f9d29-c52a-4aaf-a0aa-92fd83659bc7",
-          "size": {
-            "height": 152,
-            "width": 234
-          },
-          "zIndex": 5
-        },
-        {
-          "location": {
-            "x": 690.80129501555427,
+            "x": 378.64839146853018,
             "y": 0
           },
           "nodeIndex": "Users",
@@ -307,11 +338,23 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 7
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 614.16511262208019,
+            "y": 359.97835958278836
+          },
+          "nodeIndex": "Licenses Held",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "Users",
-      "zoomValue": 64.028332230712266,
+      "zoomValue": 90.237250975167342,
       "pinKeyFieldsToTop": false,
       "showExtraHeaderInfo": false,
       "hideKeyFieldsWhenCollapsed": false,
@@ -335,12 +378,12 @@
             "height": 296,
             "width": 234
           },
-          "zIndex": 1
+          "zIndex": 8
         },
         {
           "location": {
-            "x": 1482.3612784635332,
-            "y": 0
+            "x": 1495.0106192602304,
+            "y": 13.752542199804793
           },
           "nodeIndex": "Alerts",
           "nodeLineageTag": "2040a737-f181-4aae-b694-1018e0213469",
@@ -348,82 +391,116 @@
             "height": 300,
             "width": 234
           },
+          "zIndex": 9
+        },
+        {
+          "location": {
+            "x": 1865.0567997998478,
+            "y": 201.43989902147791
+          },
+          "nodeIndex": "Index Alert Status",
+          "nodeLineageTag": "65050a38-4859-499e-a5d9-c19aa136fcd7",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 1095.4800011272923,
+            "y": 0
+          },
+          "nodeIndex": "Incidents",
+          "nodeLineageTag": "02eb3069-aebe-492c-aed5-f70893980a24",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 1866.6186084010722,
+            "y": 13.752542199804793
+          },
+          "nodeIndex": "Index Severity",
+          "nodeLineageTag": "5885408f-001b-491c-b9f6-52506c2c13e0",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 677.71143192919737,
+            "y": 350.63139721217834
+          },
+          "nodeIndex": "SecureComponent Descriptions",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
           "zIndex": 2
         },
         {
           "location": {
-            "x": 357.424756218962,
-            "y": 342.43524637416454
+            "x": 437.849507528309,
+            "y": 10.932660208573
           },
-          "nodeIndex": "Daily Scores",
-          "nodeLineageTag": "35b62065-104f-4be2-8861-2632268cb73c",
+          "nodeIndex": "Score Detail",
           "size": {
-            "height": 224,
+            "height": 296,
             "width": 234
           },
           "zIndex": 3
         },
         {
           "location": {
-            "x": 833.89229205166873,
-            "y": 339.69873700360534
+            "x": 877.96371734127251,
+            "y": 606.66483250728265
           },
-          "nodeIndex": "Descriptions",
-          "nodeLineageTag": "de1e4091-41a7-4188-9abe-44a53c08fe51",
+          "nodeIndex": "Score Yesterday",
           "size": {
-            "height": 176,
+            "height": 296,
             "width": 234
           },
           "zIndex": 4
         },
         {
           "location": {
-            "x": 594.03036765078036,
-            "y": 0
+            "x": 201.24389609649063,
+            "y": 353.36790658273753
           },
-          "nodeIndex": "DetailScore",
-          "nodeLineageTag": "3b6665f1-de6d-4a70-83e0-7cf2efd821fa",
+          "nodeIndex": "Score Daily",
           "size": {
-            "height": 296,
+            "height": 224,
             "width": 234
           },
           "zIndex": 5
         },
         {
           "location": {
-            "x": 620.30812033027212,
-            "y": 601.19308000875594
+            "x": 464.12726020780076,
+            "y": 612.12574021732894
           },
-          "nodeIndex": "SCIDs secured",
-          "nodeLineageTag": "bd89d351-899e-4665-9f63-10cee2075bde",
+          "nodeIndex": "SecureComponent statuses",
           "size": {
             "height": 224,
             "width": 234
           },
-          "zIndex": 9
-        },
-        {
-          "location": {
-            "x": 1034.1445774637439,
-            "y": 595.73217229870966
-          },
-          "nodeIndex": "Yesterday scores",
-          "nodeLineageTag": "9e3f2df6-de0b-4b62-b7f6-71de4dbe6710",
-          "size": {
-            "height": 296,
-            "width": 234
-          },
-          "zIndex": 12
+          "zIndex": 6
         }
       ],
       "name": "Security",
-      "zoomValue": 64.028332230712266,
+      "zoomValue": 71.7866045340909,
       "pinKeyFieldsToTop": false,
       "showExtraHeaderInfo": false,
       "hideKeyFieldsWhenCollapsed": false,
       "tablesLocked": false
     }
   ],
-  "selectedDiagram": "All tables",
+  "selectedDiagram": "Users",
   "defaultDiagram": "All tables"
 }

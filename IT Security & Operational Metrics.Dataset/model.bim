@@ -8,11 +8,11 @@
       },
       {
         "name": "PBIDesktopVersion",
-        "value": "2.124.1052.0 (23.12)"
+        "value": "2.124.1805.0 (23.12)"
       },
       {
         "name": "PBI_QueryOrder",
-        "value": "[\"Daily Scores\",\"DetailScore\",\"Yesterday scores\",\"SCIDs secured\",\"MeasuresTable\",\"Descriptions\",\"MS products\",\"Azure Graph API Url\",\"Azure Tenant ID\",\"Azure Application ID\",\"Azure Application Client Secret\",\"SecureScores Raw\",\"LicensesHeldAPI Raw\",\"UsersAPI Raw\",\"Licenses unpacked\",\"PrimaryLicense - skuId\",\"assignedLicenses - disabledPlans\",\"User held Licenses\",\"Users\",\"Licenses SKU Raw\",\"Alerts Raw\",\"Alerts\",\"Licenses SKU\",\"Groups Raw\",\"GetGroupMembers\",\"GroupMembers\",\"Azure GroupID\",\"Groups\",\"DateDimensionBI\",\"user last sigin\"]"
+        "value": "[\"Score Daily\",\"Score Detail\",\"Score Yesterday\",\"SecureComponent statuses\",\"MeasuresTable\",\"SecureComponent Descriptions\",\"MS products\",\"Azure Graph API Url\",\"Azure Tenant ID\",\"Azure Application ID\",\"Azure Application Client Secret\",\"SecureScores Raw\",\"LicensesHeldAPI Raw\",\"UsersAPI Raw\",\"Licenses unpacked\",\"PrimaryLicense - skuId\",\"assignedLicenses - disabledPlans\",\"Licenses Held\",\"Users\",\"Licenses SKU Raw\",\"Alerts Raw\",\"Alerts\",\"Licenses SKU\",\"Groups Raw\",\"Incidents Raw\",\"GetGroupMembers\",\"GroupMembers\",\"Azure GroupID\",\"Groups\",\"DateDimensionBI\",\"User last sigin\",\"Index Severity\",\"Index Alert Status\",\"Incidents\",\"Index Incident Status\",\"Incidents Duplicate incidents\"]"
       },
       {
         "name": "PBI_ProTooling",
@@ -369,6 +369,7 @@
           "  // loads the full result to UserDetail Variable  ",
           "  UserDetail = GetUserDetail(\"beta/users?$\"),",
           "  #\"Converted UserAPI to Table\" = Table.FromList(UserDetail, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+          "    // Much reduced columns, not all needed",
           "    #\"Expanded user records\" = Table.ExpandRecordColumn(",
           "  #\"Converted UserAPI to Table\",",
           "  \"Column1\",",
@@ -377,56 +378,33 @@
           "    \"deletedDateTime\",",
           "    \"accountEnabled\",",
           "    \"businessPhones\",",
-          "    \"city\",",
           "    \"createdDateTime\",",
           "    \"creationType\",",
           "    \"companyName\",",
           "    \"country\",",
           "    \"department\",",
           "    \"displayName\",",
-          "    \"employeeId\",",
-          "    \"employeeHireDate\",",
-          "    \"employeeLeaveDateTime\",",
-          "    \"employeeType\",",
           "    \"faxNumber\",",
           "    \"givenName\",",
-          "    \"imAddresses\",",
-          "    \"infoCatalogs\",",
           "    \"isLicenseReconciliationNeeded\",",
           "    \"jobTitle\",",
           "    \"mail\",",
           "    \"mailNickname\",",
-          "    \"mobilePhone\",",
           "    \"officeLocation\",",
-          "    \"otherMails\",",
-          "    \"passwordPolicies\",",
           "    \"postalCode\",",
-          "    \"preferredLanguage\",",
-          "    \"proxyAddresses\",",
           "    \"refreshTokensValidFromDateTime\",",
           "    \"securityIdentifier\",",
-          "    \"showInAddressList\",",
           "    \"signInSessionsValidFromDateTime\",",
           "    \"state\",",
           "    \"streetAddress\",",
           "    \"surname\",",
           "    \"usageLocation\",",
           "    \"userPrincipalName\",",
-          "    \"externalUserConvertedOn\",",
           "    \"externalUserState\",",
           "    \"externalUserStateChangeDateTime\",",
           "    \"userType\",",
-          "    \"employeeOrgData\",",
-          "    \"passwordProfile\",",
           "    \"assignedLicenses\",",
           "    \"assignedPlans\",",
-          "    \"authorizationInfo\",",
-          "    \"cloudRealtimeCommunicationInfo\",",
-          "    \"deviceKeys\",",
-          "    \"identities\",",
-          "    \"onPremisesExtensionAttributes\",",
-          "    \"onPremisesProvisioningErrors\",",
-          "    \"onPremisesSipInfo\",",
           "    \"provisionedPlans\",",
           "    \"serviceProvisioningErrors\"",
           "  },",
@@ -435,56 +413,33 @@
           "    \"deletedDateTime\",",
           "    \"accountEnabled\",",
           "    \"businessPhones\",",
-          "    \"city\",",
           "    \"createdDateTime\",",
           "    \"creationType\",",
           "    \"companyName\",",
           "    \"country\",",
           "    \"department\",",
           "    \"displayName\",",
-          "    \"employeeId\",",
-          "    \"employeeHireDate\",",
-          "    \"employeeLeaveDateTime\",",
-          "    \"employeeType\",",
           "    \"faxNumber\",",
           "    \"givenName\",",
-          "    \"imAddresses\",",
-          "    \"infoCatalogs\",",
           "    \"isLicenseReconciliationNeeded\",",
           "    \"jobTitle\",",
           "    \"mail\",",
           "    \"mailNickname\",",
-          "    \"mobilePhone\",",
           "    \"officeLocation\",",
-          "    \"otherMails\",",
-          "    \"passwordPolicies\",",
           "    \"postalCode\",",
-          "    \"preferredLanguage\",",
-          "    \"proxyAddresses\",",
           "    \"refreshTokensValidFromDateTime\",",
           "    \"securityIdentifier\",",
-          "    \"showInAddressList\",",
           "    \"signInSessionsValidFromDateTime\",",
           "    \"state\",",
           "    \"streetAddress\",",
           "    \"surname\",",
           "    \"usageLocation\",",
           "    \"userPrincipalName\",",
-          "    \"externalUserConvertedOn\",",
           "    \"externalUserState\",",
           "    \"externalUserStateChangeDateTime\",",
           "    \"userType\",",
-          "    \"employeeOrgData\",",
-          "    \"passwordProfile\",",
           "    \"assignedLicenses\",",
           "    \"assignedPlans\",",
-          "    \"authorizationInfo\",",
-          "    \"cloudRealtimeCommunicationInfo\",",
-          "    \"deviceKeys\",",
-          "    \"identities\",",
-          "    \"onPremisesExtensionAttributes\",",
-          "    \"onPremisesProvisioningErrors\",",
-          "    \"onPremisesSipInfo\",",
           "    \"provisionedPlans\",",
           "    \"serviceProvisioningErrors\"",
           "  }",
@@ -609,7 +564,7 @@
           "    ), ",
           "    value = Source[value],",
           "    #\"Converted Alerts API to Table\" = Table.FromList(value, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
-          "    #\"Expanded Alerts records\" = Table.ExpandRecordColumn(#\"Converted Alerts API to Table\", \"Column1\", {\"id\", \"providerAlertId\", \"incidentId\", \"status\", \"severity\", \"classification\", \"determination\", \"serviceSource\", \"detectionSource\", \"productName\", \"detectorId\", \"tenantId\", \"title\", \"description\", \"recommendedActions\", \"category\", \"assignedTo\", \"alertWebUrl\", \"incidentWebUrl\", \"actorDisplayName\", \"threatDisplayName\", \"threatFamilyName\", \"mitreTechniques\", \"createdDateTime\", \"lastUpdateDateTime\", \"resolvedDateTime\", \"firstActivityDateTime\", \"lastActivityDateTime\", \"systemTags\", \"alertPolicyId\", \"additionalData\", \"comments\", \"evidence\"}, {\"id\", \"providerAlertId\", \"incidentId\", \"status\", \"severity\", \"classification\", \"determination\", \"serviceSource\", \"detectionSource\", \"productName\", \"detectorId\", \"tenantId\", \"title\", \"description\", \"recommendedActions\", \"category\", \"assignedTo\", \"alertWebUrl\", \"incidentWebUrl\", \"actorDisplayName\", \"threatDisplayName\", \"threatFamilyName\", \"mitreTechniques\", \"createdDateTime\", \"lastUpdateDateTime\", \"resolvedDateTime\", \"firstActivityDateTime\", \"lastActivityDateTime\", \"systemTags\", \"alertPolicyId\", \"additionalData\", \"comments\", \"evidence\"})",
+          "    #\"Expanded Alerts records\" = Table.ExpandRecordColumn(#\"Converted Alerts API to Table\", \"Column1\", {\"id\", \"incidentId\", \"status\", \"severity\", \"title\", \"category\", \"assignedTo\", \"alertWebUrl\", \"createdDateTime\", \"lastUpdateDateTime\", \"resolvedDateTime\", \"firstActivityDateTime\", \"lastActivityDateTime\"}, {\"id\", \"incidentId\", \"status\", \"severity\", \"title\", \"category\", \"assignedTo\", \"alertWebUrl\", \"createdDateTime\", \"lastUpdateDateTime\", \"resolvedDateTime\", \"firstActivityDateTime\", \"lastActivityDateTime\"})",
           "in",
           "    #\"Expanded Alerts records\""
         ],
@@ -768,10 +723,6 @@
         "name": "Azure GroupID",
         "annotations": [
           {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
-          },
-          {
             "name": "PBI_ResultType",
             "value": "Text"
           }
@@ -780,6 +731,154 @@
         "kind": "m",
         "lineageTag": "87a936cd-8edb-471c-bfa8-8d61508e6aaf",
         "queryGroup": "00 Utilities\\00-0 Parameters"
+      },
+      {
+        "name": "Incidents Raw",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+          "    makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+          "        loginURL = \"https://login.microsoftonline.com/\",",
+          "        TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+          "        ResourceId = #\"Azure Graph API Url\", // where is this token for",
+          "        TokenResponse = Json.Document(",
+          "            Web.Contents(loginURL",
+          "\t\t\t    , [RelativePath = TokenUri",
+          "\t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+          "\t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+          "\t\t\t    ]",
+          "            ) // end web contents",
+          "        ), // end json",
+          "        generatedToken = TokenResponse[access_token] // assign token value",
+          "    in",
+          "    generatedToken,",
+          "myToken = makeToken(",
+          "                        #\"Azure Graph API Url\"",
+          "                        , #\"Azure Tenant ID\"",
+          "                        , #\"Azure Application ID\"",
+          "                        , #\"Azure Application Client Secret\"",
+          "                    )",
+          ", ",
+          "// Define a Function Called GetIncidents that takes a single parameter Path; the MS Graph API Endpoint",
+          "  GetIncidents = (queryPath)=>",
+          "    let",
+          "    // call out to the web endpoint and convert the result to a JSON",
+          "    // Document object which is saved in the Source variable",
+          "    Source = Json.Document(",
+          "                Web.Contents(",
+          "                    #\"Azure Graph API Url\"",
+          "                    , [RelativePath = queryPath, Headers = [Authorization = \"Bearer \" & myToken]]",
+          "                )",
+          "            ),",
+          "    // Assign the resultant List object (API return) to NextList variable",
+          "    NextList= @Source[value],",
+          "    nextLink = Text.AfterDelimiter(Source[#\"@odata.nextLink\"], #\"Azure Graph API Url\"), ",
+          "    // recursively call GetIncidents function using the value of the @odata.nextLink as the path",
+          "    // Since @odata.nextLink is not guaranteed to always exist in the case where the result is less than 100 we need to catch this and deal with it",
+          "    // using a try otherwise basically means if you error out because no",
+          "    // @odata.nextLink exisit then just return the resulting list of values you did get",
+          "    // there is an API returned value called @odata.nextLink - so we can directly reference that",
+          "    result = try @NextList & @GetIncidents(nextLink) otherwise @NextList",
+          "    in",
+          "    // Return the result variable as the function return",
+          "    result,",
+          "  // Use the function GetIncidents with the initial path to the object.",
+          "  // The function will run recursively until it gets all the record and then",
+          "  // loads the full result to IncidentsReturn Variable  ",
+          "  IncidentsReturn = GetIncidents(\"beta/security/incidents/?$\"),",
+          "  #\"Converted incidents API to Table\" = Table.FromList(IncidentsReturn, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+          "  #\"Expanded Column1\" = Table.ExpandRecordColumn(#\"Converted incidents API to Table\", \"Column1\", {\"id\", \"status\", \"incidentWebUrl\", \"displayName\", \"createdDateTime\", \"lastUpdateDateTime\", \"assignedTo\", \"classification\", \"severity\", \"lastModifiedBy\"}, {\"id\", \"status\", \"incidentWebUrl\", \"displayName\", \"createdDateTime\", \"lastUpdateDateTime\", \"assignedTo\", \"classification\", \"severity\", \"lastModifiedBy\"})",
+          "in",
+          "    #\"Expanded Column1\""
+        ],
+        "kind": "m",
+        "lineageTag": "bbe9ac7e-b4d5-4dcd-bfca-431bc6b1de88",
+        "queryGroup": "01 API query\\01-01 API return"
+      },
+      {
+        "name": "Incidents Duplicate incidents",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+          "    makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+          "        loginURL = \"https://login.microsoftonline.com/\",",
+          "        TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+          "        ResourceId = #\"Azure Graph API Url\", // where is this token for",
+          "        TokenResponse = Json.Document(",
+          "            Web.Contents(loginURL",
+          "\t\t\t    , [RelativePath = TokenUri",
+          "\t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+          "\t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+          "\t\t\t    ]",
+          "            ) // end web contents",
+          "        ), // end json",
+          "        generatedToken = TokenResponse[access_token] // assign token value",
+          "    in",
+          "    generatedToken,",
+          "myToken = makeToken(",
+          "                        #\"Azure Graph API Url\"",
+          "                        , #\"Azure Tenant ID\"",
+          "                        , #\"Azure Application ID\"",
+          "                        , #\"Azure Application Client Secret\"",
+          "                    )",
+          ", ",
+          "// Define a Function Called GetIncidents that takes a single parameter Path; the MS Graph API Endpoint",
+          "  GetIncidents = (queryPath)=>",
+          "    let",
+          "    // call out to the web endpoint and convert the result to a JSON",
+          "    // Document object which is saved in the Source variable",
+          "    Source = Json.Document(",
+          "                Web.Contents(",
+          "                    #\"Azure Graph API Url\"",
+          "                    , [RelativePath = queryPath, Headers = [Authorization = \"Bearer \" & myToken]]",
+          "                )",
+          "            ),",
+          "    // Assign the resultant List object (API return) to NextList variable",
+          "    NextList= @Source[value],",
+          "    nextLink = Text.AfterDelimiter(Source[#\"@odata.nextLink\"], #\"Azure Graph API Url\"), ",
+          "    // recursively call GetIncidents function using the value of the @odata.nextLink as the path",
+          "    // Since @odata.nextLink is not guaranteed to always exist in the case where the result is less than 100 we need to catch this and deal with it",
+          "    // using a try otherwise basically means if you error out because no",
+          "    // @odata.nextLink exisit then just return the resulting list of values you did get",
+          "    // there is an API returned value called @odata.nextLink - so we can directly reference that",
+          "    result = try @NextList & @GetIncidents(nextLink) otherwise @NextList",
+          "    in",
+          "    // Return the result variable as the function return",
+          "    result,",
+          "  // Use the function GetIncidents with the initial path to the object.",
+          "  // The function will run recursively until it gets all the record and then",
+          "  // loads the full result to IncidentsReturn Variable  ",
+          "  IncidentsReturn = GetIncidents(\"beta/security/incidents/?$\"),",
+          "  #\"Converted incidents API to Table\" = Table.FromList(IncidentsReturn, Splitter.SplitByNothing(), null, null, ExtraValues.Error),",
+          "  #\"Expanded Column1\" = Table.ExpandRecordColumn(#\"Converted incidents API to Table\", \"Column1\", {\"id\", \"tenantId\", \"status\", \"incidentWebUrl\", \"redirectIncidentId\", \"displayName\", \"createdDateTime\", \"lastUpdateDateTime\", \"assignedTo\", \"classification\", \"determination\", \"severity\", \"lastModifiedBy\"}, {\"id\", \"tenantId\", \"status\", \"incidentWebUrl\", \"redirectIncidentId\", \"displayName\", \"createdDateTime\", \"lastUpdateDateTime\", \"assignedTo\", \"classification\", \"determination\", \"severity\", \"lastModifiedBy\"}),",
+          "  #\"Changed Type\" = Table.TransformColumnTypes(#\"Expanded Column1\",{{\"createdDateTime\", type datetimezone}, {\"lastUpdateDateTime\", type datetimezone}}),",
+          "    #\"Kept Duplicates\" = let columnNames = {\"id\"}, addCount = Table.Group(#\"Changed Type\", columnNames, {{\"Count\", Table.RowCount, type number}}), selectDuplicates = Table.SelectRows(addCount, each [Count] > 1), removeCount = Table.RemoveColumns(selectDuplicates, \"Count\") in Table.Join(#\"Changed Type\", columnNames, removeCount, columnNames, JoinKind.Inner)",
+          "in",
+          "    #\"Kept Duplicates\""
+        ],
+        "kind": "m",
+        "lineageTag": "da5caf06-ba47-45a9-bcc9-ad863834892a",
+        "queryGroup": "99 testing"
       }
     ],
     "queryGroups": [
@@ -814,7 +913,7 @@
         "annotations": [
           {
             "name": "PBI_QueryGroupOrder",
-            "value": "4"
+            "value": "3"
           }
         ],
         "folder": "03 Model Tables"
@@ -890,45 +989,54 @@
           }
         ],
         "folder": "02 Staging\\02-01 Licenses Stg"
+      },
+      {
+        "annotations": [
+          {
+            "name": "PBI_QueryGroupOrder",
+            "value": "4"
+          }
+        ],
+        "folder": "04 Index Tables"
       }
     ],
     "relationships": [
       {
         "name": "1cf2113c-821e-4a01-9b82-67953991afba",
         "fromColumn": "controlName",
-        "fromTable": "DetailScore",
+        "fromTable": "Score Detail",
         "toColumn": "controlName",
-        "toTable": "Descriptions"
+        "toTable": "SecureComponent Descriptions"
       },
       {
         "name": "714a9706-6f61-4ca0-bba9-3ed260706205",
         "fromColumn": "createdDate",
-        "fromTable": "DetailScore",
+        "fromTable": "Score Detail",
         "toColumn": "createdDate",
-        "toTable": "Daily Scores"
+        "toTable": "Score Daily"
       },
       {
         "name": "52d4554f-db20-296e-b49a-559577e8b52c",
         "crossFilteringBehavior": "bothDirections",
         "fromCardinality": "one",
         "fromColumn": "controlName",
-        "fromTable": "Descriptions",
+        "fromTable": "SecureComponent Descriptions",
         "toColumn": "controlName",
-        "toTable": "SCIDs secured"
+        "toTable": "SecureComponent statuses"
       },
       {
         "name": "1beba249-93b1-159d-079b-b99273b7384c",
         "crossFilteringBehavior": "bothDirections",
         "fromCardinality": "one",
         "fromColumn": "controlName",
-        "fromTable": "Descriptions",
+        "fromTable": "SecureComponent Descriptions",
         "toColumn": "controlName",
-        "toTable": "Yesterday scores"
+        "toTable": "Score Yesterday"
       },
       {
         "name": "fd35b8bf-5508-41f4-893a-b35686b758bc",
         "fromColumn": "product GUID",
-        "fromTable": "User held Licenses",
+        "fromTable": "Licenses Held",
         "toColumn": "GUID",
         "toTable": "MS products"
       },
@@ -952,13 +1060,14 @@
         "name": "f0b21999-6690-854b-0c85-edfa2fdea949",
         "fromColumn": "CreatedDate",
         "fromTable": "Alerts",
+        "isActive": false,
         "toColumn": "Date",
         "toTable": "DateDimensionBI"
       },
       {
         "name": "6bee4d5f-f173-291d-679f-876df125760f",
         "fromColumn": "createdDate",
-        "fromTable": "DetailScore",
+        "fromTable": "Score Detail",
         "isActive": false,
         "toColumn": "Date",
         "toTable": "DateDimensionBI"
@@ -986,7 +1095,7 @@
         "fromColumn": "Date",
         "fromTable": "DateDimensionBI",
         "toColumn": "createdDate",
-        "toTable": "Daily Scores"
+        "toTable": "Score Daily"
       },
       {
         "name": "7c811a0f-ec7b-4c4f-bd23-65d0a635aa91",
@@ -995,12 +1104,12 @@
         "fromColumn": "user id",
         "fromTable": "Users",
         "toColumn": "user id",
-        "toTable": "user last sigin"
+        "toTable": "User last sigin"
       },
       {
         "name": "c24072cd-6712-432f-9b4a-4ad65eff5d6a",
         "fromColumn": "user id",
-        "fromTable": "User held Licenses",
+        "fromTable": "Licenses Held",
         "toColumn": "user id",
         "toTable": "Users"
       },
@@ -1014,19 +1123,67 @@
       {
         "name": "b91ba6a1-b7c9-4011-a5f7-5232090c75e2",
         "fromColumn": "Last SignIn Date",
-        "fromTable": "user last sigin",
+        "fromTable": "User last sigin",
         "toColumn": "Date",
         "toTable": "DateDimensionBI"
+      },
+      {
+        "name": "4f561a7b-4fd4-cd41-b050-4675461177b3",
+        "fromColumn": "severity",
+        "fromTable": "Alerts",
+        "isActive": false,
+        "toColumn": "SeverityGraph",
+        "toTable": "Index Severity"
+      },
+      {
+        "name": "118fa320-fd1e-a218-918e-866b44c5c412",
+        "fromColumn": "status",
+        "fromTable": "Alerts",
+        "toColumn": "StatusGraph",
+        "toTable": "Index Alert Status"
+      },
+      {
+        "name": "31fea14a-5d4c-4c91-940d-0a5433ca99db",
+        "fromColumn": "incidentId",
+        "fromTable": "Alerts",
+        "toColumn": "id",
+        "toTable": "Incidents"
+      },
+      {
+        "name": "8162553a-c95a-4696-b35c-45078d2ac8d9",
+        "fromColumn": "CreatedDate",
+        "fromTable": "Incidents",
+        "toColumn": "Date",
+        "toTable": "DateDimensionBI"
+      },
+      {
+        "name": "b8ead09e-6db9-4ebd-990f-905af335d011",
+        "fromColumn": "status",
+        "fromTable": "Incidents",
+        "toColumn": "Status",
+        "toTable": "Index Incident Status"
+      },
+      {
+        "name": "be23918f-21c4-4da5-8bf2-8f15d9305b8d",
+        "fromColumn": "severity",
+        "fromTable": "Incidents",
+        "toColumn": "SeverityGraph",
+        "toTable": "Index Severity"
       }
     ],
     "sourceQueryCulture": "en-AU",
     "tables": [
       {
-        "name": "Descriptions",
+        "name": "SecureComponent Descriptions",
         "annotations": [
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "Name"
           }
         ],
         "columns": [
@@ -1086,7 +1243,7 @@
         "lineageTag": "de1e4091-41a7-4188-9abe-44a53c08fe51",
         "partitions": [
           {
-            "name": "Descriptions",
+            "name": "SecureComponent Descriptions",
             "mode": "import",
             "queryGroup": "02 Staging\\02-00 Security Stg",
             "source": {
@@ -1113,15 +1270,20 @@
         ]
       },
       {
-        "name": "Daily Scores",
+        "name": "Score Daily",
         "annotations": [
           {
             "name": "PBI_ResultType",
-            "value": "Table"
+            "value": "Exception"
           },
           {
             "name": "PBI_NavigationStepName",
             "value": "Navigation"
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "Name"
           }
         ],
         "columns": [
@@ -1156,6 +1318,7 @@
               }
             ],
             "dataType": "double",
+            "displayFolder": "Scores",
             "lineageTag": "0596e145-5694-4b9c-888d-ec6c8613e4db",
             "sourceColumn": "currentScore",
             "summarizeBy": "none"
@@ -1173,6 +1336,7 @@
               }
             ],
             "dataType": "double",
+            "displayFolder": "Scores",
             "lineageTag": "b256c353-3d5d-4691-b0eb-cc01397e593b",
             "sourceColumn": "maxScore",
             "summarizeBy": "none"
@@ -1186,6 +1350,7 @@
               }
             ],
             "dataType": "double",
+            "displayFolder": "Scores",
             "formatString": "0.00%;-0.00%;0.00%",
             "lineageTag": "ba49cf3f-39bc-46c4-ab6f-62564049a45c",
             "sourceColumn": "AllTenants",
@@ -1200,6 +1365,7 @@
               }
             ],
             "dataType": "double",
+            "displayFolder": "Scores",
             "formatString": "0.00%;-0.00%;0.00%",
             "lineageTag": "7436e46e-0f59-43d6-bbe5-afa4c18dc4ba",
             "sourceColumn": "TotalSeats",
@@ -1218,6 +1384,7 @@
               }
             ],
             "dataType": "double",
+            "displayFolder": "Scores",
             "lineageTag": "9e0fe617-a39e-40e5-8fec-5fe15ae898da",
             "sourceColumn": "Secure Score %",
             "summarizeBy": "none"
@@ -1226,7 +1393,7 @@
         "lineageTag": "35b62065-104f-4be2-8861-2632268cb73c",
         "partitions": [
           {
-            "name": "Daily Scores",
+            "name": "Score Daily",
             "mode": "import",
             "queryGroup": "03 Model Tables\\03-01 Security master tables",
             "source": {
@@ -1257,11 +1424,16 @@
         ]
       },
       {
-        "name": "SCIDs secured",
+        "name": "SecureComponent statuses",
         "annotations": [
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "Name"
           }
         ],
         "columns": [
@@ -1274,6 +1446,7 @@
               }
             ],
             "dataType": "int64",
+            "displayFolder": "score metric",
             "formatString": "0",
             "lineageTag": "7fd4e715-ca6b-4121-9e04-0af74b800cb0",
             "sourceColumn": "Exposed devices",
@@ -1288,6 +1461,7 @@
               }
             ],
             "dataType": "int64",
+            "displayFolder": "score metric",
             "formatString": "0",
             "lineageTag": "cb39e889-77b4-43f3-8a0f-665709879b1f",
             "sourceColumn": "total devices",
@@ -1302,6 +1476,7 @@
               }
             ],
             "dataType": "double",
+            "displayFolder": "score metric",
             "formatString": "0.0%;-0.0%;0.0%",
             "lineageTag": "88d83ca4-88bf-41af-af07-c6eb307d8e2d",
             "sourceColumn": "% secured",
@@ -1321,6 +1496,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "labels",
             "lineageTag": "022f085b-6ba8-4041-a486-c7a83424364e",
             "sortByColumn": "SCID-index",
             "sourceColumn": "controlName",
@@ -1340,6 +1516,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "labels",
             "lineageTag": "78c4936b-caa1-42e9-93bb-e7113aa8b2c2",
             "sortByColumn": "SCID-index",
             "sourceColumn": "DailyScoreKey",
@@ -1359,6 +1536,7 @@
               }
             ],
             "dataType": "int64",
+            "displayFolder": "labels",
             "formatString": "0",
             "isHidden": true,
             "lineageTag": "d57288e7-a7b7-497e-bbb7-67c9845ede19",
@@ -1369,13 +1547,13 @@
         "lineageTag": "bd89d351-899e-4665-9f63-10cee2075bde",
         "partitions": [
           {
-            "name": "SCIDs secured",
+            "name": "SecureComponent statuses",
             "mode": "import",
             "queryGroup": "03 Model Tables\\03-02 Security Current Stats",
             "source": {
               "expression": [
                 "let",
-                "    Source = #\"Yesterday scores\",",
+                "    Source = #\"Score Yesterday\",",
                 "    // These seem to only be as-at",
                 "    // need most recent instance: https://stackoverflow.com/a/50473350",
                 "    #\"Filtered device scores\" = Table.SelectRows(Source, each Text.StartsWith([controlName], \"scid_\")),",
@@ -1424,8 +1602,8 @@
             "displayFolder": "Security Scores",
             "expression": [
               "CALCULATE(",
-              "    sum('Daily Scores'[Secure Score %])",
-              "    , FILTER('DateDimensionBI', 'DateDimensionBI'[Date] = SELECTEDVALUE('DateDimensionBI'[Date], MAX('Daily Scores'[createdDate]))",
+              "    sum('Score Daily'[Secure Score %])",
+              "    , FILTER('DateDimensionBI', 'DateDimensionBI'[Date] = SELECTEDVALUE('DateDimensionBI'[Date], MAX('Score Daily'[createdDate]))",
               "))"
             ],
             "formatString": "0.00%;-0.00%;0.00%",
@@ -1436,7 +1614,7 @@
             "displayFolder": "Users",
             "expression": [
               "CALCULATE(",
-              "    DISTINCTCOUNT('User held Licenses'[user id])",
+              "    DISTINCTCOUNT('Licenses Held'[user id])",
               ")"
             ],
             "formatString": "0",
@@ -1456,6 +1634,7 @@
           },
           {
             "name": "Last Refreshed",
+            "displayFolder": "00 Utilities",
             "expression": "FORMAT(NOW(), \"yyyy/mm/dd HH:mm\")",
             "lineageTag": "7544c434-465a-4aed-85c5-c87e39429963"
           },
@@ -1484,8 +1663,8 @@
             "displayFolder": "Security Scores",
             "expression": [
               "CALCULATE(",
-              "    SUM('Daily Scores'[TotalSeats])",
-              "    , FILTER('DateDimensionBI', 'DateDimensionBI'[Date] = SELECTEDVALUE('DateDimensionBI'[Date], MAX('Daily Scores'[createdDate]))",
+              "    SUM('Score Daily'[TotalSeats])",
+              "    , FILTER('DateDimensionBI', 'DateDimensionBI'[Date] = SELECTEDVALUE('DateDimensionBI'[Date], MAX('Score Daily'[createdDate]))",
               "))"
             ],
             "formatString": "0.00%;-0.00%;0.00%",
@@ -1493,9 +1672,12 @@
           },
           {
             "name": "Alerts",
+            "displayFolder": "Alerts & Incidents\\Alerts",
             "expression": [
               "CALCULATE(",
-              "    COUNT(Alerts[id])",
+              "    DISTINCTCOUNT(Alerts[id])",
+              "    , USERELATIONSHIP(Alerts[CreatedDate], DateDimensionBI[Date])",
+              "    , USERELATIONSHIP(Alerts[severity], 'Index Severity'[SeverityGraph])",
               ")"
             ],
             "formatString": "0",
@@ -1509,7 +1691,8 @@
                 "value": "{\"isDateTimeCustom\":true}"
               }
             ],
-            "expression": "MAX('Daily Scores'[createdDate])",
+            "displayFolder": "00 Utilities",
+            "expression": "MAX('Score Daily'[createdDate])",
             "formatString": "yyyy/mm/dd",
             "lineageTag": "e6a04031-8990-461d-8ba0-ca86379e1aea"
           },
@@ -1530,8 +1713,8 @@
             "displayFolder": "Users",
             "expression": [
               "CALCULATE(",
-              "    DISTINCTCOUNT('user last sigin'[user id])",
-              "    , USERELATIONSHIP('user last sigin'[Last SignIn Date], DateDimensionBI[Date])",
+              "    DISTINCTCOUNT('User last sigin'[user id])",
+              "    , USERELATIONSHIP('User last sigin'[Last SignIn Date], DateDimensionBI[Date])",
               ")"
             ],
             "lineageTag": "696d647a-5ea5-40bf-ac16-aa908a22d77d"
@@ -1546,6 +1729,115 @@
             ],
             "formatString": "0",
             "lineageTag": "aa67bdb9-f4b5-49ab-ab31-0f88809548bc"
+          },
+          {
+            "name": "Average Component Score %",
+            "displayFolder": "Security Scores",
+            "expression": "CALCULATE(AVERAGE('Score Detail'[Score Percentage]))",
+            "formatString": "0.0%;-0.0%;0.0%",
+            "lineageTag": "7fa2671e-95a3-4ab4-9f33-b6883a1b8a1a"
+          },
+          {
+            "name": "Average Component Score % Yesterday",
+            "displayFolder": "Security Scores",
+            "expression": "CALCULATE(AVERAGE('Score Yesterday'[Score Percentage]))",
+            "formatString": "0.0%;-0.0%;0.0%",
+            "lineageTag": "63451df6-2c95-4227-bdf4-53d2c3df0220"
+          },
+          {
+            "name": "Recent Alerts",
+            "displayFolder": "Alerts & Incidents\\Alerts",
+            "expression": [
+              "CALCULATE(",
+              "    [Alerts]",
+              "    , DateDimensionBI[t-90] = TRUE",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "370ee752-e53f-42d5-95aa-efd46db873cc"
+          },
+          {
+            "name": "Response time - Alerts",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "displayFolder": "Alerts & Incidents\\Alerts",
+            "expression": [
+              "CALCULATE(",
+              "    AVERAGE(Alerts[Hours to Resolve (first activity)])",
+              "    , USERELATIONSHIP(Alerts[severity], 'Index Severity'[SeverityGraph])",
+              ")"
+            ],
+            "lineageTag": "5e4809d5-ec2f-4853-9cef-efddb1516ff2"
+          },
+          {
+            "name": "Unresolved Alerts",
+            "displayFolder": "Alerts & Incidents\\Alerts",
+            "expression": [
+              "CALCULATE(",
+              "    [Alerts]",
+              "    , NOT('Index Alert Status'[Status] = \"Resolved\")",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "0c86308c-52d0-4197-89ae-d16c7f4c03f7"
+          },
+          {
+            "name": "Incidents",
+            "displayFolder": "Alerts & Incidents\\Incidents",
+            "expression": [
+              "CALCULATE(",
+              "    DISTINCTCOUNT(Incidents[id])",
+              "    , USERELATIONSHIP(Incidents[severity], 'Index Severity'[SeverityGraph])",
+              "    , USERELATIONSHIP(Incidents[CreatedDate], DateDimensionBI[Date])",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "34b2b908-e36b-440b-8fa1-038a3498ce66"
+          },
+          {
+            "name": "Unresolved Incidents",
+            "displayFolder": "Alerts & Incidents\\Incidents",
+            "expression": [
+              "CALCULATE(",
+              "    [Incidents]",
+              "    , NOT('Incidents'[status] = \"Resolved\")",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "7e598c8b-6933-4f9e-8d93-0f4634f50a81"
+          },
+          {
+            "name": "Recent Incidents",
+            "displayFolder": "Alerts & Incidents\\Incidents",
+            "expression": [
+              "CALCULATE(",
+              "    [Incidents]",
+              "    , DateDimensionBI[t-90] = TRUE",
+              ")"
+            ],
+            "formatString": "0",
+            "lineageTag": "c2a4ba6b-3105-41eb-9b88-366df6acf601"
+          },
+          {
+            "name": "Response time - Incidents",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "displayFolder": "Alerts & Incidents\\Incidents",
+            "expression": [
+              "CALCULATE(",
+              "    AVERAGE(Incidents[TimeToResolve])",
+              "    , USERELATIONSHIP(Incidents[severity], 'Index Severity'[SeverityGraph])",
+              ")"
+            ],
+            "lineageTag": "c3db31f5-a300-4150-a6ae-762fb01c04a7"
           }
         ],
         "partitions": [
@@ -1568,7 +1860,7 @@
         ]
       },
       {
-        "name": "Yesterday scores",
+        "name": "Score Yesterday",
         "annotations": [
           {
             "name": "PBI_ResultType",
@@ -1589,6 +1881,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "datetimes",
             "formatString": "Long Date",
             "lineageTag": "4edaca44-db67-4d3e-86d1-4bc0e0761f2e",
             "sourceColumn": "createdDate",
@@ -1603,6 +1896,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "datetimes",
             "formatString": "General Date",
             "lineageTag": "a33829c7-660b-46cd-a294-019ea539d978",
             "sourceColumn": "lastSynced",
@@ -1617,6 +1911,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "labels",
             "lineageTag": "f517544f-fefd-40d8-8426-9478bda0478d",
             "sourceColumn": "controlName",
             "summarizeBy": "none"
@@ -1634,6 +1929,7 @@
               }
             ],
             "dataType": "double",
+            "displayFolder": "score metrics",
             "lineageTag": "d762af10-f7a9-4f07-af6f-5971945a8e5a",
             "sourceColumn": "score",
             "summarizeBy": "none"
@@ -1647,6 +1943,7 @@
               }
             ],
             "dataType": "double",
+            "displayFolder": "score metrics",
             "formatString": "0.00%;-0.00%;0.00%",
             "lineageTag": "3131613c-894c-46f4-8846-29d1ebcc33dc",
             "sourceColumn": "Score Percentage",
@@ -1661,6 +1958,7 @@
               }
             ],
             "dataType": "boolean",
+            "displayFolder": "score metrics",
             "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
             "lineageTag": "2ba7ee66-7284-4b61-9bfe-58bd34c31a56",
             "sourceColumn": "on",
@@ -1675,6 +1973,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "labels",
             "lineageTag": "a148de65-4884-4ac9-b884-9497392096ba",
             "sourceColumn": "DailyScoreKey",
             "summarizeBy": "none"
@@ -1688,6 +1987,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "labels",
             "lineageTag": "3e4a2097-db79-465d-a6bd-572cdf591064",
             "sourceColumn": "controlCategory",
             "summarizeBy": "none"
@@ -1701,6 +2001,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "score metrics",
             "lineageTag": "55ce6186-5992-49fe-bd5b-4492848a79c0",
             "sourceColumn": "Implementation Status",
             "summarizeBy": "none"
@@ -1709,13 +2010,13 @@
         "lineageTag": "9e3f2df6-de0b-4b62-b7f6-71de4dbe6710",
         "partitions": [
           {
-            "name": "Yesterday scores",
+            "name": "Score Yesterday",
             "mode": "import",
             "queryGroup": "03 Model Tables\\03-02 Security Current Stats",
             "source": {
               "expression": [
                 "let",
-                "    Source = DetailScore,",
+                "    Source = #\"Score Detail\",",
                 "    // https://stackoverflow.com/a/50473350",
                 "    #\"Filtered - only yesterday's scores\" = Table.SelectRows(Source, each DateTime.Date([createdDate]) = Date.From(List.Max(Source[createdDate])))",
                 "in",
@@ -1727,7 +2028,7 @@
         ]
       },
       {
-        "name": "DetailScore",
+        "name": "Score Detail",
         "annotations": [
           {
             "name": "PBI_ResultType",
@@ -1748,6 +2049,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "datetimes",
             "formatString": "Long Date",
             "lineageTag": "a8946365-8587-46d2-9195-968da96958b9",
             "sourceColumn": "createdDate",
@@ -1762,6 +2064,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "datetimes",
             "formatString": "General Date",
             "lineageTag": "9bbce438-266c-4336-add5-0a0009464a28",
             "sourceColumn": "lastSynced",
@@ -1776,6 +2079,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "labels",
             "lineageTag": "e90edd1d-be15-4b2e-a8b6-97f4931f997a",
             "sourceColumn": "controlName",
             "summarizeBy": "none"
@@ -1793,6 +2097,7 @@
               }
             ],
             "dataType": "double",
+            "displayFolder": "score metrics",
             "lineageTag": "38835ad0-7a01-400b-aaa3-e82b496aea25",
             "sourceColumn": "score",
             "summarizeBy": "none"
@@ -1806,6 +2111,7 @@
               }
             ],
             "dataType": "double",
+            "displayFolder": "score metrics",
             "formatString": "0.00%;-0.00%;0.00%",
             "lineageTag": "ea7bed14-4f7f-4705-a78d-330e13c27c5b",
             "sourceColumn": "Score Percentage",
@@ -1820,6 +2126,7 @@
               }
             ],
             "dataType": "boolean",
+            "displayFolder": "score metrics",
             "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
             "lineageTag": "16b038f9-1a74-493d-b941-39bc841970a5",
             "sourceColumn": "on",
@@ -1834,6 +2141,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "labels",
             "lineageTag": "09cc30fb-c2f2-4d7b-b6c4-b89a592c3c48",
             "sourceColumn": "DailyScoreKey",
             "summarizeBy": "none"
@@ -1847,6 +2155,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "labels",
             "lineageTag": "ffe922c6-d777-4b98-89a5-068cd3924f82",
             "sourceColumn": "controlCategory",
             "summarizeBy": "none"
@@ -1860,6 +2169,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "score metrics",
             "lineageTag": "c41a12bf-8469-440a-bc98-dd78d29968cc",
             "sourceColumn": "Implementation Status",
             "summarizeBy": "none"
@@ -1868,7 +2178,7 @@
         "lineageTag": "3b6665f1-de6d-4a70-83e0-7cf2efd821fa",
         "partitions": [
           {
-            "name": "DetailScore",
+            "name": "Score Detail",
             "mode": "import",
             "queryGroup": "03 Model Tables\\03-01 Security master tables",
             "source": {
@@ -1901,15 +2211,16 @@
         ]
       },
       {
-        "name": "User held Licenses",
+        "name": "Licenses Held",
         "annotations": [
           {
             "name": "PBI_ResultType",
             "value": "Table"
-          },
+          }
+        ],
+        "changedProperties": [
           {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
+            "property": "Name"
           }
         ],
         "columns": [
@@ -1956,7 +2267,7 @@
         "lineageTag": "4f5f9d29-c52a-4aaf-a0aa-92fd83659bc7",
         "partitions": [
           {
-            "name": "User held Licenses",
+            "name": "Licenses Held",
             "mode": "import",
             "queryGroup": "03 Model Tables\\03-03 Users",
             "source": {
@@ -1979,6 +2290,10 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
           }
         ],
         "columns": [
@@ -1991,6 +2306,7 @@
               }
             ],
             "dataType": "boolean",
+            "displayFolder": "account features",
             "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
             "lineageTag": "1d0329e5-aea4-4efa-9fb7-75ff2e61389b",
             "sourceColumn": "accountEnabled",
@@ -2007,19 +2323,6 @@
             "dataType": "string",
             "lineageTag": "5a8cac7d-76b3-4cfb-babf-fe7524ddb27b",
             "sourceColumn": "businessPhones",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "city",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "f2b39775-0280-4e31-bf6c-2050ae3c8b7c",
-            "sourceColumn": "city",
             "summarizeBy": "none"
           },
           {
@@ -2127,19 +2430,6 @@
             "summarizeBy": "none"
           },
           {
-            "name": "mobilePhone",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "d1618d33-5506-407d-afbb-82375e92bd9a",
-            "sourceColumn": "mobilePhone",
-            "summarizeBy": "none"
-          },
-          {
             "name": "officeLocation",
             "annotations": [
               {
@@ -2236,58 +2526,6 @@
             "summarizeBy": "none"
           },
           {
-            "name": "employeeId",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "9008c85f-ae7f-4ea6-8d03-7167b92fa015",
-            "sourceColumn": "employeeId",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "employeeHireDate",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "0aa64bc1-903d-4ded-9cdc-73a57f5eef2d",
-            "sourceColumn": "employeeHireDate",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "employeeLeaveDateTime",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "9aa86c7a-01fb-4e6e-82e4-40fbb0693eee",
-            "sourceColumn": "employeeLeaveDateTime",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "employeeType",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "70e33d69-018b-4925-9ad2-e3e6785df8dd",
-            "sourceColumn": "employeeType",
-            "summarizeBy": "none"
-          },
-          {
             "name": "faxNumber",
             "annotations": [
               {
@@ -2298,32 +2536,6 @@
             "dataType": "string",
             "lineageTag": "4cbeabdc-7115-4758-95ee-8474079737de",
             "sourceColumn": "faxNumber",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "imAddresses",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "0307a14f-31fb-48b1-9ec0-8b056b291a9a",
-            "sourceColumn": "imAddresses",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "infoCatalogs",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "62efb5ad-2ac7-4bf6-b01f-ca71092ea2ab",
-            "sourceColumn": "infoCatalogs",
             "summarizeBy": "none"
           },
           {
@@ -2341,32 +2553,6 @@
             "summarizeBy": "none"
           },
           {
-            "name": "otherMails",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "898efd36-e65d-4cf5-b857-47346a1d7f11",
-            "sourceColumn": "otherMails",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "passwordPolicies",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "ef445a41-f3dd-4491-adeb-73de53f61bd8",
-            "sourceColumn": "passwordPolicies",
-            "summarizeBy": "none"
-          },
-          {
             "name": "postalCode",
             "annotations": [
               {
@@ -2377,32 +2563,6 @@
             "dataType": "string",
             "lineageTag": "c978b719-4075-40f3-98cd-caa6681bf7d3",
             "sourceColumn": "postalCode",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "preferredLanguage",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "78624866-9379-4976-842d-c53628ea51ac",
-            "sourceColumn": "preferredLanguage",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "proxyAddresses",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "6ce3486f-cbae-4e52-909e-83acb210a346",
-            "sourceColumn": "proxyAddresses",
             "summarizeBy": "none"
           },
           {
@@ -2429,19 +2589,6 @@
             "dataType": "string",
             "lineageTag": "feba138d-a993-47b5-814a-5bc06fc8e7ce",
             "sourceColumn": "securityIdentifier",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "showInAddressList",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "3c8720e7-9596-4c2a-b775-32103f80417f",
-            "sourceColumn": "showInAddressList",
             "summarizeBy": "none"
           },
           {
@@ -2511,19 +2658,6 @@
             "summarizeBy": "none"
           },
           {
-            "name": "externalUserConvertedOn",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "82fc729d-fb25-40ee-9e26-94e666efe65a",
-            "sourceColumn": "externalUserConvertedOn",
-            "summarizeBy": "none"
-          },
-          {
             "name": "externalUserState",
             "annotations": [
               {
@@ -2551,32 +2685,6 @@
             "summarizeBy": "none"
           },
           {
-            "name": "employeeOrgData",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "80efcad3-0b0a-493e-b50c-dabbe56b2770",
-            "sourceColumn": "employeeOrgData",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "passwordProfile",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "e0e2c768-aa28-4320-b318-eeafe1f6b264",
-            "sourceColumn": "passwordProfile",
-            "summarizeBy": "none"
-          },
-          {
             "name": "assignedLicenses",
             "annotations": [
               {
@@ -2585,6 +2693,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "account features",
             "lineageTag": "174450bb-83dc-4f35-9df5-0ffda7f87d9d",
             "sourceColumn": "assignedLicenses",
             "summarizeBy": "none"
@@ -2598,99 +2707,9 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "account features",
             "lineageTag": "933cace4-775e-4430-a469-c70cc8527e93",
             "sourceColumn": "assignedPlans",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "authorizationInfo",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "5b8719a1-bf68-4ca9-ad64-eefdc953ef41",
-            "sourceColumn": "authorizationInfo",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "cloudRealtimeCommunicationInfo",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "fa6240ef-4e9e-4502-b2a9-2f77ee84a007",
-            "sourceColumn": "cloudRealtimeCommunicationInfo",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "deviceKeys",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "de99f25f-4398-4204-a4fe-155bc7fef58d",
-            "sourceColumn": "deviceKeys",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "identities",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "18b9b74a-241a-4e5c-89d4-ca53bf05053d",
-            "sourceColumn": "identities",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "onPremisesExtensionAttributes",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "aa74323f-77c7-4692-820e-ef66be582ca4",
-            "sourceColumn": "onPremisesExtensionAttributes",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "onPremisesProvisioningErrors",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "b4e6e3dc-782a-4fe4-971f-847d5291691b",
-            "sourceColumn": "onPremisesProvisioningErrors",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "onPremisesSipInfo",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "3c62af23-0fb8-47b1-98bd-ab106c54a453",
-            "sourceColumn": "onPremisesSipInfo",
             "summarizeBy": "none"
           },
           {
@@ -2702,6 +2721,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "account features",
             "lineageTag": "2971d5ab-8701-441a-b75e-003bad0059d9",
             "sourceColumn": "provisionedPlans",
             "summarizeBy": "none"
@@ -2715,6 +2735,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "account features",
             "lineageTag": "e616d50f-ebff-40cc-b34e-c1d4610ab154",
             "sourceColumn": "serviceProvisioningErrors",
             "summarizeBy": "none"
@@ -2757,9 +2778,8 @@
                 "let",
                 "GetUserDetail = #\"UsersAPI Raw\",",
                 "    #\"Extracted phone numbers\" = Table.TransformColumns(GetUserDetail, {\"businessPhones\", each Text.Combine(List.Transform(_, Text.From), \";\"), type text}),",
-                "    #\"Extracted imAddress\" = Table.TransformColumns(#\"Extracted phone numbers\", {\"imAddresses\", each Text.Combine(List.Transform(_, Text.From), \";\"), type text}),",
                 "    // scans text for \"blocked\"",
-                "    #\"Added is blocked\" = Table.AddColumn(#\"Extracted imAddress\", \"Marked as blocked\", each if [department] <> null then (if Text.Contains(Text.Lower([department]), \"blocked\") then true else false) else null),",
+                "    #\"Added is blocked\" = Table.AddColumn(#\"Extracted phone numbers\", \"Marked as blocked\", each if [department] <> null then (if Text.Contains(Text.Lower([department]), \"blocked\") then true else false) else null),",
                 "    // need to first set datetimezones to such, to enable follow-up step of casting to date",
                 "    #\"Changed Types\" = Table.TransformColumnTypes(#\"Added is blocked\",{{\"signInSessionsValidFromDateTime\", type datetimezone}, {\"externalUserStateChangeDateTime\", type datetimezone}, {\"createdDateTime\", type datetimezone}, {\"isLicenseReconciliationNeeded\", type logical}, {\"accountEnabled\", type logical}}),",
                 "    #\"Changed created to date\" = Table.TransformColumnTypes(#\"Changed Types\",{{\"createdDateTime\", type date}}),",
@@ -2778,6 +2798,10 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
           }
         ],
         "columns": [
@@ -2790,21 +2814,9 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "IDs",
             "lineageTag": "aeae7dde-d72b-4274-91e1-b11ca697a177",
             "sourceColumn": "id",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "providerAlertId",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "2be0b4e2-b5d8-4f95-8551-9b6810e2c305",
-            "sourceColumn": "providerAlertId",
             "summarizeBy": "none"
           },
           {
@@ -2816,6 +2828,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "IDs",
             "lineageTag": "fcbd7f34-e3a2-47cf-ada4-e2d5faec98b0",
             "sourceColumn": "incidentId",
             "summarizeBy": "none"
@@ -2829,6 +2842,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "Groupings",
             "lineageTag": "9d671469-d290-4279-81bf-c4a395f56358",
             "sourceColumn": "status",
             "summarizeBy": "none"
@@ -2842,99 +2856,9 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "Groupings",
             "lineageTag": "dd6d4a1d-a612-4d85-ae26-4a7f232dbf13",
             "sourceColumn": "severity",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "classification",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "4c9c39c2-d63d-48ea-8f9d-33770f218988",
-            "sourceColumn": "classification",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "determination",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "0cbe151a-fff1-46b5-a015-6149e332d8f0",
-            "sourceColumn": "determination",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "serviceSource",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "3ae0ddca-5b6b-4e71-94d6-6e2c699852e6",
-            "sourceColumn": "serviceSource",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "detectionSource",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "04d16c12-902e-4dfa-9675-f7a8eaac4d31",
-            "sourceColumn": "detectionSource",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "productName",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "b10ac402-7ba0-497b-8192-525ab5ce96ea",
-            "sourceColumn": "productName",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "detectorId",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "cb9bdb1d-23ca-4ec1-9c11-8154e9ec9c81",
-            "sourceColumn": "detectorId",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "tenantId",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "55f04756-be71-43ae-bd97-987092a07d69",
-            "sourceColumn": "tenantId",
             "summarizeBy": "none"
           },
           {
@@ -2946,34 +2870,9 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "About",
             "lineageTag": "1f5859f6-c8d7-47b9-b151-607a5d54cf3c",
             "sourceColumn": "title",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "description",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "cd22e9b6-adb8-43d1-b7e2-8ed1c122d973",
-            "sourceColumn": "description",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "recommendedActions",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "63e4d43f-8f6d-4556-8d4a-110788546077",
-            "sourceColumn": "recommendedActions",
             "summarizeBy": "none"
           },
           {
@@ -2985,6 +2884,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "About",
             "lineageTag": "c3e14019-90d1-415f-9392-8054d9a56c69",
             "sourceColumn": "category",
             "summarizeBy": "none"
@@ -2998,6 +2898,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "About",
             "lineageTag": "647aeed6-a071-4c75-92af-9074ce22e23f",
             "sourceColumn": "assignedTo",
             "summarizeBy": "none"
@@ -3010,74 +2911,11 @@
                 "value": "Automatic"
               }
             ],
+            "dataCategory": "WebUrl",
             "dataType": "string",
+            "displayFolder": "IDs",
             "lineageTag": "0a7b8609-b2a4-440a-b360-58e5e9ba081f",
             "sourceColumn": "alertWebUrl",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "incidentWebUrl",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "44b4897b-da5f-4dad-a312-66bddfc67b54",
-            "sourceColumn": "incidentWebUrl",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "actorDisplayName",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "c1917671-6d5c-48c7-b67f-7469f4db963b",
-            "sourceColumn": "actorDisplayName",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "threatDisplayName",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "ec6219bb-99f2-42df-859c-159b79f4fc39",
-            "sourceColumn": "threatDisplayName",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "threatFamilyName",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "d07c3909-873c-48cc-9e5d-a5f5df5a5aae",
-            "sourceColumn": "threatFamilyName",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "mitreTechniques",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "cbff2d89-433e-4d09-89c6-73b1007e6092",
-            "sourceColumn": "mitreTechniques",
             "summarizeBy": "none"
           },
           {
@@ -3089,6 +2927,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Dates",
             "formatString": "General Date",
             "lineageTag": "7f908a7a-cfc6-4517-aaf9-2ce1e5a78fcf",
             "sourceColumn": "createdDateTime",
@@ -3103,6 +2942,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Dates",
             "formatString": "General Date",
             "lineageTag": "4131eee5-d229-481f-80c3-f01748304ab9",
             "sourceColumn": "lastUpdateDateTime",
@@ -3117,6 +2957,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Dates",
             "formatString": "General Date",
             "lineageTag": "f8fbbf39-ceb7-42f3-be35-ad5b786b05b6",
             "sourceColumn": "resolvedDateTime",
@@ -3131,6 +2972,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Dates",
             "formatString": "General Date",
             "lineageTag": "9de28d81-368b-4bcb-a54d-7f613c9d400f",
             "sourceColumn": "firstActivityDateTime",
@@ -3145,74 +2987,10 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Dates",
             "formatString": "General Date",
             "lineageTag": "82cc78c3-d3bd-4760-9912-335fa6b0f0c5",
             "sourceColumn": "lastActivityDateTime",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "systemTags",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "cf5374f3-281f-4497-859a-867bdb58570d",
-            "sourceColumn": "systemTags",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "alertPolicyId",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "0af74a9d-8267-4da7-be78-02ab56c77162",
-            "sourceColumn": "alertPolicyId",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "additionalData",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "1ec2975b-aa7a-472c-9c56-697647c036aa",
-            "sourceColumn": "additionalData",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "comments",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "c76ec68f-077a-4763-b42a-82230e56558f",
-            "sourceColumn": "comments",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "evidence",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "ca0536a6-66b0-43ee-9635-644fdf290438",
-            "sourceColumn": "evidence",
             "summarizeBy": "none"
           },
           {
@@ -3228,9 +3006,59 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Dates",
             "formatString": "Long Date",
             "lineageTag": "08f08c4d-058f-42e5-9dfe-88f367845cca",
             "sourceColumn": "CreatedDate",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Hours to Resolve (alert created)",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "displayFolder": "Resolution Time",
+            "lineageTag": "375ec666-266b-4f25-a39a-8ee5c6384f54",
+            "sourceColumn": "Hours to Resolve (alert created)",
+            "summarizeBy": "average"
+          },
+          {
+            "name": "Hours to Resolve (first activity)",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "displayFolder": "Resolution Time",
+            "lineageTag": "72730d0e-c8a9-43c3-af91-1f60550a60f7",
+            "sourceColumn": "Hours to Resolve (first activity)",
+            "summarizeBy": "average"
+          },
+          {
+            "name": "Alert Colour",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "8a7aed78-2532-425d-82d5-70eee01a0a19",
+            "sourceColumn": "Alert Colour",
             "summarizeBy": "none"
           }
         ],
@@ -3246,9 +3074,13 @@
                 "    Source = #\"Alerts Raw\",",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"createdDateTime\", type datetimezone}, {\"lastUpdateDateTime\", type datetimezone}, {\"resolvedDateTime\", type datetimezone}, {\"firstActivityDateTime\", type datetimezone}, {\"lastActivityDateTime\", type datetimezone}}),",
                 "    #\"Added CreatedDate\" = Table.AddColumn(#\"Changed Type\", \"CreatedDate\", each DateTime.Date([createdDateTime])),",
-                "    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Added CreatedDate\",{{\"CreatedDate\", type date}})",
+                "    #\"Changed dates to date type\" = Table.TransformColumnTypes(#\"Added CreatedDate\",{{\"CreatedDate\", type date}}),",
+                "    #\"Added Hours to resolve - created alert\" = Table.AddColumn(#\"Changed dates to date type\", \"Hours to Resolve (alert created)\", each if [resolvedDateTime] = null then null else Duration.TotalHours([resolvedDateTime] - [createdDateTime]), type number),",
+                "    #\"Added Hours to resolve - first active\" = Table.AddColumn(#\"Added Hours to resolve - created alert\", \"Hours to Resolve (first activity)\", each if [resolvedDateTime] = null then null else Duration.TotalHours([resolvedDateTime] - [firstActivityDateTime]), type number),",
+                "    // Used in network chart",
+                "    #\"Added Colour\" = Table.AddColumn(#\"Added Hours to resolve - first active\", \"Alert Colour\", each \"#FE9666\")",
                 "in",
-                "    #\"Changed Type1\""
+                "    #\"Added Colour\""
               ],
               "type": "m"
             }
@@ -3524,10 +3356,6 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
-          },
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
           }
         ],
         "columns": [
@@ -3664,10 +3492,6 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
-          },
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
           }
         ],
         "columns": [
@@ -3950,10 +3774,6 @@
         "name": "DateDimensionBI",
         "annotations": [
           {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
-          },
-          {
             "name": "PBI_ResultType",
             "value": "Table"
           }
@@ -3990,6 +3810,7 @@
               }
             ],
             "dataType": "int64",
+            "displayFolder": "Year",
             "formatString": "0",
             "lineageTag": "29cf3f02-5825-4d6c-b4c1-244cc73bc8c1",
             "sourceColumn": "Year",
@@ -4008,6 +3829,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Year",
             "formatString": "Long Date",
             "lineageTag": "8b4e7047-c772-4178-9cc9-9e005195fb9b",
             "sourceColumn": "Start of Year",
@@ -4026,6 +3848,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "X of Y",
             "formatString": "Long Date",
             "lineageTag": "1393a432-9e9e-445d-90d7-0a05851a213b",
             "sourceColumn": "End of Year",
@@ -4040,6 +3863,7 @@
               }
             ],
             "dataType": "int64",
+            "displayFolder": "Months",
             "formatString": "0",
             "lineageTag": "0791a058-da8b-48c2-b8e3-fcf5d4e34e1b",
             "sourceColumn": "Month Number",
@@ -4059,8 +3883,9 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "Months",
             "lineageTag": "1ccf21f9-6dfb-48bb-b2dc-89080d21468a",
-            "sortByColumn": "Month Number",
+            "sortByColumn": "FY Month",
             "sourceColumn": "Month Name",
             "summarizeBy": "none"
           },
@@ -4081,6 +3906,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Months",
             "formatString": "yyyy-mm-dd",
             "lineageTag": "5eef945f-38d6-4c97-a8cd-42857f297377",
             "sourceColumn": "Month Start Date",
@@ -4103,6 +3929,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Months",
             "formatString": "yyyy-mm-dd",
             "lineageTag": "4f150bc8-b609-475e-8044-f6659a43064b",
             "sourceColumn": "Month End Date",
@@ -4117,6 +3944,7 @@
               }
             ],
             "dataType": "int64",
+            "displayFolder": "Months",
             "formatString": "0",
             "lineageTag": "ee9b7132-444a-4215-89d6-fbc2cb674ec9",
             "sourceColumn": "Days in Month",
@@ -4131,6 +3959,7 @@
               }
             ],
             "dataType": "int64",
+            "displayFolder": "Quarter",
             "formatString": "0",
             "lineageTag": "04f75878-f675-4eb2-892a-83390c542e44",
             "sourceColumn": "Quarter Number",
@@ -4153,6 +3982,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Quarter",
             "formatString": "yyyy-mm-dd",
             "lineageTag": "dc54e5f0-d47d-4cac-aa33-8273c7c0f945",
             "sourceColumn": "Quarter Start Date",
@@ -4175,6 +4005,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Quarter",
             "formatString": "yyyy-mm-dd",
             "lineageTag": "bdb7477f-82de-4f28-b46a-12707b01df9b",
             "sourceColumn": "Quarter End Date",
@@ -4189,6 +4020,7 @@
               }
             ],
             "dataType": "int64",
+            "displayFolder": "Weeks",
             "formatString": "0",
             "lineageTag": "e03c8fb7-fcbc-4c03-b67b-5b62587fc231",
             "sourceColumn": "Week Number of Year",
@@ -4203,6 +4035,7 @@
               }
             ],
             "dataType": "int64",
+            "displayFolder": "Weeks",
             "formatString": "0",
             "lineageTag": "0b6279d4-988b-4c17-b574-95027b006651",
             "sourceColumn": "Week Number of Month",
@@ -4225,6 +4058,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Weeks",
             "formatString": "yyyy-mm-dd",
             "lineageTag": "5db2d073-26ff-4442-8c09-9f72c81c6172",
             "sourceColumn": "Week Start Date",
@@ -4247,6 +4081,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "Weeks",
             "formatString": "yyyy-mm-dd",
             "lineageTag": "0482c9af-9f35-4ab9-a4d3-6d361f8c64b5",
             "sourceColumn": "Week End Date",
@@ -4261,6 +4096,7 @@
               }
             ],
             "dataType": "int64",
+            "displayFolder": "X of Y",
             "formatString": "0",
             "lineageTag": "17b595cb-2e5c-4bc8-a38e-a2ca77e08b2f",
             "sourceColumn": "Day of Month",
@@ -4275,6 +4111,7 @@
               }
             ],
             "dataType": "int64",
+            "displayFolder": "Weeks",
             "formatString": "0",
             "lineageTag": "76b40f29-01dd-4360-a3f6-88aca8931e08",
             "sourceColumn": "Day of Week",
@@ -4289,6 +4126,7 @@
               }
             ],
             "dataType": "int64",
+            "displayFolder": "X of Y",
             "formatString": "0",
             "lineageTag": "8ef01b45-1a92-4bde-bb45-0042240f550d",
             "sourceColumn": "Day of Year",
@@ -4322,6 +4160,7 @@
               }
             ],
             "dataType": "boolean",
+            "displayFolder": "conditionals",
             "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
             "lineageTag": "1090a32a-48cb-4866-8182-b23f5b84756b",
             "sourceColumn": "t-90",
@@ -4336,10 +4175,44 @@
               }
             ],
             "dataType": "boolean",
+            "displayFolder": "conditionals",
             "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
             "lineageTag": "68ed3946-c899-4551-bc0c-1bc8c8f9ac3b",
             "sourceColumn": "isFuture",
             "summarizeBy": "none"
+          },
+          {
+            "name": "FY Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "displayFolder": "Year",
+            "expression": "\"FY\" & IF(MONTH('DateDimensionBI'[Date])<=6, YEAR('DateDimensionBI'[Date]), YEAR('DateDimensionBI'[Date]) + 1)",
+            "isDataTypeInferred": true,
+            "lineageTag": "9838366e-5093-48a2-9998-958ca3a1420f",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "FY Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "displayFolder": "Months",
+            "expression": "if(DateDimensionBI[Month Number] > 6, DateDimensionBI[Month Number] - 6, DateDimensionBI[Month Number] + 6)",
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "lineageTag": "f6663ae2-8d02-4c2d-95e6-e05a34af9bc8",
+            "summarizeBy": "none",
+            "type": "calculated"
           }
         ],
         "lineageTag": "ebdfe54c-6249-4558-ae7b-316c53cc74c8",
@@ -4365,15 +4238,16 @@
         ]
       },
       {
-        "name": "user last sigin",
+        "name": "User last sigin",
         "annotations": [
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
-          },
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "Name"
           }
         ],
         "columns": [
@@ -4399,6 +4273,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "IDs",
             "lineageTag": "d9b0b199-8bd7-42f6-9ba1-b52124eeda85",
             "sourceColumn": "user id",
             "summarizeBy": "none"
@@ -4412,6 +4287,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "datetimes",
             "formatString": "General Date",
             "lineageTag": "e6f2f04e-7619-4021-8b5d-4e1871c3daa1",
             "sourceColumn": "lastSignInDateTime",
@@ -4426,6 +4302,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "IDs",
             "lineageTag": "fa4cd2d9-2792-4093-a48d-43461ad0488f",
             "sourceColumn": "lastSignInRequestId",
             "summarizeBy": "none"
@@ -4439,6 +4316,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "datetimes",
             "formatString": "General Date",
             "lineageTag": "9b1bc78d-97c4-4dc1-bd33-3ed57dcb7ea6",
             "sourceColumn": "lastNonInteractiveSignInDateTime",
@@ -4453,6 +4331,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "IDs",
             "lineageTag": "fe4539a2-f9ef-4a69-b6fe-418cad05463c",
             "sourceColumn": "lastNonInteractiveSignInRequestId",
             "summarizeBy": "none"
@@ -4466,6 +4345,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "datetimes",
             "formatString": "General Date",
             "lineageTag": "53693b05-dd7d-4390-9478-60eeedf7b994",
             "sourceColumn": "lastSuccessfulSignInDateTime",
@@ -4480,6 +4360,7 @@
               }
             ],
             "dataType": "string",
+            "displayFolder": "IDs",
             "lineageTag": "3ec5e632-b891-4036-8a0c-52503349361f",
             "sourceColumn": "lastSuccessfulSignInRequestId",
             "summarizeBy": "none"
@@ -4501,6 +4382,7 @@
               }
             ],
             "dataType": "dateTime",
+            "displayFolder": "datetimes",
             "formatString": "yyyy/mm/dd",
             "lineageTag": "7ef82d0f-40b1-48e5-9ea3-0a9ecbd09071",
             "sourceColumn": "Last SignIn Date",
@@ -4516,7 +4398,7 @@
         "lineageTag": "83207739-1192-49c3-9e4b-65fa4bc19e62",
         "partitions": [
           {
-            "name": "user last sigin",
+            "name": "User last sigin",
             "mode": "import",
             "queryGroup": "03 Model Tables\\03-03 Users",
             "source": {
@@ -4578,6 +4460,493 @@
                 "    #\"Changed datetimes to timezones\" = Table.TransformColumnTypes(#\"Expanded signInActivity\",{{\"lastSignInDateTime\", type datetimezone}, {\"lastNonInteractiveSignInDateTime\", type datetimezone}, {\"lastSuccessfulSignInDateTime\", type datetimezone}}),",
                 "    #\"Added LastSignInDate\" = Table.AddColumn(#\"Changed datetimes to timezones\", \"Last SignIn Date\", each DateTime.Date([lastSignInDateTime])),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Added LastSignInDate\",{{\"Last SignIn Date\", type date}})",
+                "in",
+                "    #\"Changed Type\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Index Severity",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "Name"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Index",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "245170e1-16c9-4c60-9f65-1bea9530792a",
+            "sourceColumn": "Index",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Severity",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "1f9e89cb-c8eb-4374-ae44-7295434e791c",
+            "sortByColumn": "Index",
+            "sourceColumn": "Severity",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "SeverityGraph",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c5f01b55-29b3-4256-b189-3aaa42eb52b0",
+            "sortByColumn": "Index",
+            "sourceColumn": "SeverityGraph",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Description",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "05335160-ecb9-41f0-819d-267f4d8acd0d",
+            "sortByColumn": "Index",
+            "sourceColumn": "Description",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "5885408f-001b-491c-b9f6-52506c2c13e0",
+        "partitions": [
+          {
+            "name": "Index Severity",
+            "mode": "import",
+            "queryGroup": "04 Index Tables",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"dZRBb9swDIX/CpFzFnTdgJ2HDcMGrLdehq4HWWZiIbJoWNRc79fvUUrSLuuAunUtiXz8HqmHh80QDsNmu3mL52t7vR94ZgqZHNkiTbN0rgsx6Eo6OKVVykwzZ/zxdaOXEZvGkLnf0Q8plAcpsacocqSQVCgozYil5Ba37ugz7zn1PNNeZvoUpfQ0uNzSeUn70HOy0Ik60QFZmUYXgw9SsgXkhEiptw22tg+pD+mQqUABWbqcC9clF3nWHX1BHn5y4xR5i5Ptc6umZ2Wvue7mJ/ZFgySSPco/JlnSi8wqEikXPxDE3oUxHJ3+RjwDMOJQXa8arC4/M8rQ4KLF3utu87h92IzchzIC8y2eu/M/9wMw4qexjiti5pKnU17nNfwy/GNlaNV6p9z0u/9b8S/mn+Xm5vZDvoJcQSUXVw2esPXE0+I1uRW27XpxDoRe9eX5EIwwR3eEjspMS+2JkouLKLCzo34IiSmym5PlQ2qXBBGx7Axj8wZ+5G2t4WSh0QmH9AbSnSqPk9IeRZuxJdUEaD0QwsEGPcoCyO/wfK9vFXeD2Vm0jhPi0SQ5gDRXIdQhxhEikML546tNG3JqRPVCRomTlMPQzDFCL7hcWJ15Xjnb2e4kHvuvejbKgbyBqoOZ6kHrOEvSzg5umjjRMuCXSyfVUKtz4Ny86OtMBPuGNTDtinUTdKWVPIjnNvazYAhgjEw8V4qEF1QNX6lDb/ZjSPlVIL3wM5Kz1cox2qVx0laFZVrsljkx3sK3yBnp9dyhKMHAobfVWsPUtWoXxmgcDvheY17umOZ0SKazinYRTr/H8+3q20cL7ZtZqFdXzFkVOjoQKlMb/lTGDrXZu10WoJVlrG2/DAFXQKNu0GFKtcLI2oUB1jBSEiL+JefC+zRJyk96HiNcc0jWMj03wyKzDmvT46NkbLF6UerjHw==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [SeverityGraph = _t, Index = _t, Severity = _t, Description = _t]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Index\", Int64.Type}}),",
+                "    #\"Cleaned Text\" = Table.TransformColumns(#\"Changed Type\",{{\"Description\", Text.Clean, type text}})",
+                "in",
+                "    #\"Cleaned Text\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Index Alert Status",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Index",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "dfc49a1e-5e8d-4797-b20e-8aac57a7e05e",
+            "sourceColumn": "Index",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Status",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "720d904c-4755-4ab0-994a-94c45ee2791f",
+            "sortByColumn": "Index",
+            "sourceColumn": "Status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "StatusGraph",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "5849756b-d2a2-419d-9c40-aea022016a5b",
+            "sortByColumn": "Index",
+            "sourceColumn": "StatusGraph",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "65050a38-4859-499e-a5d9-c19aa136fcd7",
+        "partitions": [
+          {
+            "name": "Index Alert Status",
+            "mode": "import",
+            "queryGroup": "04 Index Tables",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i45WykstV9JRMgRiPyArVidaKTMvoCg/vSi1uBgoaATEnnkKcBGQAiAjP6csNQUoZQzEQTBubCwA\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [StatusGraph = _t, Index = _t, Status = _t]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Index\", Int64.Type}})",
+                "in",
+                "    #\"Changed Type\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Incidents",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "displayFolder": "IDs",
+            "lineageTag": "8ffd1742-b90e-43bf-894f-9ba4ff03d1e8",
+            "sourceColumn": "id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "status",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "displayFolder": "Groupings",
+            "lineageTag": "43e3ac54-4322-4529-8345-0af26c991b5d",
+            "sourceColumn": "status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "incidentWebUrl",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataCategory": "WebUrl",
+            "dataType": "string",
+            "displayFolder": "IDs",
+            "lineageTag": "3e2130af-b2a7-469e-b7cb-10dec6a03eeb",
+            "sourceColumn": "incidentWebUrl",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "displayName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "displayFolder": "Groupings",
+            "lineageTag": "3b47c8a7-4735-4d73-91b1-6c31a961cff5",
+            "sourceColumn": "displayName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "createdDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "displayFolder": "Datetimes",
+            "formatString": "General Date",
+            "lineageTag": "d1ed206c-18a4-4640-b38c-1fdce452a962",
+            "sourceColumn": "createdDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastUpdateDateTime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "displayFolder": "Datetimes",
+            "formatString": "General Date",
+            "lineageTag": "26286127-379c-43bf-9487-db2b3290466c",
+            "sourceColumn": "lastUpdateDateTime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "assignedTo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "bc1f04e1-3e62-4f5c-9d7f-a9c374132449",
+            "sourceColumn": "assignedTo",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "classification",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "displayFolder": "Groupings",
+            "lineageTag": "8af8e8c4-7e45-41da-99b2-9af600e2d22f",
+            "sourceColumn": "classification",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "severity",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "displayFolder": "Groupings",
+            "lineageTag": "54f6a13a-285d-47a4-907d-4df2ef855a13",
+            "sourceColumn": "severity",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "lastModifiedBy",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "displayFolder": "Datetimes",
+            "lineageTag": "e30a0a70-e0ff-4afd-b332-21faf1d5a64b",
+            "sourceColumn": "lastModifiedBy",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "CreatedDate",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "DataType"
+              }
+            ],
+            "dataType": "dateTime",
+            "displayFolder": "Datetimes",
+            "formatString": "Long Date",
+            "lineageTag": "27fbd206-6fd9-40cc-8bac-bb8668d6391d",
+            "sourceColumn": "CreatedDate",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Incident Colour",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "9fe840b7-6518-4f12-a75c-04b9d334af7e",
+            "sourceColumn": "Incident Colour",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "TimeToResolve",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "displayFolder": "Datetimes",
+            "lineageTag": "396c0788-0bd2-44fe-8689-8a473f811724",
+            "sourceColumn": "TimeToResolve",
+            "summarizeBy": "sum"
+          }
+        ],
+        "lineageTag": "02eb3069-aebe-492c-aed5-f70893980a24",
+        "partitions": [
+          {
+            "name": "Incidents",
+            "mode": "import",
+            "queryGroup": "03 Model Tables\\03-01 Security master tables",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = #\"Incidents Raw\",",
+                "    #\"Changed types to Datetimezone\" = Table.TransformColumnTypes(Source,{{\"createdDateTime\", type datetimezone}, {\"lastUpdateDateTime\", type datetimezone}}),",
+                "    // There was one dup incident",
+                "    #\"Removed Duplicates\" = Table.Distinct(#\"Changed types to Datetimezone\", {\"id\"}),",
+                "    #\"Added Date Created\" = Table.AddColumn(#\"Removed Duplicates\", \"CreatedDate\", each DateTime.Date([createdDateTime])),",
+                "    // Used in network chart",
+                "    #\"Added Colour\" = Table.AddColumn(#\"Added Date Created\", \"Incident Colour\", each \"#1C4A9F\"),",
+                "    #\"Added Time to Resolve\" = Table.AddColumn(#\"Added Colour\", \"TimeToResolve\", each if [status] = \"resolved\"",
+                "then Duration.TotalHours([lastUpdateDateTime] - [createdDateTime])",
+                "else null, type number)",
+                "in",
+                "    #\"Added Time to Resolve\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Index Incident Status",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Status",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "36bfcac9-249d-4c9b-86fd-74ff2087d027",
+            "sortByColumn": "Index",
+            "sourceColumn": "Status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Index",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "bc196950-7938-4505-bc83-353e7e5d6cef",
+            "sourceColumn": "Index",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "482e508e-0931-4ed8-a809-181fe03110a8",
+        "partitions": [
+          {
+            "name": "Index Incident Status",
+            "mode": "import",
+            "queryGroup": "04 Index Tables",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i45WKkotzs8pS01R0lGytFSK1YlWSkwuySxLBfINwdyi1JTMotTkErASI6XYWAA=\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Status = _t, Index = _t]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Status\", type text}, {\"Index\", Int64.Type}})",
                 "in",
                 "    #\"Changed Type\""
               ],

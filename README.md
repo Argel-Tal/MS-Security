@@ -6,6 +6,8 @@ This stops IT from having to go into multiple different security provider sites/
 We'll leverage one PowerBI dataset/model which consolidates all these sources
 
 #### Current state of the dashboard, as presented to Executives:
+![Gateway Setup](./readMeImages/IT%20Operational%20dash%20-%20current%20state.png)
+
 - Metrics /data are extracted manually
     - Metrics are "as of <date>" (point in time)
 - All these sources then get integrated inside a PowerPoint presentation
@@ -25,14 +27,15 @@ Page number     |   Image
 ----------------|---------
 Landing page    |  <img src="./readMeImages/01 Landing page.png" width="800">
 Yesterday's security position   |   <img src="./readMeImages/02 Yesterday Scores.png"> 
-Guest users in tenancy  |   <img src="./readMeImages/03 Guest Users page.png" width="800">
-License consumption and allocation  |   <img src="./readMeImages/04 Licensing.png" width="800">
-User profiles   |   <img src="./readMeImages/05 User profile page.png" width="800">
-Security Alerts |   <img src="./readMeImages/AAAA.png" width="800">
 Drill-through page: given day's score   |   <img src="./readMeImages/Drill page given day score.png" width="800">
 Drill-through page: metric definitons   |   <img src="./readMeImages/Drill page metric definiton.png" width="800">
+Guest users in tenancy  |   <img src="./readMeImages/03 Guest Users page.png" width="800">
 Drill-through page: guest user profile   |   <img src="./readMeImages/Drill page guest user profile.png" width="800">
-
+License consumption and allocation  |   <img src="./readMeImages/04 Licensing.png" width="800">
+User profiles   |   <img src="./readMeImages/05 User profile page.png" width="800">
+Security Alerts |   <img src="./readMeImages/06 Alerts Summary.png" width="800">
+About Alerts    |   <img src="./readMeImages/06.1 About Alerts.png" width="800">
+Unresolved Alerts    |   <img src="./readMeImages/06.2 Unresolved Alerts.png" width="800">
 
 
 ## MS Graph API set up
