@@ -8,11 +8,11 @@
       },
       {
         "name": "PBIDesktopVersion",
-        "value": "2.124.1805.0 (23.12)"
+        "value": "2.124.2028.0 (23.12)"
       },
       {
         "name": "PBI_QueryOrder",
-        "value": "[\"Score Daily\",\"Score Detail\",\"Score Yesterday\",\"SecureComponent statuses\",\"MeasuresTable\",\"SecureComponent Descriptions\",\"MS products\",\"Azure Graph API Url\",\"Azure Tenant ID\",\"Azure Application ID\",\"Azure Application Client Secret\",\"SecureScores Raw\",\"LicensesHeldAPI Raw\",\"UsersAPI Raw\",\"Licenses unpacked\",\"PrimaryLicense - skuId\",\"assignedLicenses - disabledPlans\",\"Licenses Held\",\"Users\",\"Licenses SKU Raw\",\"Alerts Raw\",\"Alerts\",\"Licenses SKU\",\"Groups Raw\",\"Incidents Raw\",\"GetGroupMembers\",\"GroupMembers\",\"Azure GroupID\",\"Groups\",\"DateDimensionBI\",\"User last sigin\",\"Index Severity\",\"Index Alert Status\",\"Incidents\",\"Index Incident Status\",\"Incidents Duplicate incidents\"]"
+        "value": "[\"Score Daily\",\"Score Detail\",\"Score Yesterday\",\"SecureComponent statuses\",\"MeasuresTable\",\"SecureComponent Descriptions\",\"MS products\",\"Azure Graph API Url\",\"Azure Tenant ID\",\"Azure Application ID\",\"Azure Application Client Secret\",\"SecureScores Raw\",\"LicensesHeldAPI Raw\",\"UsersAPI Raw\",\"Licenses unpacked\",\"PrimaryLicense - skuId\",\"assignedLicenses - disabledPlans\",\"Licenses Held\",\"Users\",\"Licenses SKU Raw\",\"Alerts Raw\",\"Alerts\",\"Licenses SKU\",\"Groups Raw\",\"Incidents Raw\",\"GetGroupMembers\",\"GroupMembers\",\"Azure GroupID\",\"Groups\",\"DateDimensionBI\",\"User last sigin\",\"Index Severity Incidents\",\"Index Status Alert\",\"Incidents\",\"Index Status Incident\",\"Incidents Duplicate incidents\",\"Index Severity Alerts\"]"
       },
       {
         "name": "PBI_ProTooling",
@@ -1128,19 +1128,11 @@
         "toTable": "DateDimensionBI"
       },
       {
-        "name": "4f561a7b-4fd4-cd41-b050-4675461177b3",
-        "fromColumn": "severity",
-        "fromTable": "Alerts",
-        "isActive": false,
-        "toColumn": "SeverityGraph",
-        "toTable": "Index Severity"
-      },
-      {
         "name": "118fa320-fd1e-a218-918e-866b44c5c412",
         "fromColumn": "status",
         "fromTable": "Alerts",
         "toColumn": "StatusGraph",
-        "toTable": "Index Alert Status"
+        "toTable": "Index Status Alert"
       },
       {
         "name": "31fea14a-5d4c-4c91-940d-0a5433ca99db",
@@ -1161,14 +1153,21 @@
         "fromColumn": "status",
         "fromTable": "Incidents",
         "toColumn": "Status",
-        "toTable": "Index Incident Status"
+        "toTable": "Index Status Incident"
       },
       {
         "name": "be23918f-21c4-4da5-8bf2-8f15d9305b8d",
         "fromColumn": "severity",
         "fromTable": "Incidents",
         "toColumn": "SeverityGraph",
-        "toTable": "Index Severity"
+        "toTable": "Index Severity Incidents"
+      },
+      {
+        "name": "a96a09b8-33e5-4c94-9864-2515caba622f",
+        "fromColumn": "severity",
+        "fromTable": "Alerts",
+        "toColumn": "SeverityGraph",
+        "toTable": "Index Severity Alerts"
       }
     ],
     "sourceQueryCulture": "en-AU",
@@ -1677,7 +1676,7 @@
               "CALCULATE(",
               "    DISTINCTCOUNT(Alerts[id])",
               "    , USERELATIONSHIP(Alerts[CreatedDate], DateDimensionBI[Date])",
-              "    , USERELATIONSHIP(Alerts[severity], 'Index Severity'[SeverityGraph])",
+              "    , USERELATIONSHIP(Alerts[severity], 'Index Severity Alerts'[SeverityGraph])",
               ")"
             ],
             "formatString": "0",
@@ -1768,7 +1767,7 @@
             "expression": [
               "CALCULATE(",
               "    AVERAGE(Alerts[Hours to Resolve (first activity)])",
-              "    , USERELATIONSHIP(Alerts[severity], 'Index Severity'[SeverityGraph])",
+              "    , USERELATIONSHIP(Alerts[severity], 'Index Severity Alerts'[SeverityGraph])",
               ")"
             ],
             "lineageTag": "5e4809d5-ec2f-4853-9cef-efddb1516ff2"
@@ -1779,7 +1778,7 @@
             "expression": [
               "CALCULATE(",
               "    [Alerts]",
-              "    , NOT('Index Alert Status'[Status] = \"Resolved\")",
+              "    , NOT('Index Status Alert'[Status] = \"Resolved\")",
               ")"
             ],
             "formatString": "0",
@@ -1791,7 +1790,7 @@
             "expression": [
               "CALCULATE(",
               "    DISTINCTCOUNT(Incidents[id])",
-              "    , USERELATIONSHIP(Incidents[severity], 'Index Severity'[SeverityGraph])",
+              "    , USERELATIONSHIP(Incidents[severity], 'Index Severity Incidents'[SeverityGraph])",
               "    , USERELATIONSHIP(Incidents[CreatedDate], DateDimensionBI[Date])",
               ")"
             ],
@@ -1834,7 +1833,7 @@
             "expression": [
               "CALCULATE(",
               "    AVERAGE(Incidents[TimeToResolve])",
-              "    , USERELATIONSHIP(Incidents[severity], 'Index Severity'[SeverityGraph])",
+              "    , USERELATIONSHIP(Incidents[severity], 'Index Severity Incidents'[SeverityGraph])",
               ")"
             ],
             "lineageTag": "c3db31f5-a300-4150-a6ae-762fb01c04a7"
@@ -4469,7 +4468,7 @@
         ]
       },
       {
-        "name": "Index Severity",
+        "name": "Index Severity Incidents",
         "annotations": [
           {
             "name": "PBI_ResultType",
@@ -4479,6 +4478,9 @@
         "changedProperties": [
           {
             "property": "Name"
+          },
+          {
+            "property": "IsHidden"
           }
         ],
         "columns": [
@@ -4488,6 +4490,11 @@
               {
                 "name": "SummarizationSetBy",
                 "value": "User"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
               }
             ],
             "dataType": "int64",
@@ -4507,6 +4514,9 @@
             "changedProperties": [
               {
                 "property": "SortByColumn"
+              },
+              {
+                "property": "IsHidden"
               }
             ],
             "dataType": "string",
@@ -4526,6 +4536,9 @@
             "changedProperties": [
               {
                 "property": "SortByColumn"
+              },
+              {
+                "property": "IsHidden"
               }
             ],
             "dataType": "string",
@@ -4545,6 +4558,9 @@
             "changedProperties": [
               {
                 "property": "SortByColumn"
+              },
+              {
+                "property": "IsHidden"
               }
             ],
             "dataType": "string",
@@ -4557,7 +4573,7 @@
         "lineageTag": "5885408f-001b-491c-b9f6-52506c2c13e0",
         "partitions": [
           {
-            "name": "Index Severity",
+            "name": "Index Severity Incidents",
             "mode": "import",
             "queryGroup": "04 Index Tables",
             "source": {
@@ -4575,11 +4591,19 @@
         ]
       },
       {
-        "name": "Index Alert Status",
+        "name": "Index Status Alert",
         "annotations": [
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "Name"
+          },
+          {
+            "property": "IsHidden"
           }
         ],
         "columns": [
@@ -4589,6 +4613,11 @@
               {
                 "name": "SummarizationSetBy",
                 "value": "User"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
               }
             ],
             "dataType": "int64",
@@ -4608,6 +4637,9 @@
             "changedProperties": [
               {
                 "property": "SortByColumn"
+              },
+              {
+                "property": "IsHidden"
               }
             ],
             "dataType": "string",
@@ -4627,6 +4659,9 @@
             "changedProperties": [
               {
                 "property": "SortByColumn"
+              },
+              {
+                "property": "IsHidden"
               }
             ],
             "dataType": "string",
@@ -4639,7 +4674,7 @@
         "lineageTag": "65050a38-4859-499e-a5d9-c19aa136fcd7",
         "partitions": [
           {
-            "name": "Index Alert Status",
+            "name": "Index Status Alert",
             "mode": "import",
             "queryGroup": "04 Index Tables",
             "source": {
@@ -4894,11 +4929,19 @@
         ]
       },
       {
-        "name": "Index Incident Status",
+        "name": "Index Status Incident",
         "annotations": [
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "Name"
+          },
+          {
+            "property": "IsHidden"
           }
         ],
         "columns": [
@@ -4913,6 +4956,9 @@
             "changedProperties": [
               {
                 "property": "SortByColumn"
+              },
+              {
+                "property": "IsHidden"
               }
             ],
             "dataType": "string",
@@ -4929,6 +4975,11 @@
                 "value": "User"
               }
             ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
             "dataType": "int64",
             "formatString": "0",
             "lineageTag": "bc196950-7938-4505-bc83-353e7e5d6cef",
@@ -4939,7 +4990,7 @@
         "lineageTag": "482e508e-0931-4ed8-a809-181fe03110a8",
         "partitions": [
           {
-            "name": "Index Incident Status",
+            "name": "Index Status Incident",
             "mode": "import",
             "queryGroup": "04 Index Tables",
             "source": {
@@ -4949,6 +5000,130 @@
                 "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Status\", type text}, {\"Index\", Int64.Type}})",
                 "in",
                 "    #\"Changed Type\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Index Severity Alerts",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "changedProperties": [
+          {
+            "property": "IsHidden"
+          }
+        ],
+        "columns": [
+          {
+            "name": "SeverityGraph",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              },
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "b7c13d20-c9ca-4cda-af30-2c84b02be1c0",
+            "sortByColumn": "Index",
+            "sourceColumn": "SeverityGraph",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Index",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "b900faf8-cebf-4cfe-9177-827b1b191749",
+            "sourceColumn": "Index",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Severity",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              },
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c5f3e280-9af2-4aaa-9320-de5c3deb74ff",
+            "sortByColumn": "Index",
+            "sourceColumn": "Severity",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Description",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "SortByColumn"
+              },
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "11e20f3f-41a3-429f-afd2-dd0e7cd335f9",
+            "sortByColumn": "Index",
+            "sourceColumn": "Description",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "e17b5086-81c1-4ea1-adc7-f627f109769c",
+        "partitions": [
+          {
+            "name": "Index Severity Alerts",
+            "mode": "import",
+            "queryGroup": "04 Index Tables",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"dZRBb9swDIX/CpFzFnTdgJ2HDcMGrLdehq4HWWZiIbJoWNRc79fvUUrSLuuAunUtiXz8HqmHh80QDsNmu3mL52t7vR94ZgqZHNkiTbN0rgsx6Eo6OKVVykwzZ/zxdaOXEZvGkLnf0Q8plAcpsacocqSQVCgozYil5Ba37ugz7zn1PNNeZvoUpfQ0uNzSeUn70HOy0Ik60QFZmUYXgw9SsgXkhEiptw22tg+pD+mQqUABWbqcC9clF3nWHX1BHn5y4xR5i5Ptc6umZ2Wvue7mJ/ZFgySSPco/JlnSi8wqEikXPxDE3oUxHJ3+RjwDMOJQXa8arC4/M8rQ4KLF3utu87h92IzchzIC8y2eu/M/9wMw4qexjiti5pKnU17nNfwy/GNlaNV6p9z0u/9b8S/mn+Xm5vZDvoJcQSUXVw2esPXE0+I1uRW27XpxDoRe9eX5EIwwR3eEjspMS+2JkouLKLCzo34IiSmym5PlQ2qXBBGx7Axj8wZ+5G2t4WSh0QmH9AbSnSqPk9IeRZuxJdUEaD0QwsEGPcoCyO/wfK9vFXeD2Vm0jhPi0SQ5gDRXIdQhxhEikML546tNG3JqRPVCRomTlMPQzDFCL7hcWJ15Xjnb2e4kHvuvejbKgbyBqoOZ6kHrOEvSzg5umjjRMuCXSyfVUKtz4Ny86OtMBPuGNTDtinUTdKWVPIjnNvazYAhgjEw8V4qEF1QNX6lDb/ZjSPlVIL3wM5Kz1cox2qVx0laFZVrsljkx3sK3yBnp9dyhKMHAobfVWsPUtWoXxmgcDvheY17umOZ0SKazinYRTr/H8+3q20cL7ZtZqFdXzFkVOjoQKlMb/lTGDrXZu10WoJVlrG2/DAFXQKNu0GFKtcLI2oUB1jBSEiL+JefC+zRJyk96HiNcc0jWMj03wyKzDmvT46NkbLF6UerjHw==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [SeverityGraph = _t, Index = _t, Severity = _t, Description = _t]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Index\", Int64.Type}}),",
+                "    #\"Cleaned Text\" = Table.TransformColumns(#\"Changed Type\",{{\"Description\", Text.Clean, type text}})",
+                "in",
+                "    #\"Cleaned Text\""
               ],
               "type": "m"
             }

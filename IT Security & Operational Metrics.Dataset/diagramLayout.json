@@ -19,7 +19,7 @@
             "height": 104,
             "width": 234
           },
-          "zIndex": 8
+          "zIndex": 15
         },
         {
           "location": {
@@ -32,7 +32,7 @@
             "height": 152,
             "width": 234
           },
-          "zIndex": 14
+          "zIndex": 17
         },
         {
           "location": {
@@ -45,7 +45,7 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 4
+          "zIndex": 12
         },
         {
           "location": {
@@ -58,7 +58,7 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 5
+          "zIndex": 13
         },
         {
           "location": {
@@ -71,7 +71,7 @@
             "height": 152,
             "width": 234
           },
-          "zIndex": 6
+          "zIndex": 14
         },
         {
           "location": {
@@ -84,7 +84,7 @@
             "height": 152,
             "width": 234
           },
-          "zIndex": 13
+          "zIndex": 16
         },
         {
           "location": {
@@ -97,7 +97,7 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 17
+          "zIndex": 18
         },
         {
           "location": {
@@ -110,20 +110,7 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 3
-        },
-        {
-          "location": {
-            "x": 1917.7443692575682,
-            "y": 0
-          },
-          "nodeIndex": "Index Alert Status",
-          "nodeLineageTag": "65050a38-4859-499e-a5d9-c19aa136fcd7",
-          "size": {
-            "height": 128,
-            "width": 234
-          },
-          "zIndex": 1
+          "zIndex": 11
         },
         {
           "location": {
@@ -136,32 +123,7 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 0
-        },
-        {
-          "location": {
-            "x": 2071.0670619969474,
-            "y": 415.19531494320296
-          },
-          "nodeIndex": "Index Incident Status",
-          "nodeLineageTag": "482e508e-0931-4ed8-a809-181fe03110a8",
-          "size": {
-            "height": 128,
-            "width": 234
-          },
-          "zIndex": 0
-        },
-        {
-          "location": {
-            "x": 1914.6194539969474,
-            "y": 196.6432710000002
-          },
-          "nodeIndex": "Index Severity",
-          "size": {
-            "height": 128,
-            "width": 234
-          },
-          "zIndex": 0
+          "zIndex": 2
         },
         {
           "location": {
@@ -173,7 +135,7 @@
             "height": 152,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 4
         },
         {
           "location": {
@@ -185,7 +147,7 @@
             "height": 272,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 5
         },
         {
           "location": {
@@ -197,7 +159,7 @@
             "height": 296,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 6
         },
         {
           "location": {
@@ -209,7 +171,7 @@
             "height": 255,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 7
         },
         {
           "location": {
@@ -221,7 +183,7 @@
             "height": 152,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 8
         },
         {
           "location": {
@@ -233,7 +195,7 @@
             "height": 152,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 9
         },
         {
           "location": {
@@ -243,6 +205,56 @@
           "nodeIndex": "Licenses Held",
           "size": {
             "height": 176,
+            "width": 234
+          },
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 2068.7452609969478,
+            "y": 597.01605700000073
+          },
+          "nodeIndex": "Index Severity Incidents",
+          "nodeLineageTag": "5885408f-001b-491c-b9f6-52506c2c13e0",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 1921.0346169969469,
+            "y": 173.29331194320264
+          },
+          "nodeIndex": "Index Severity Alerts",
+          "nodeLineageTag": "e17b5086-81c1-4ea1-adc7-f627f109769c",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 19
+        },
+        {
+          "location": {
+            "x": 1917.7443692575682,
+            "y": 0
+          },
+          "nodeIndex": "Index Status Alert",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2071.0670619969474,
+            "y": 415.19531494320296
+          },
+          "nodeIndex": "Index Status Incident",
+          "size": {
+            "height": 128,
             "width": 234
           },
           "zIndex": 0
@@ -382,8 +394,8 @@
         },
         {
           "location": {
-            "x": 1495.0106192602304,
-            "y": 13.752542199804793
+            "x": 1401.6784433830694,
+            "y": 285.39096452885656
           },
           "nodeIndex": "Alerts",
           "nodeLineageTag": "2040a737-f181-4aae-b694-1018e0213469",
@@ -392,19 +404,6 @@
             "width": 234
           },
           "zIndex": 9
-        },
-        {
-          "location": {
-            "x": 1865.0567997998478,
-            "y": 201.43989902147791
-          },
-          "nodeIndex": "Index Alert Status",
-          "nodeLineageTag": "65050a38-4859-499e-a5d9-c19aa136fcd7",
-          "size": {
-            "height": 128,
-            "width": 234
-          },
-          "zIndex": 7
         },
         {
           "location": {
@@ -418,19 +417,6 @@
             "width": 234
           },
           "zIndex": 10
-        },
-        {
-          "location": {
-            "x": 1866.6186084010722,
-            "y": 13.752542199804793
-          },
-          "nodeIndex": "Index Severity",
-          "nodeLineageTag": "5885408f-001b-491c-b9f6-52506c2c13e0",
-          "size": {
-            "height": 128,
-            "width": 234
-          },
-          "zIndex": 1
         },
         {
           "location": {
@@ -491,6 +477,30 @@
             "width": 234
           },
           "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1381.8485008599953,
+            "y": 0
+          },
+          "nodeIndex": "Index Severity Incidents",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1555.8069036098507,
+            "y": 656.95663800404145
+          },
+          "nodeIndex": "Index Status Alert",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "Security",
@@ -501,6 +511,6 @@
       "tablesLocked": false
     }
   ],
-  "selectedDiagram": "Users",
+  "selectedDiagram": "All tables",
   "defaultDiagram": "All tables"
 }
