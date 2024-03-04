@@ -5,13 +5,6 @@ This stops IT from having to go into multiple different security provider sites/
 
 We'll leverage one PowerBI dataset/model which consolidates all these sources
 
-#### Current state of the dashboard, as presented to Executives:
-![Gateway Setup](./readMeImages/IT%20Operational%20dash%20-%20current%20state.png)
-
-- Metrics /data are extracted manually
-    - Metrics are "as of <date>" (point in time)
-- All these sources then get integrated inside a PowerPoint presentation
-
 ## Datasets included in BI report
 - MS Graph
     - Security
