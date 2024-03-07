@@ -8,11 +8,11 @@
       },
       {
         "name": "PBIDesktopVersion",
-        "value": "2.124.2028.0 (23.12)"
+        "value": "2.126.1261.0 (24.02)"
       },
       {
         "name": "PBI_QueryOrder",
-        "value": "[\"Score Daily\",\"Score Detail\",\"Score Yesterday\",\"SecureComponent statuses\",\"MeasuresTable\",\"SecureComponent Descriptions\",\"MS products\",\"Azure Graph API Url\",\"Azure Tenant ID\",\"Azure Application ID\",\"Azure Application Client Secret\",\"SecureScores Raw\",\"LicensesHeldAPI Raw\",\"UsersAPI Raw\",\"Licenses unpacked\",\"PrimaryLicense - skuId\",\"assignedLicenses - disabledPlans\",\"Licenses Held\",\"Users\",\"Licenses SKU Raw\",\"Alerts Raw\",\"Alerts\",\"Licenses SKU\",\"Groups Raw\",\"Incidents Raw\",\"GetGroupMembers\",\"GroupMembers\",\"Azure GroupID\",\"Groups\",\"DateDimensionBI\",\"User last sigin\",\"Index Severity Incidents\",\"Index Status Alert\",\"Incidents\",\"Index Status Incident\",\"Incidents Duplicate incidents\",\"Index Severity Alerts\"]"
+        "value": "[\"Score Daily\",\"Score Detail\",\"Score Yesterday\",\"SecureComponent statuses\",\"MeasuresTable\",\"SecureComponent Descriptions\",\"MS products\",\"Azure Graph API Url\",\"Defender API URL\",\"Azure Tenant ID\",\"Azure Application ID\",\"Azure Application Client Secret\",\"SecureScores Raw\",\"LicensesHeldAPI Raw\",\"UsersAPI Raw\",\"Licenses unpacked\",\"PrimaryLicense - skuId\",\"assignedLicenses - disabledPlans\",\"Licenses Held\",\"Users\",\"Licenses SKU Raw\",\"Alerts Raw\",\"Alerts\",\"Licenses SKU\",\"Groups Raw\",\"Incidents Raw\",\"GetGroupMembers\",\"GroupMembers\",\"Azure GroupID\",\"Groups\",\"DateDimensionBI\",\"User last sigin\",\"Index Status Alert\",\"Incidents\",\"Index Status Incident\",\"Index Severity Incidents\",\"Incidents Duplicate incidents\",\"Index Severity Alerts\",\"Exposure Score\"]"
       },
       {
         "name": "PBI_ProTooling",
@@ -879,6 +879,23 @@
         "kind": "m",
         "lineageTag": "da5caf06-ba47-45a9-bcc9-ad863834892a",
         "queryGroup": "99 testing"
+      },
+      {
+        "name": "Defender API URL",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Text"
+          }
+        ],
+        "expression": "\"https://api.securitycenter.microsoft.com\" meta [IsParameterQuery=true, List={\"https://api.securitycenter.microsoft.com\"}, DefaultValue=\"https://api.securitycenter.microsoft.com\", Type=\"Text\", IsParameterQueryRequired=true]",
+        "kind": "m",
+        "lineageTag": "204e3664-6aff-43e3-952a-29d8f2bc20f0",
+        "queryGroup": "00 Utilities\\00-0 Parameters"
       }
     ],
     "queryGroups": [
@@ -1168,6 +1185,15 @@
         "fromTable": "Alerts",
         "toColumn": "SeverityGraph",
         "toTable": "Index Severity Alerts"
+      },
+      {
+        "name": "ed2bfcc2-3622-45f2-9bc3-897f9577b4d7",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "ExposureScore date",
+        "fromTable": "Exposure Score",
+        "toColumn": "Date",
+        "toTable": "DateDimensionBI"
       }
     ],
     "sourceQueryCulture": "en-AU",
@@ -1178,11 +1204,6 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
-          }
-        ],
-        "changedProperties": [
-          {
-            "property": "Name"
           }
         ],
         "columns": [
@@ -1274,15 +1295,6 @@
           {
             "name": "PBI_ResultType",
             "value": "Exception"
-          },
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
-          }
-        ],
-        "changedProperties": [
-          {
-            "property": "Name"
           }
         ],
         "columns": [
@@ -1428,11 +1440,6 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
-          }
-        ],
-        "changedProperties": [
-          {
-            "property": "Name"
           }
         ],
         "columns": [
@@ -1837,6 +1844,18 @@
               ")"
             ],
             "lineageTag": "c3db31f5-a300-4150-a6ae-762fb01c04a7"
+          },
+          {
+            "name": "Exposure score",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "displayFolder": "Security Scores",
+            "expression": "MAX('Exposure Score'[score]) // api only ever returns one (1) value, today's",
+            "lineageTag": "47216340-8491-4317-bdcf-7201e137b66e"
           }
         ],
         "partitions": [
@@ -2217,11 +2236,6 @@
             "value": "Table"
           }
         ],
-        "changedProperties": [
-          {
-            "property": "Name"
-          }
-        ],
         "columns": [
           {
             "name": "user id",
@@ -2289,10 +2303,6 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
-          },
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
           }
         ],
         "columns": [
@@ -2797,10 +2807,6 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
-          },
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
           }
         ],
         "columns": [
@@ -4212,6 +4218,34 @@
             "lineageTag": "f6663ae2-8d02-4c2d-95e6-e05a34af9bc8",
             "summarizeBy": "none",
             "type": "calculated"
+          },
+          {
+            "name": "Reporting Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "195ecdc4-5c86-43ec-aa19-d52872ca6312",
+            "sourceColumn": "Reporting Month",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Reporting Month - Last year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "e9f2e9e2-089d-498a-b062-3b3850d7f849",
+            "sourceColumn": "Reporting Month - Last year",
+            "summarizeBy": "none"
           }
         ],
         "lineageTag": "ebdfe54c-6249-4558-ae7b-316c53cc74c8",
@@ -4477,9 +4511,6 @@
         ],
         "changedProperties": [
           {
-            "property": "Name"
-          },
-          {
             "property": "IsHidden"
           }
         ],
@@ -4596,12 +4627,13 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
           }
         ],
         "changedProperties": [
-          {
-            "property": "Name"
-          },
           {
             "property": "IsHidden"
           }
@@ -4680,7 +4712,7 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i45WykstV9JRMgRiPyArVidaKTMvoCg/vSi1uBgoaATEnnkKcBGQAiAjP6csNQUoZQzEQTBubCwA\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [StatusGraph = _t, Index = _t, Status = _t]),",
+                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i45WykstV9JRMgRiPyArVidaKTMvoCg/vSi1uBgoaATEnnkKcBGQAiAjP6csNQUoZQzEQTAuRC4lsyg1uQRJFi4QGwsA\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [StatusGraph = _t, Index = _t, Status = _t]),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Index\", Int64.Type}})",
                 "in",
                 "    #\"Changed Type\""
@@ -4693,10 +4725,6 @@
       {
         "name": "Incidents",
         "annotations": [
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
-          },
           {
             "name": "PBI_ResultType",
             "value": "Table"
@@ -4934,12 +4962,13 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
           }
         ],
         "changedProperties": [
-          {
-            "property": "Name"
-          },
           {
             "property": "IsHidden"
           }
@@ -4996,7 +5025,7 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i45WKkotzs8pS01R0lGytFSK1YlWSkwuySxLBfINwdyi1JTMotTkErASI6XYWAA=\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Status = _t, Index = _t]),",
+                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i45WKkotzs8pS01R0lGytFSK1YlWSkwuySxLBfINwdyi1JTMotTkErASY7BQZl5AUX46UGcxUMhIKTYWAA==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Status = _t, Index = _t]),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Status\", type text}, {\"Index\", Int64.Type}})",
                 "in",
                 "    #\"Changed Type\""
@@ -5009,10 +5038,6 @@
       {
         "name": "Index Severity Alerts",
         "annotations": [
-          {
-            "name": "PBI_NavigationStepName",
-            "value": "Navigation"
-          },
           {
             "name": "PBI_ResultType",
             "value": "Table"
@@ -5124,6 +5149,128 @@
                 "    #\"Cleaned Text\" = Table.TransformColumns(#\"Changed Type\",{{\"Description\", Text.Clean, type text}})",
                 "in",
                 "    #\"Cleaned Text\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Exposure Score",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "time",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "387232fa-5188-4bbf-a2ed-8bd68f763d7f",
+            "sourceColumn": "time",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "score",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "4d5a021a-29ae-4946-a828-afb4c7059093",
+            "sourceColumn": "score",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ExposureScore date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "63fd8d7d-b1c3-4fe8-bafc-b32309205b98",
+            "sourceColumn": "ExposureScore date",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "06b96227-52c9-4dba-9275-21649985ebbb",
+        "partitions": [
+          {
+            "name": "Exposure Score",
+            "mode": "import",
+            "queryGroup": "99 testing",
+            "source": {
+              "expression": [
+                "let",
+                "    // a function which generates the token - needs to happen at the same time as the query, so PBI doesn't do dumb firewall stuff",
+                "    makeToken = (#\"Azure Graph API Url\" as any, #\"Azure Tenant ID\" as any, #\"Azure Application ID\" as any, #\"Azure Application Client Secret\" as any) => let",
+                "        loginURL = \"https://login.microsoftonline.com/\",",
+                "        TokenUri = #\"Azure Tenant ID\" & \"/oauth2/token\", // which domain is this a token for",
+                "        ResourceId = #\"Azure Graph API Url\", // where is this token for",
+                "        TokenResponse = Json.Document(",
+                "            Web.Contents(loginURL",
+                "\t\t\t    , [RelativePath = TokenUri",
+                "\t\t\t    , Content = Text.ToBinary(Uri.BuildQueryString([client_id = #\"Azure Application ID\", resource = ResourceId, grant_type = \"client_credentials\", client_secret = #\"Azure Application Client Secret\"]))",
+                "\t\t\t\t    , Headers = [Accept = \"application/json\"], ManualStatusHandling = {400}",
+                "\t\t\t    ]",
+                "            ) // end web contents",
+                "        ), // end json",
+                "        generatedToken = TokenResponse[access_token] // assign token value",
+                "    in",
+                "    generatedToken,",
+                "    // Token specific to defender",
+                "    myToken = makeToken(",
+                "        #\"Defender API URL\"",
+                "        , #\"Azure Tenant ID\"",
+                "        , #\"Azure Application ID\"",
+                "        , #\"Azure Application Client Secret\"",
+                "    ) // end makeToken",
+                "    , ",
+                "    // Ping API for json,",
+                "    #\"API return\" = Json.Document(",
+                "        Web.Contents(\"https://api-au.securitycenter.microsoft.com/\"",
+                "            , [",
+                "                RelativePath = \"api/exposureScore\"",
+                "                , Headers = [",
+                "                    Authorization = \"Bearer \"",
+                "                    &  myToken",
+                "                ]",
+                "            ]   ",
+                "        )",
+                "    ),",
+                "    #\"Converted to Table\" = Record.ToTable(#\"API return\"),",
+                "    #\"Transposed Table\" = Table.Transpose(#\"Converted to Table\"),",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(#\"Transposed Table\", [PromoteAllScalars=true]),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Promoted Headers\",{\"time\", \"score\"}),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Removed Other Columns\",{{\"score\", type number}, {\"time\", type datetimezone}}),",
+                "    #\"Added date col from timezone\" = Table.AddColumn(#\"Changed Type\", \"ExposureScore date\", each Date.From([time]), type date)",
+                "in",
+                "    #\"Added date col from timezone\""
               ],
               "type": "m"
             }

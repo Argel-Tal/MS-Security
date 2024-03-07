@@ -34,34 +34,34 @@ Unresolved Alerts    |   <img src="./readMeImages/06.2 Unresolved Alerts.png" wi
 ## MS Graph API set up
 ### Configuring source dataflow
 #### Concept tutorials:
-1. Good tutorial, with a minor error: 
-    - https://techpeanuts.wordpress.com/2020/05/28/connecting-power-bi-to-microsoft-graph/
+1. [Good tutorial, with a minor error](https://techpeanuts.wordpress.com/2020/05/28/connecting-power-bi-to-microsoft-graph/)
     Error: This tutorial's example API call of `/me` won't work if you set up the API in the way explained _(delegated)_, as it does not run as an impersonated user, and the `/me` command returns information about the (impersonated) user!! 
     _I wasted a few minutes trying to figure this one out_
     You do want delegated perms, so follow the tute, just use a diff API call. 
-0.  Lower quality tute, but still good reading:
-    - https://minkus.medium.com/easily-connecting-between-power-query-power-bi-and-microsoft-graph-72333eb95a35
+0.  [Lower quality tute, but still good reading](https://minkus.medium.com/easily-connecting-between-power-query-power-bi-and-microsoft-graph-72333eb95a35)
 
 #### Steps
 1. Set up an App registration for your application - name it something link "PowerBI to Graph"
     Links:   
-    - Primary tutorial: https://www.eginnovations.com/documentation/Office-365/Registering-MS-Graph-App-On-Azure-AD.htm
-    - MS offical guide: https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app
+    - [Primary tutorial](https://www.eginnovations.com/documentation/Office-365/Registering-MS-Graph-App-On-Azure-AD.htm)
+    - [MS offical guide](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app)
     
 0. Give that app API permissions, allowing it to call specific API functions
 	Links: 
-    - MS guide to adding perms: https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-configure-app-access-web-apis
+    - [MS guide to adding perms](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-configure-app-access-web-apis)
 0. Should now see something like this in your App's perms:
     <img src="./readMeImages/configExample.png" width="800">
+0. For Exposure scores, they're not under Microsoft Graph, so you need to add the WindowsDefenderATP API: 
+    <img src="./readMeImages/Defender API scope.png" width="800">
 
 ### Connection inside PowerBI
 #### Steps for connecting to MS Graph
-1. Make query to MS login API, asking for an access token
+1. Make query to MS login API, asking for an access token. 
     ```powerquery
-    makeToken = (#"Azure Graph API Url" as any, #"Azure Tenant ID" as any, #"Azure Application ID" as any, #"Azure Application Client Secret" as any) => let
+    makeToken = (#"API endpoint URL" as any, #"Azure Tenant ID" as any, #"Azure Application ID" as any, #"Azure Application Client Secret" as any) => let
         loginURL = "https://login.microsoftonline.com/",
         TokenUri = #"Azure Tenant ID" & "/oauth2/token", // which domain is this a token for
-        ResourceId = #"Azure Graph API Url", // where is this token for
+        ResourceId = #"API endpoint URL", // where is this token for
         TokenResponse = Json.Document(
             Web.Contents(loginURL
 			    , [RelativePath = TokenUri
@@ -74,7 +74,9 @@ Unresolved Alerts    |   <img src="./readMeImages/06.2 Unresolved Alerts.png" wi
     in
     generatedToken,
     ```
-0. Get token from that API return
+0. Get token from that API return.
+__NB:__ Depending on your API endpoint, you will need to change the token's URL - ideally do this by passing different parameters (_for each end-point_) into the argument `API endpoint URL`.
+    <img src="./readMeImages/Defender token code.png" width="800">
     ```powerquery
     myToken = makeToken(
                         #"Azure Graph API Url"
