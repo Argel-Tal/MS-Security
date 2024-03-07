@@ -29,6 +29,7 @@ User profiles   |   <img src="./readMeImages/05 User profile page.png" width="80
 Security Alerts |   <img src="./readMeImages/06 Alerts Summary.png" width="800">
 About Alerts    |   <img src="./readMeImages/06.1 About Alerts.png" width="800">
 Unresolved Alerts    |   <img src="./readMeImages/06.2 Unresolved Alerts.png" width="800">
+Related Incidents and Alerts    |   <img src="./readMeImages/07 Related Incidents and Alerts.png" width="800">
 
 
 ## MS Graph API set up
